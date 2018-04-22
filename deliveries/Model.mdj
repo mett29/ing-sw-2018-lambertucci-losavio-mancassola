@@ -20274,7 +20274,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": true,
-											"text": "+evaluators: Map<String, BiFunction<Action, Board, Boolean>>",
+											"text": "+evaluators: Map<Int, BiFunction<Action, Board, Boolean>>",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -24791,7 +24791,7 @@
 									"visibility": "public",
 									"isStatic": true,
 									"isLeaf": false,
-									"type": "Map<String, BiFunction<Action, Board, Boolean>>",
+									"type": "Map<Int, BiFunction<Action, Board, Boolean>>",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
