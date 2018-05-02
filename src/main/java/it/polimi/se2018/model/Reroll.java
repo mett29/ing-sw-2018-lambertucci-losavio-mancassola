@@ -1,13 +1,20 @@
 package it.polimi.se2018.model;
 
 //The class that describes the Reroll action
-public class Reroll extends Action {
-    private Observer<T> die;
+public class Reroll implements Action {
+    private DieCoord dieCoord;
 
-    public Reroll() {}
+    public Reroll(DieCoord dieCoord) {
+        this.dieCoord = dieCoord;
+    }
 
-    //rerolls a die
-    public void reroll(Observer<T> die) {
+    @Override
+    public PlacementError check() {
+        return new PlacementError();
+    }
 
+    @Override
+    public void perform() {
+        dieCoord.get().randomize();
     }
 }

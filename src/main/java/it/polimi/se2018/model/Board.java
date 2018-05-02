@@ -57,9 +57,14 @@ public class Board implements Iterable<Cell> {
      * @return the Die in a specific position on the board
      */
     public Die getDie(int x, int y) {
-        if (x < 0 || y < 0 || x > 4 || y > 3)
+        return getCell(x, y).getDie();
+    }
+
+
+    public Cell getCell(int x, int y){
+        if(x < 0 || y < 0 || x > 4 || y > 3)
             throw new InvalidParameterException();
-        return window[x][y].getDie();
+        return window[x][y];
     }
 
     /**
@@ -145,7 +150,7 @@ public class Board implements Iterable<Cell> {
      */
     private void reset() {
         for (Cell[] cells : window)
-            for (Cell cell : cells) cell.setDie(new Die());
+            for (Cell cell : cells) cell.setDie(null);
     }
 
     public int countDices() {

@@ -1,12 +1,19 @@
 package it.polimi.se2018.model;
 
-public class MoveToDicebag extends Action {
-    private Observer<T> die;
+public class MoveToDicebag implements Action {
+    private DieCoord dieCoord;
 
-    public MoveToDicebag() {}
+    public MoveToDicebag(DieCoord dieCoord) {
+        this.dieCoord = dieCoord;
+    }
 
-    //moves the die into the dicebag
-    public void moveToDicebag(Observer<T> die) {
+    @Override
+    public PlacementError check() {
+        return new PlacementError();
+    }
 
+    @Override
+    public void perform() {
+        //TODO: need Match to implement
     }
 }

@@ -5,7 +5,7 @@ import java.util.Random;
 
 //The class that describes the extractor with generic
 public class Extractor<T> {
-    protected ArrayList<T> container;
+    private ArrayList<T> container;
 
     public Extractor(){
         container = new ArrayList<>();
@@ -20,11 +20,10 @@ public class Extractor<T> {
     }
 
     /**
-     * Extracts a random element from the container with a specified size
-     * @param bound integer as index
+     * Extracts a random element from the container
      * @return an element and removes it from the container
      */
-    public T extract(int bound) {
-        return container.remove(new Random().nextInt(bound));
+    public T extract() {
+        return container.remove(new Random().nextInt(container.size()));
     }
 }

@@ -30,12 +30,12 @@ public class Restriction {
                 if(die.getColor() != color)
                     return new PlacementError(Flags.COLOR);
                 else return new PlacementError();
-                break;
+
             case VALUE:
                 if(die.getValue() != value)
                     return new PlacementError(Flags.VALUE);
                 else return new PlacementError();
-                break;
+
             default:
                 return new PlacementError();
         }

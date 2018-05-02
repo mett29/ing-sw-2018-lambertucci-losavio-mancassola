@@ -15,10 +15,7 @@ public class DiceContainerCoord implements DieCoord {
      * @return `Die` pointed by DieCoord
      */
     public Die get() {
-        if(index <= container.getSize())
-            return this.container.getDice().get(index);
-        else
-            return new Die(0, null); //maybe an error message it's better
+        return this.container.getDie(index);
     }
 
     /**
@@ -26,7 +23,7 @@ public class DiceContainerCoord implements DieCoord {
      * @param die object to set
      */
     public void set(Die die) {
-        this.container.insert(die);
+        this.container.setDie(index, die);
     }
 
     /**
@@ -35,6 +32,8 @@ public class DiceContainerCoord implements DieCoord {
      * @return placement errors container
      */
     public PlacementError isAllowed(Die die) {
-        // TODO
+        if(!container.isEmpty(index))
+            return new PlacementError(Flags.NOTEMPTY);
+        return new PlacementError();
     }
 }

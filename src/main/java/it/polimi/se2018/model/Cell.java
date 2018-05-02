@@ -8,9 +8,9 @@ public class Cell {
     private Restriction restriction;
     private Die die;
 
-    public Cell(Color color, int value) {
-        this.die = new Die();
-        this.restriction = new Restriction(color, value);
+    public Cell(Restriction restriction) {
+        this.die = null;
+        this.restriction = restriction;
     }
 
     /**
@@ -25,7 +25,7 @@ public class Cell {
         err = PlacementError.union(err, restriction.isDieAllowed(die));
 
         // Check if the Cell is occupied yet
-        if (this.getDie() != null)
+        if (!isEmpty())
             err = PlacementError.union(err, restriction.isDieAllowed(die));
 
         return err;

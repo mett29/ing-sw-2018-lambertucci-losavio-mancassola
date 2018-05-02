@@ -1,24 +1,15 @@
 package it.polimi.se2018.model;
 
-//The class that describes an action of a player
-public class Action {
-    private Player player;
-    private View view;
+//The interface that describes an action of a player
+public interface Action {
+    /**
+     * Check possible errors if action was to be performed
+     * @return
+     */
+    public PlacementError check();
 
-    public Action() { }
-
-    //performs the action crafted
-    public PlacementError perform() {
-
-    }
-
-    //gets the player of the action
-    public Player getPlayer() {
-
-    }
-
-    //gets the view of the player
-    public View getView() {
-
-    }
+    /**
+     * Perform the action
+     */
+    public void perform();
 }
