@@ -1,28 +1,57 @@
 package it.polimi.se2018.model;
 
-//The class that describes a cell of the board
+/**
+ * This class represents the object Cell of the board
+ * @version 1.0
+ */
 public class Cell {
     private Restriction restriction;
-    private Die die = null;
+    private Die die;
 
-    public Cell() {}
+    public Cell(Color color, int value) {
+        this.die = new Die();
+        this.restriction = new Restriction(color, value);
+    }
 
-    //gets any error
+    /**
+     * @param die the Die to check
+     * @return the related error
+     */
     public PlacementError isDieAllowed(Die die) {
 
+        // Check if the placed Die violate the restriction
+        if (restriction.isDieAllowed(die).isColorError())
+            return new PlacementError(Flags.COLOR);
+        if (restriction.isDieAllowed(die).isValueError())
+            return new PlacementError(Flags.VALUE);
+
+        // Check if the Cell is occupied yet
+        if (this.getDie() != null)
+            return new PlacementError(Flags.NOTEMPTY);
+
+        return new PlacementError();
     }
 
-    //gets the die that is inside the cell (if there is one)
+    /**
+     * @return the Die in the Cell
+     */
     public Die getDie() {
-
+        return this.die;
     }
 
-    //sets a die inside the cell
+    /**
+     * This method set a Die in the Cell
+     * @param die the Die to set
+     */
     public void setDie(Die die) {
-
+        this.die = die;
     }
 
-    public boolean isEmpty(){
+    /**
+     * This method check if a Cell is empty or not
+     * @return True or False
+     */
+    public boolean isEmpty() {
         return die == null;
     }
 }
