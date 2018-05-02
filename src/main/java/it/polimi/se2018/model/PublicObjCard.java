@@ -209,7 +209,7 @@ public class PublicObjCard extends ObjCard{
                     if (color == iDie.getColor()) {
                         return true;
                     }
-                } catch (InvalidParameterException){
+                } catch (InvalidParameterException e){
                     // do nothing
                 }
             }

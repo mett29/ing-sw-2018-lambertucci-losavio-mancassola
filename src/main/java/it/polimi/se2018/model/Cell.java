@@ -19,17 +19,16 @@ public class Cell {
      */
     public PlacementError isDieAllowed(Die die) {
 
+        PlacementError err = new PlacementError();
+
         // Check if the placed Die violate the restriction
-        if (restriction.isDieAllowed(die).isColorError())
-            return new PlacementError(Flags.COLOR);
-        if (restriction.isDieAllowed(die).isValueError())
-            return new PlacementError(Flags.VALUE);
+        err = PlacementError.union(err, restriction.isDieAllowed(die));
 
         // Check if the Cell is occupied yet
         if (this.getDie() != null)
-            return new PlacementError(Flags.NOTEMPTY);
+            err = PlacementError.union(err, restriction.isDieAllowed(die));
 
-        return new PlacementError();
+        return err;
     }
 
     /**

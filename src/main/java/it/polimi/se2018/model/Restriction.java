@@ -2,25 +2,46 @@ package it.polimi.se2018.model;
 
 /**
  * This class represents the Restriction of color and value present in the board
- * @version 1.0
+ * @version 1.1
  */
 public class Restriction {
     private Color color;
     private int value;
+    private RestrictionType type;
 
-    public Restriction(Color color, int value) {
+    public Restriction(Color color) {
         this.color = color;
+        type = RestrictionType.COLOR;
+    }
+
+    public Restriction(int value){
         this.value = value;
+        type = RestrictionType.VALUE;
     }
 
-    //gets any error from color and/or value restrictions
+    /**
+     * Check possible errors if `die` is to be evaluated by this restriction
+     * @param die to be evaluated
+     * @return errors container
+     */
     public PlacementError isDieAllowed(Die die) {
-        if (die.getColor() != color)
-            return new PlacementError(Flags.COLOR);
-        if (die.getValue() != value)
-            return new PlacementError(Flags.VALUE);
-        return new PlacementError();
+        switch(type){
+            case COLOR:
+                if(die.getColor() != color)
+                    return new PlacementError(Flags.COLOR);
+                else return new PlacementError();
+                break;
+            case VALUE:
+                if(die.getValue() != value)
+                    return new PlacementError(Flags.VALUE);
+                else return new PlacementError();
+                break;
+            default:
+                return new PlacementError();
+        }
     }
 
-
+    private enum RestrictionType {
+        COLOR, VALUE
+    }
 }

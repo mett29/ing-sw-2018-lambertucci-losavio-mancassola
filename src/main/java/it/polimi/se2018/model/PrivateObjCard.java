@@ -10,7 +10,10 @@ public class PrivateObjCard extends ObjCard {
         cardColor = color;
     }
 
-    //gets the color of the card
+    /**
+     * Get the color of the Private Objctive Card
+     * @return color of the card
+     */
     public Color getColor() {
         return cardColor;
     }

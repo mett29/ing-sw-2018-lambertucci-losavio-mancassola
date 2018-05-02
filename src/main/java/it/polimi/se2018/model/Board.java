@@ -26,36 +26,31 @@ public class Board implements Iterable<Cell> {
      */
     public PlacementError isDieAllowed(int x, int y, Die die) {
 
+        PlacementError ret = new PlacementError();
+
         // Check if the placed Die violate the restriction
-        if (window[x][y].isDieAllowed(die).isColorError())
-            return new PlacementError(Flags.COLOR);
-        if (window[x][y].isDieAllowed(die).isValueError())
-            return new PlacementError(Flags.VALUE);
+        ret = PlacementError.union(ret, window[x][y].isDieAllowed(die));
 
         List<Die> adjacentDies = getNeighbours(x, y);
 
         // Check that all the adjacent dies don't have the same color or the same value of the placed die
         for (Die neighbour : adjacentDies) {
             if (neighbour.getColor() == die.getColor())
-                return new PlacementError(Flags.COLOR);
+                ret = PlacementError.union(ret, new PlacementError(Flags.COLOR));
             if (neighbour.getValue() == die.getValue())
-                return new PlacementError(Flags.VALUE);
+                ret = PlacementError.union(ret, new PlacementError(Flags.VALUE));
         }
-
-        // Check if Cell is occupied yet
-        if (window[x][y].getDie() != null)
-            return new PlacementError(Flags.NOTEMPTY);
 
         // Check if the Die is near other dices
         if (getNeighbours(x, y).isEmpty())
-            return new PlacementError(Flags.NEIGHBOURS);
+            ret = PlacementError.union(ret, new PlacementError(Flags.NEIGHBOURS));
 
         // Check if the Die has been placed on an edge
         if (countDices() == 0)
             if (x != 0 && y != 0 && x != 4 && y != 3)
-                return new PlacementError(Flags.EDGE);
+                ret = PlacementError.union(ret, new PlacementError(Flags.EDGE));
 
-        return new PlacementError();
+        return ret;
     }
 
     /**
