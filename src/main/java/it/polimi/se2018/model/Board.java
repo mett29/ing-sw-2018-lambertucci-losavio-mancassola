@@ -5,7 +5,7 @@ import java.util.*;
 
 /**
  * This class represent the player's board
- * @version 1.0, 02/05/2018
+ * @version 1.1
  */
 public class Board implements Iterable<Cell> {
 
@@ -160,6 +160,26 @@ public class Board implements Iterable<Cell> {
                 if (!cell.isEmpty())
                     counter++;
         return counter;
+    }
+
+    /**
+     * This method allow to save the board's state in order to restore it when it needs
+     * @return a BoardMemento object with the saved state
+     */
+    public BoardMemento saveToMemento() {
+        Cell[][] savedWindow = new Cell[4][5];
+        for (int i = 0; i < boardHeight; i++)
+            for (int j = 0; j < boardWidth; j++)
+                savedWindow[i][j].setDie(this.window[i][j].getDie());
+        return new BoardMemento(savedWindow);
+    }
+
+    /**
+     * This method allow to restore the board's state previously saved
+     * @param boardMemento the object containing the saved state
+     */
+    public void undoFromMemento(BoardMemento boardMemento) {
+        this.window = boardMemento.getWindow();
     }
 
     @Override
