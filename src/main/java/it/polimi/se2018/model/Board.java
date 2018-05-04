@@ -12,9 +12,11 @@ public class Board implements Iterable<Cell> {
     private Cell[][] window;
     private static final int boardWidth = 5;
     private static final int boardHeight = 4;
+    private int boardDifficulty;
 
-    public Board() {
+    public Board(int boardDifficulty) {
         this.window = new Cell[4][5];
+        this.boardDifficulty = boardDifficulty;
         reset();
     }
 
@@ -146,6 +148,11 @@ public class Board implements Iterable<Cell> {
     }
 
     /**
+     * @return the board's difficulty
+     */
+    public int getBoardDifficulty() { return this.boardDifficulty; }
+
+    /**
      * This method reset the board
      */
     private void reset() {
@@ -168,9 +175,12 @@ public class Board implements Iterable<Cell> {
      */
     public BoardMemento saveToMemento() {
         Cell[][] savedWindow = new Cell[4][5];
-        for (int i = 0; i < boardHeight; i++)
-            for (int j = 0; j < boardWidth; j++)
-                savedWindow[i][j].setDie(this.window[i][j].getDie());
+        for (int i = 0; i < boardHeight; i++) {
+            for (int j = 0; j < boardWidth; j++) {
+                savedWindow[i][j] = new Cell(this.window[i][j].getRestriction());
+                savedWindow[i][j].setDie(new Die(this.window[i][j].getDie().getValue(), this.window[i][j].getDie().getColor()));
+            }
+        }
         return new BoardMemento(savedWindow);
     }
 

@@ -46,6 +46,8 @@ public class Cell {
         this.die = die;
     }
 
+    public Restriction getRestriction() { return this.restriction; }
+
     /**
      * This method check if a Cell is empty or not
      * @return True or False

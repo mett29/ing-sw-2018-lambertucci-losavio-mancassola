@@ -1,6 +1,11 @@
 package it.polimi.se2018.model;
 
-//The class that describes the player
+import java.security.InvalidParameterException;
+
+/**
+ * This class describes the Player
+ * @version 1.1
+ */
 public class Player {
     private Board board;
     private int token;
@@ -8,83 +13,69 @@ public class Player {
     private PrivateObjCard privateObjCard;
     private ToolCard activatedToolcard;
 
-    public Player() {
-        board = null;
-        token = 0;
-        name = null;
-        privateObjCard = null;
-        activatedToolcard = null;
+    // Player constructor
+    public Player(String name) {
+        this.name = name;
     }
 
-    public Player(Board newBoard, int newToken, String newName, PrivateObjCard newPrivateObjCard, ToolCard newActivatedToolcard) {
-        board = newBoard;
-        token = newToken;
-        name = newName;
-        privateObjCard = newPrivateObjCard;
-        activatedToolcard = newActivatedToolcard;
+    /**
+     * @return the player's name
+     */
+    public String getName() {
+        return this.name;
     }
     
     /**
-     * Getter of the board of the player
-     * @return the current player board
+     * @return the player's board
      */
     public Board getBoard() {
-        return board;
+        return this.board;
     }
 
     /**
-     * Getter of the remaining tokens of the player
-     * @return the current player tokens
+     * @return the number of tokens of the player
      */
     public int getToken() {
-        return token;
+        return this.token;
     }
 
     /**
      * Setter of the tokens of the player
-     * @param newToken object to set
+     * @param token number of tokens
      */
-    public void setToken(int newToken) {
-        token = newToken;
+    public void setToken(int token) {
+        if (this.board.getBoardDifficulty() == token)
+            this.token = token;
+        else throw new InvalidParameterException("The number of tokens must be equal to the board's difficulty.");
     }
 
     /**
-     * Getter of the name chosen by the player
-     * @return the current player name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Getter of the private objective card that the player received at the start of the match
-     * @return the current player private objective card
+     * @return the private objective card assigned to the player
      */
     public PrivateObjCard getPrivateObjCard() {
         return privateObjCard;
     }
 
     /**
-     * Setter of the private objective card of the player
-     * @param card object to set
+     * Setter of the player's private objective card
+     * @param privateObjCard to assign to the player
      */
-    public void setPrivateObjCard(PrivateObjCard card) {
-        privateObjCard = card;
+    public void setPrivateObjCard(PrivateObjCard privateObjCard) {
+        this.privateObjCard = privateObjCard;
     }
 
     /**
-     * Getter of the toolcard activated by the player
-     * @return the current toolcard used
+     * @return the toolcard activated by the player
      */
     public ToolCard getActivatedToolcard() {
-        return activatedToolcard;
+        return this.activatedToolcard;
     }
 
     /**
-     * Setter of the toolcard activated by the player
-     * @param newActivatedToolcard object to set
+     * Setter of the activated toolcard
+     * @param activatedToolcard the toolcard activated by the player
      */
-    public void setActivatedToolcard(ToolCard newActivatedToolcard) {
-        activatedToolcard = newActivatedToolcard;
+    public void setActivatedToolcard(ToolCard activatedToolcard) {
+        this.activatedToolcard = activatedToolcard;
     }
 }
