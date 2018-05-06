@@ -19,4 +19,14 @@ public interface DieCoord {
      * @return placement errors container
      */
     public PlacementError isAllowed(Die die);
+
+    /**
+     * Saves the state of the container internally
+     */
+    public void saveState();
+
+    /**
+     * Restores the state of the previously internally stored container
+     */
+    public void restoreState();
 }

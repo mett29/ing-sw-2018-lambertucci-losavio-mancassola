@@ -3,7 +3,7 @@ package it.polimi.se2018.model;
 import java.util.*;
 
 //The class that describes the private objective card
-public class PrivateObjCard extends ObjCard {
+public class PrivateObjCard implements ObjCard {
     private Color cardColor;
 
     public PrivateObjCard(Color color) {

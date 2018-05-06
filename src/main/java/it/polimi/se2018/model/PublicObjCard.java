@@ -3,11 +3,12 @@ package it.polimi.se2018.model;
 import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.min;
 
 //The class that describes the public objective card
-public class PublicObjCard extends ObjCard{
+public class PublicObjCard implements ObjCard{
     private int id;
     public PublicObjCard(int id){
         this.id = id;
@@ -45,7 +46,7 @@ public class PublicObjCard extends ObjCard{
             tmpBonuses.put(0, (Board board) -> {
                 int sum = 0;
                 for(Cell[] row : board.getRows()){
-                    if(differentColors(row)){
+                    if(differentColors(Arrays.asList(row))){
                         sum += 6;
                     }
                 }
@@ -56,7 +57,7 @@ public class PublicObjCard extends ObjCard{
             tmpBonuses.put(1, (Board board) -> {
                 int sum = 0;
                 for(Cell[] column : board.getColumns()){
-                    if(differentColors(column)){
+                    if(differentColors(Arrays.asList(column))){
                         sum += 5;
                     }
                 }
@@ -67,7 +68,7 @@ public class PublicObjCard extends ObjCard{
             tmpBonuses.put(2, (Board board) -> {
                 int sum = 0;
                 for(Cell[] row : board.getRows()){
-                    if(differentValues(row)){
+                    if(differentValues(Arrays.asList(row))){
                         sum += 5;
                     }
                 }
@@ -78,7 +79,7 @@ public class PublicObjCard extends ObjCard{
             tmpBonuses.put(3, (Board board) -> {
                 int sum = 0;
                 for(Cell[] column : board.getColumns()){
-                    if(differentValues(column)){
+                    if(differentValues(Arrays.asList(column))){
                         sum += 4;
                     }
                 }
@@ -146,14 +147,15 @@ public class PublicObjCard extends ObjCard{
             bonuses = Collections.unmodifiableMap(tmpBonuses);
         }
 
-        private static boolean differentColors(Cell[] elems){
+        /**
+         * Check if there are not two or more dice with the same color in container
+         * @param elems List to be checked
+         * @return true if there is no duplicate, false otherwise
+         */
+        private static boolean differentColors(List<Cell> elems){
             Map<Color, Integer> count = new HashMap<>();
-            for(Cell i : elems){
-                if(!i.isEmpty()){
-                    Color iColor = i.getDie().getColor();
-                    int tmpCount = count.getOrDefault(iColor, 0);
-                    count.replace(iColor, tmpCount + 1);
-                }
+            for(Color color : Color.values()){
+                count.put(color, numberOf(color, elems));
             }
             for(int counter : count.values()){
                 if(counter > 1) {
@@ -163,14 +165,15 @@ public class PublicObjCard extends ObjCard{
             return true;
         }
 
-        private static boolean differentValues(Cell[] elems){
+        /**
+         * Check if there is no duplicate value in list
+         * @param elems List to be checked
+         * @return true if there is no duplicate, false otherwise
+         */
+        private static boolean differentValues(List<Cell> elems){
             Map<Integer, Integer> count = new HashMap<>();
-            for(Cell i : elems){
-                if(!i.isEmpty()){
-                    int iValue = i.getDie().getValue();
-                    int tmpCount = count.getOrDefault(iValue, 0);
-                    count.replace(iValue, tmpCount + 1);
-                }
+            for(int i = 1; i < 7; i++){
+                count.put(i, numberOf(i, elems));
             }
             for(int counter : count.values()){
                 if(counter > 1) {
@@ -180,9 +183,15 @@ public class PublicObjCard extends ObjCard{
             return true;
         }
 
-        private static int numberOf(int value, Board board){
+        /**
+         * Count occurrencies of dice with a specified value in a container
+         * @param value number whose occurrencies are to be counted
+         * @param container iterable to count in
+         * @return number of occurrencies
+         */
+        private static int numberOf(int value, Iterable<Cell> container){
             int count = 0;
-            for(Cell cell : board){
+            for(Cell cell : container){
                 if(!cell.isEmpty() && cell.getDie().getValue() == value){
                     count++;
                 }
@@ -190,9 +199,15 @@ public class PublicObjCard extends ObjCard{
             return count;
         }
 
-        private static int numberOf(Color color, Board board){
+        /**
+         * Count occurrencies of dice with a specified color in a container
+         * @param color color whose occurrencies are to be counted
+         * @param container iterable to count in
+         * @return number of occurrencies
+         */
+        private static int numberOf(Color color, Iterable<Cell> container){
             int sum = 0;
-            for(Cell cell : board){
+            for(Cell cell : container){
                 if(!cell.isEmpty() && cell.getDie().getColor() == color) {
                     sum++;
                 }
@@ -200,6 +215,13 @@ public class PublicObjCard extends ObjCard{
             return sum;
         }
 
+        /**
+         * Check if a die on a board has at least one diagonal neighbour of the same color
+         * @param x horizontal coordinate of cell to be checked
+         * @param y vertical coordinate of cell to be checked
+         * @param board board to be checked
+         * @return true if ha at least one diagonal neighbour, false otherwise
+         */
         private static boolean hasDiagonalSameColor(int x, int y, Board board){
             Die die = board.getDie(x, y);
             Color color = die.getColor();
@@ -216,8 +238,14 @@ public class PublicObjCard extends ObjCard{
             return false;
         }
 
-        private static ArrayList<int[]> diagonalNeighbours(int x, int y){
-            ArrayList<int[]> ret = new ArrayList<>();
+        /**
+         * Get a list of all diagonal neighbours coordinates
+         * @param x horizontal coordinate
+         * @param y vertical coordinate
+         * @return list of diagonal neighbours coordinate
+         */
+        private static List<int[]> diagonalNeighbours(int x, int y){
+            List<int[]> ret = new ArrayList<>();
             ret.add(new int[] {x-1, y-1});
             ret.add(new int[] {x-1, y+1});
             ret.add(new int[] {x+1, y-1});

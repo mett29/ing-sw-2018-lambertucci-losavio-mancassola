@@ -13,10 +13,13 @@ public class BoardCoord implements DieCoord {
     private int x;
     private int y;
 
+    private Board savedBoard;
+
     public BoardCoord(Board board, int x, int y) {
         this.board = board;
         this.x = x;
         this.y = y;
+        this.savedBoard = null;
     }
 
     @Override
@@ -32,5 +35,17 @@ public class BoardCoord implements DieCoord {
     @Override
     public PlacementError isAllowed(Die die) {
         return board.isDieAllowed(x, y, die);
+    }
+
+    @Override
+    public void saveState() {
+        savedBoard = board.saveState();
+    }
+
+    @Override
+    public void restoreState() {
+        if(savedBoard == null){ throw new NullPointerException(); }
+        board.restoreState(savedBoard);
+        savedBoard = null;
     }
 }

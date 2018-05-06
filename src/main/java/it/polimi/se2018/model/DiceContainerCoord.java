@@ -5,9 +5,12 @@ public class DiceContainerCoord implements DieCoord {
     private DiceContainer container;
     private int index;
 
+    private DiceContainer savedContainer;
+
     public DiceContainerCoord(DiceContainer container, int index) {
         this.container = container;
         this.index = index;
+        savedContainer = null;
     }
 
     /**
@@ -35,5 +38,17 @@ public class DiceContainerCoord implements DieCoord {
         if(!container.isEmpty(index))
             return new PlacementError(Flags.NOTEMPTY);
         return new PlacementError();
+    }
+
+    @Override
+    public void saveState() {
+        savedContainer = container.saveState();
+    }
+
+    @Override
+    public void restoreState() {
+        if(savedContainer == null){ throw new NullPointerException(); }
+        container.restoreState(savedContainer);
+        savedContainer = null;
     }
 }

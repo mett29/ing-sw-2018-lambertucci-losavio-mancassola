@@ -12,6 +12,7 @@ public class Player {
     private String name;
     private PrivateObjCard privateObjCard;
     private ToolCard activatedToolcard;
+    private PlayerState state;
 
     // Player constructor
     public Player(String name) {
@@ -77,5 +78,9 @@ public class Player {
      */
     public void setActivatedToolcard(ToolCard activatedToolcard) {
         this.activatedToolcard = activatedToolcard;
+    }
+
+    public void setState(PlayerState state){
+        this.state = state;
     }
 }

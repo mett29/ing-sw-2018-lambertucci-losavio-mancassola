@@ -12,6 +12,15 @@ public class Die {
     }
 
     /**
+     * COpy constructor
+     * @param die object to deep copy
+     */
+    public Die(Die die){
+        this.value = die.getValue();
+        this.color = die.getColor();
+    }
+
+    /**
      * Getter of the Die value
      * @return the value
      */

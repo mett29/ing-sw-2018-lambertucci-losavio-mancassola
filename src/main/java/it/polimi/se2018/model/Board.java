@@ -7,7 +7,7 @@ import java.util.*;
  * This class represent the player's board
  * @version 1.1
  */
-public class Board implements Iterable<Cell> {
+public class Board implements Iterable<Cell>, Memento<Board> {
 
     private Cell[][] window;
     private static final int boardWidth = 5;
@@ -15,9 +15,24 @@ public class Board implements Iterable<Cell> {
     private int boardDifficulty;
 
     public Board(int boardDifficulty) {
-        this.window = new Cell[4][5];
+        this.window = new Cell[boardHeight][boardWidth];
         this.boardDifficulty = boardDifficulty;
         reset();
+    }
+
+    /**
+     * Copy constructor
+     * @param board object to deep copy
+     */
+    public Board(Board board){
+        this.window = new Cell[boardHeight][boardWidth];
+        this.boardDifficulty = board.getBoardDifficulty();
+        for (int i = 0; i < boardHeight; i++) {
+            for (int j = 0; j < boardWidth; j++) {
+                this.window[i][j] = new Cell(board.window[i][j].getRestriction());
+                this.window[i][j].setDie(new Die(board.window[i][j].getDie()));
+            }
+        }
     }
 
     /**
@@ -75,9 +90,7 @@ public class Board implements Iterable<Cell> {
      * @param die the Die object to set in the player's board
      */
     public void setDie(int x, int y, Die die) {
-        if (x < 0 || y < 0 || x > 4 || y > 3)
-            throw new InvalidParameterException();
-        window[x][y].setDie(die);
+        getCell(x, y).setDie(die);
     }
 
     /**
@@ -156,40 +169,19 @@ public class Board implements Iterable<Cell> {
      * This method reset the board
      */
     private void reset() {
-        for (Cell[] cells : window)
-            for (Cell cell : cells) cell.setDie(null);
+        for(Cell cell : this){
+            cell.setDie(null);
+        }
     }
 
     public int countDices() {
         int counter = 0;
-        for (Cell[] cells : window)
-            for (Cell cell : cells)
-                if (!cell.isEmpty())
-                    counter++;
-        return counter;
-    }
-
-    /**
-     * This method allow to save the board's state in order to restore it when it needs
-     * @return a BoardMemento object with the saved state
-     */
-    public BoardMemento saveToMemento() {
-        Cell[][] savedWindow = new Cell[4][5];
-        for (int i = 0; i < boardHeight; i++) {
-            for (int j = 0; j < boardWidth; j++) {
-                savedWindow[i][j] = new Cell(this.window[i][j].getRestriction());
-                savedWindow[i][j].setDie(new Die(this.window[i][j].getDie().getValue(), this.window[i][j].getDie().getColor()));
+        for(Cell cell : this) {
+            if (!cell.isEmpty()) {
+                counter++;
             }
         }
-        return new BoardMemento(savedWindow);
-    }
-
-    /**
-     * This method allow to restore the board's state previously saved
-     * @param boardMemento the object containing the saved state
-     */
-    public void undoFromMemento(BoardMemento boardMemento) {
-        this.window = boardMemento.getWindow();
+        return counter;
     }
 
     @Override
@@ -223,5 +215,16 @@ public class Board implements Iterable<Cell> {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    @Override
+    public Board saveState() {
+        return new Board(this);
+    }
+
+    @Override
+    public void restoreState(Board savedState) {
+        this.window = savedState.window;
+        this.boardDifficulty = savedState.getBoardDifficulty();
     }
 }
