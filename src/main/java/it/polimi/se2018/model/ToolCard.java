@@ -13,15 +13,33 @@ public class ToolCard implements Card{
         this.id = id;
     }
 
+    /**
+     * Get the color of the toolcard
+     * @return object to get
+     */
     public Color getColor() {
         return CardInfos.colors.get(id);
     }
 
+    /**
+     * Get the id of the toolcard
+     * @return object to get
+     */
+    public int getId() { return this.id; }
+
+    /**
+     * Get the description of the toolcard
+     * @return object to get
+     */
     @Override
     public String getDescription() {
         return CardInfos.descriptions.get(id);
     }
 
+    /**
+     * Get the title of the toolcard
+     * @return object to get
+     */
     @Override
     public String getTitle() {
         return CardInfos.titles.get(id);

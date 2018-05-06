@@ -174,6 +174,9 @@ public class Board implements Iterable<Cell>, Memento<Board> {
         }
     }
 
+    /**
+     * @return all dice on board
+     */
     public int countDices() {
         int counter = 0;
         for(Cell cell : this) {

@@ -31,8 +31,6 @@ public class Score {
         return ret;
     }
 
-    //sets all the 4 score values of the player
-
     /**
      * Setter of all the score values of the player
      * @param privCards score based on private objective cards
