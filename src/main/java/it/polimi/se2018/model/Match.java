@@ -107,7 +107,7 @@ public class Match {
      * @param action to perform
      * @return any error
      */
-    public PlacementError performAction(Action action) {
+    public void performAction(Action action) {
         // TODO
         action.perform();
     }

@@ -1,5 +1,7 @@
 package it.polimi.se2018.model;
 
+import com.sun.istack.internal.Nullable;
+
 /**
  * This class represents the object Cell of the board
  * @version 1.0
@@ -8,39 +10,46 @@ public class Cell {
     private Restriction restriction;
     private Die die;
 
-    public Cell(Restriction restriction) {
+    /**
+     * Create cell with a restriction
+     * @param restriction Restriction to be set inside the cell. Set to `null` for a cell with no restriction.
+     */
+    public Cell(@Nullable Restriction restriction) {
         this.die = null;
         this.restriction = restriction;
     }
 
     /**
-     * @param die the Die to check
-     * @return the related error
+     * Check placement errors if `die` was to be placed in this cell
+     * @param die The Die to check
+     * @return The related error
      */
     public PlacementError isDieAllowed(Die die) {
 
         PlacementError err = new PlacementError();
 
         // Check if the placed Die violate the restriction
-        err = PlacementError.union(err, restriction.isDieAllowed(die));
+        if(restriction != null) {
+            err = PlacementError.union(err, restriction.isDieAllowed(die));
+        }
 
         // Check if the Cell is occupied yet
         if (!isEmpty())
-            err = PlacementError.union(err, restriction.isDieAllowed(die));
+            err = PlacementError.union(err, new PlacementError(Flags.NOTEMPTY));
 
         return err;
     }
 
     /**
-     * @return the Die in the Cell
+     * @return The Die in the Cell
      */
     public Die getDie() {
         return this.die;
     }
 
     /**
-     * This method set a Die in the Cell
-     * @param die the Die to set
+     * Set die in this cell
+     * @param die The die to set
      */
     public void setDie(Die die) {
         this.die = die;

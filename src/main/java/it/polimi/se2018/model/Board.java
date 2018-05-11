@@ -14,10 +14,36 @@ public class Board implements Iterable<Cell>, Memento<Board> {
     private static final int boardHeight = 4;
     private int boardDifficulty;
 
+    /**
+     * Create board with a blank window frame (no restrictions)
+     * @param boardDifficulty Number of token to be assigned to the player who chooses this board
+     */
     public Board(int boardDifficulty) {
         this.window = new Cell[boardHeight][boardWidth];
         this.boardDifficulty = boardDifficulty;
-        reset();
+
+        for(int i = 0; i < boardWidth; i++){
+            for(int j = 0; j < boardWidth; j++){
+                //set window[i][j] to no restriction
+                this.window[i][j] = new Cell(null);
+            }
+        }
+    }
+
+    /**
+     * Create board with `pattern` window frame
+     * @param pattern Matrix of restrictions
+     * @param boardDifficulty Number of token to be assigned to the player who chooses this board
+     */
+    public Board(Restriction[][] pattern, int boardDifficulty){
+        this.window = new Cell[boardHeight][boardWidth];
+        this.boardDifficulty = boardDifficulty;
+
+        for (int i = 0; i < boardHeight; i++) {
+            for (int j = 0; j < boardWidth; j++) {
+                window[i][j] = new Cell(pattern[i][j]);
+            }
+        }
     }
 
     /**
@@ -46,16 +72,18 @@ public class Board implements Iterable<Cell>, Memento<Board> {
         PlacementError ret = new PlacementError();
 
         // Check if the placed Die violate the restriction
-        ret = PlacementError.union(ret, window[x][y].isDieAllowed(die));
+        ret = PlacementError.union(ret, getCell(x, y).isDieAllowed(die));
 
         List<Die> adjacentDies = getNeighbours(x, y);
 
         // Check that all the adjacent dies don't have the same color or the same value of the placed die
         for (Die neighbour : adjacentDies) {
-            if (neighbour.getColor() == die.getColor())
-                ret = PlacementError.union(ret, new PlacementError(Flags.COLOR));
-            if (neighbour.getValue() == die.getValue())
-                ret = PlacementError.union(ret, new PlacementError(Flags.VALUE));
+            if(neighbour != null) {
+                if (neighbour.getColor() == die.getColor())
+                    ret = PlacementError.union(ret, new PlacementError(Flags.COLOR));
+                if (neighbour.getValue() == die.getValue())
+                    ret = PlacementError.union(ret, new PlacementError(Flags.VALUE));
+            }
         }
 
         // Check if the Die is near other dices
@@ -80,8 +108,8 @@ public class Board implements Iterable<Cell>, Memento<Board> {
 
     public Cell getCell(int x, int y){
         if(x < 0 || y < 0 || x > 4 || y > 3)
-            throw new InvalidParameterException();
-        return window[x][y];
+            throw new NoSuchElementException();
+        return window[y][x];
     }
 
     /**
@@ -107,10 +135,21 @@ public class Board implements Iterable<Cell>, Memento<Board> {
         int aboveY = (y - 1 + boardHeight) % boardHeight;
         int belowY = (y + 1) % boardHeight;
 
-        adjacentDies.add(window[leftX][y].getDie());
-        adjacentDies.add(window[x][belowY].getDie());
-        adjacentDies.add(window[rightX][y].getDie());
-        adjacentDies.add(window[x][aboveY].getDie());
+        if(!getCell(leftX, y).isEmpty()) {
+            adjacentDies.add(getDie(leftX, y));
+        }
+
+        if(!getCell(x, belowY).isEmpty()) {
+            adjacentDies.add(getDie(x, belowY));
+        }
+
+        if(!getCell(rightX, y).isEmpty()) {
+            adjacentDies.add(getDie(rightX, y));
+        }
+
+        if(!getCell(x, aboveY).isEmpty()) {
+            adjacentDies.add(getDie(x, aboveY));
+        }
 
         return adjacentDies;
     }
@@ -122,7 +161,7 @@ public class Board implements Iterable<Cell>, Memento<Board> {
     public Cell[] getColumn(int index) {
         Cell[] col = new Cell[5];
         for(int row = 0; row < 4; row++)
-            col[row] = window[row][index];
+            col[row] = getCell(index, row);
         return col;
     }
 
@@ -200,17 +239,26 @@ public class Board implements Iterable<Cell>, Memento<Board> {
                 return index / 5; // integer division
             }
 
+            private int getNextX() {
+                return (index + 1) % 5;
+            }
+
+            private int getNextY() {
+                return (index + 1) / 5;
+            }
+
             @Override
             public boolean hasNext() {
-                return getX() < 5 && getY() < 4;
+                return getNextX() < 5 && getNextY() < 4;
             }
 
             @Override
             public Cell next() {
-                if (!hasNext())
+                if (!hasNext()) {
                     throw new NoSuchElementException();
+                }
                 index++;
-                return window[getX()][getY()];
+                return getCell(getX(), getY());
             }
 
             @Override

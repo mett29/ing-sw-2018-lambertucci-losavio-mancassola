@@ -78,4 +78,8 @@ public class PlacementError {
     public boolean hasError() {
         return !errorByte.isEmpty();
     }
+
+    public boolean isEqual(EnumSet<Flags> flags){
+        return errorByte.containsAll(flags);
+    }
 }
