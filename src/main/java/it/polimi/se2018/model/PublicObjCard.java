@@ -45,7 +45,7 @@ public class PublicObjCard implements ObjCard{
             tmpBonuses.put(0, (Board board) -> {
                 int sum = 0;
                 for(Cell[] row : board.getRows()){
-                    if(differentColors(Arrays.asList(row))){
+                    if(differentColors(Arrays.asList(row)) && fullList(Arrays.asList(row))){
                         sum += 6;
                     }
                 }
@@ -56,7 +56,7 @@ public class PublicObjCard implements ObjCard{
             tmpBonuses.put(1, (Board board) -> {
                 int sum = 0;
                 for(Cell[] column : board.getColumns()){
-                    if(differentColors(Arrays.asList(column))){
+                    if(differentColors(Arrays.asList(column)) && fullList(Arrays.asList(column))){
                         sum += 5;
                     }
                 }
@@ -67,7 +67,7 @@ public class PublicObjCard implements ObjCard{
             tmpBonuses.put(2, (Board board) -> {
                 int sum = 0;
                 for(Cell[] row : board.getRows()){
-                    if(differentValues(Arrays.asList(row))){
+                    if(differentValues(Arrays.asList(row)) && fullList(Arrays.asList(row))){
                         sum += 5;
                     }
                 }
@@ -78,7 +78,7 @@ public class PublicObjCard implements ObjCard{
             tmpBonuses.put(3, (Board board) -> {
                 int sum = 0;
                 for(Cell[] column : board.getColumns()){
-                    if(differentValues(Arrays.asList(column))){
+                    if(differentValues(Arrays.asList(column)) && fullList(Arrays.asList(column))) {
                         sum += 4;
                     }
                 }
@@ -113,7 +113,7 @@ public class PublicObjCard implements ObjCard{
             tmpBonuses.put(7, (Board board) -> {
                 ArrayList<Integer> counter = new ArrayList<>();
                 for(int i = 0; i < 6; i++){
-                    counter.add(i, numberOf(i, board));
+                    counter.add(i, numberOf(i+1, board));
                 }
                 int score = Collections.min(counter);
                 return score * 5;
@@ -146,12 +146,18 @@ public class PublicObjCard implements ObjCard{
             bonuses = Collections.unmodifiableMap(tmpBonuses);
         }
 
+        private static boolean fullList(List<Cell> elems) {
+            for (Cell elem : elems)
+                if (elem.isEmpty()) return false;
+            return true;
+        }
+
         /**
          * Check if there are not two or more dice with the same color in container
          * @param elems List to be checked
          * @return true if there is no duplicate, false otherwise
          */
-        private static boolean differentColors(List<Cell> elems){
+        private static boolean differentColors(List<Cell> elems) {
             Map<Color, Integer> count = new HashMap<>();
             for(Color color : Color.values()){
                 count.put(color, numberOf(color, elems));
@@ -223,15 +229,17 @@ public class PublicObjCard implements ObjCard{
          */
         private static boolean hasDiagonalSameColor(int x, int y, Board board){
             Die die = board.getDie(x, y);
-            Color color = die.getColor();
-            for(int[] i : diagonalNeighbours(x, y)) {
-                try {
-                    Die iDie = board.getDie(i[0], i[1]);
-                    if (color == iDie.getColor()) {
-                        return true;
+            if (die != null) {
+                Color color = die.getColor();
+                for (int[] i : diagonalNeighbours(x, y)) {
+                    try {
+                        Die iDie = board.getDie(i[0], i[1]);
+                        if (iDie != null) {
+                            if (color == iDie.getColor()) return true;
+                        }
+                    } catch (InvalidParameterException e) {
+                        // do nothing
                     }
-                } catch (InvalidParameterException e){
-                    // do nothing
                 }
             }
             return false;
@@ -245,10 +253,10 @@ public class PublicObjCard implements ObjCard{
          */
         private static List<int[]> diagonalNeighbours(int x, int y){
             List<int[]> ret = new ArrayList<>();
-            ret.add(new int[] {x-1, y-1});
-            ret.add(new int[] {x-1, y+1});
-            ret.add(new int[] {x+1, y-1});
-            ret.add(new int[] {x+1, y-1});
+            if (x - 1 >= 0 && y - 1 >= 0) ret.add(new int[] {x-1, y-1});
+            if (x - 1 >= 0 && y + 1 <= 3) ret.add(new int[] {x-1, y+1});
+            if (x + 1 <= 4 && y - 1 >= 0) ret.add(new int[] {x+1, y-1});
+            if (x + 1 <= 4 && y + 1 <= 3) ret.add(new int[] {x+1, y+1});
             return ret;
         }
     }
