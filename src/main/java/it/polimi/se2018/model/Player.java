@@ -16,6 +16,8 @@ public class Player {
 
     // Player constructor
     public Player(String name) {
+        if(name == null)
+            throw new NullPointerException("`name` must be not null");
         this.name = name;
     }
 
@@ -34,9 +36,8 @@ public class Player {
     }
 
     public void setBoard(Board board) {
-        if(board == null){
+        if(board == null)
             throw new NullPointerException("`board` must be not null");
-        }
         this.board = board;
         this.token = board.getBoardDifficulty();
     }
@@ -71,6 +72,8 @@ public class Player {
      * @param privateObjCard to assign to the player
      */
     public void setPrivateObjCard(PrivateObjCard privateObjCard) {
+        if(privateObjCard == null)
+            throw new NullPointerException("`privateObjCard` must be not null");
         this.privateObjCard = privateObjCard;
     }
 
@@ -86,11 +89,23 @@ public class Player {
      * @param activatedToolcard the toolcard activated by the player
      */
     public void setActivatedToolcard(ToolCard activatedToolcard) {
+        if(activatedToolcard == null)
+            throw new NullPointerException("`activatedToolcard` must be not null");
         this.activatedToolcard = activatedToolcard;
     }
 
+    /**
+     * Setter of the player's state
+     * @param state object to set
+     */
     public void setState(PlayerState state){
+        if(state == null)
+            throw new NullPointerException("`state` must be not null");
         this.state = state;
     }
+
+    /**
+     * @return the player's state
+     */
     public PlayerState getState() { return state; }
 }

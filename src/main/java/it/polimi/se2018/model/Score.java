@@ -1,5 +1,7 @@
 package it.polimi.se2018.model;
 
+import java.security.InvalidParameterException;
+
 //The score of the player
 public class Score {
     private int privateObjCards;
@@ -37,10 +39,14 @@ public class Score {
      * @param empty score based on empty cells of the player board
      */
     public void setValues(int privCards, int publCards, int tok, int empty) {
-        privateObjCards = privCards;
-        publicObjCards = publCards;
-        tokens = tok;
-        emptyElems = empty;
+        if(privCards >= 0 && publCards >= 0 && tok >= 0 && empty >= 0) {
+            privateObjCards = privCards;
+            publicObjCards = publCards;
+            tokens = tok;
+            emptyElems = empty;
+        } else {
+            throw new InvalidParameterException("All sub-scores must be greater or equal than 0");
+        }
     }
 
     /**

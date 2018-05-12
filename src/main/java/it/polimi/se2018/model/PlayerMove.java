@@ -9,6 +9,8 @@ public class PlayerMove<T> {
     private T move;
 
     public PlayerMove(Player actor, T move){
+        if(actor == null)
+            throw new NullPointerException("The actor doesn't exist");
         this.actor = actor;
         this.move = move;
     }
@@ -26,6 +28,8 @@ public class PlayerMove<T> {
      * @param state State to be setted
      */
     public void setActorState(PlayerState state){
+        if(state == null)
+            throw new NullPointerException("`state` must be not null");
         actor.setState(state);
     }
 }
