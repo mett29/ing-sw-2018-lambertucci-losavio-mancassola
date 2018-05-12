@@ -16,7 +16,13 @@ public class BoardCoord implements DieCoord {
     private Board savedBoard;
 
     public BoardCoord(Board board, int x, int y) {
+        if(board == null){
+            throw new NullPointerException();
+        }
         this.board = board;
+        if(!Board.checkIndex(x, y)){
+            throw new IndexOutOfBoundsException("x must be in [0, 4]; y must be in [0, 3]");
+        }
         this.x = x;
         this.y = y;
         this.savedBoard = null;

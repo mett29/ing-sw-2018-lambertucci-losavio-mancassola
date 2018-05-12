@@ -1,6 +1,5 @@
 package it.polimi.se2018.model;
 
-import com.sun.istack.internal.Nullable;
 
 /**
  * This class represents the object Cell of the board
@@ -14,7 +13,7 @@ public class Cell {
      * Create cell with a restriction
      * @param restriction Restriction to be set inside the cell. Set to `null` for a cell with no restriction.
      */
-    public Cell(@Nullable Restriction restriction) {
+    public Cell(Restriction restriction) {
         this.die = null;
         this.restriction = restriction;
     }

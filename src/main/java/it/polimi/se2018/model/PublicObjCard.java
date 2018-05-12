@@ -3,7 +3,6 @@ package it.polimi.se2018.model;
 import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.lang.Integer.min;
 

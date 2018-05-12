@@ -9,7 +9,7 @@ public interface Memento<T> {
 
     /**
      * Restore a previously saved state
-     * @param savedState
+     * @param savedState State to restore
      */
     public void restoreState(T savedState);
 }

@@ -15,28 +15,17 @@ public class Board implements Iterable<Cell>, Memento<Board> {
     private int boardDifficulty;
 
     /**
-     * Create board with a blank window frame (no restrictions)
-     * @param boardDifficulty Number of token to be assigned to the player who chooses this board
-     */
-    public Board(int boardDifficulty) {
-        this.window = new Cell[boardHeight][boardWidth];
-        this.boardDifficulty = boardDifficulty;
-
-        for(int i = 0; i < boardWidth; i++){
-            for(int j = 0; j < boardWidth; j++){
-                //set window[i][j] to no restriction
-                this.window[i][j] = new Cell(null);
-            }
-        }
-    }
-
-    /**
      * Create board with `pattern` window frame
      * @param pattern Matrix of restrictions
      * @param boardDifficulty Number of token to be assigned to the player who chooses this board
      */
     public Board(Restriction[][] pattern, int boardDifficulty){
         this.window = new Cell[boardHeight][boardWidth];
+
+        if(boardDifficulty <= 0){
+            throw new InvalidParameterException("Board Difficulty must be greater than 0");
+        }
+
         this.boardDifficulty = boardDifficulty;
 
         for (int i = 0; i < boardHeight; i++) {
@@ -56,7 +45,9 @@ public class Board implements Iterable<Cell>, Memento<Board> {
         for (int i = 0; i < boardHeight; i++) {
             for (int j = 0; j < boardWidth; j++) {
                 this.window[i][j] = new Cell(board.window[i][j].getRestriction());
-                this.window[i][j].setDie(new Die(board.window[i][j].getDie()));
+                if(board.window[i][j].getDie() != null) {
+                    this.window[i][j].setDie(new Die(board.window[i][j].getDie()));
+                }
             }
         }
     }
@@ -91,9 +82,8 @@ public class Board implements Iterable<Cell>, Memento<Board> {
             ret = PlacementError.union(ret, new PlacementError(Flags.NEIGHBOURS));
 
         // Check if the Die has been placed on an edge
-        if (countDices() == 0)
-            if (x != 0 && y != 0 && x != 4 && y != 3)
-                ret = PlacementError.union(ret, new PlacementError(Flags.EDGE));
+        if (x != 0 && y != 0 && x != 4 && y != 3)
+            ret = PlacementError.union(ret, new PlacementError(Flags.EDGE));
 
         return ret;
     }
@@ -107,8 +97,8 @@ public class Board implements Iterable<Cell>, Memento<Board> {
 
 
     public Cell getCell(int x, int y){
-        if(x < 0 || y < 0 || x > 4 || y > 3)
-            throw new NoSuchElementException();
+        if(!checkIndex(x, y))
+            throw new IndexOutOfBoundsException();
         return window[y][x];
     }
 
@@ -159,7 +149,7 @@ public class Board implements Iterable<Cell>, Memento<Board> {
      * @return the index(th) column
      */
     public Cell[] getColumn(int index) {
-        Cell[] col = new Cell[5];
+        Cell[] col = new Cell[4];
         for(int row = 0; row < 4; row++)
             col[row] = getCell(index, row);
         return col;
@@ -214,7 +204,7 @@ public class Board implements Iterable<Cell>, Memento<Board> {
     }
 
     /**
-     * @return all dice on board
+     * @return number of all dice on board
      */
     public int countDices() {
         int counter = 0;
@@ -229,7 +219,7 @@ public class Board implements Iterable<Cell>, Memento<Board> {
     @Override
     public Iterator<Cell> iterator() {
         return new Iterator<Cell>() {
-            private int index = 0;
+            private int index = -1;
 
             private int getX() {
                 return index % 5;
@@ -277,5 +267,9 @@ public class Board implements Iterable<Cell>, Memento<Board> {
     public void restoreState(Board savedState) {
         this.window = savedState.window;
         this.boardDifficulty = savedState.getBoardDifficulty();
+    }
+
+    public static boolean checkIndex(int x, int y){
+        return !(x < 0 || y < 0 || x > 4 || y > 3);
     }
 }

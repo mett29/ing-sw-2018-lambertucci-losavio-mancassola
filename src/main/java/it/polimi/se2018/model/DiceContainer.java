@@ -22,7 +22,11 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
         container = new HashMap<>();
         maxSize = other.maxSize;
         for(Die i : other){
-            insert(new Die(i));
+            if(i == null){
+                insert(null);
+            } else {
+                insert(new Die(i));
+            }
         }
     }
 

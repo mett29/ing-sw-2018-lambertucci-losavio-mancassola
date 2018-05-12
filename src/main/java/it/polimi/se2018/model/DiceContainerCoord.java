@@ -8,7 +8,13 @@ public class DiceContainerCoord implements DieCoord {
     private DiceContainer savedContainer;
 
     public DiceContainerCoord(DiceContainer container, int index) {
+        if(container == null){
+            throw new NullPointerException();
+        }
         this.container = container;
+        if(0 > index || index > container.getMaxSize()){
+            throw new IndexOutOfBoundsException("index must be in [0, container.maxSize[");
+        }
         this.index = index;
         savedContainer = null;
     }

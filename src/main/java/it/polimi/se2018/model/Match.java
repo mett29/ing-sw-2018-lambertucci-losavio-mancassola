@@ -1,6 +1,7 @@
 package it.polimi.se2018.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 //The class that describes the match
@@ -66,7 +67,7 @@ public class Match {
      * Getter of all the toolcards of the current match
      * @return all the toolcards
      */
-    public ArrayList<ToolCard> getToolCards() {
+    public List<ToolCard> getToolCards() {
         return toolCards;
     }
 
@@ -74,7 +75,7 @@ public class Match {
      * Getter of all the public objective cards of the current match
      * @return all the public objective cards
      */
-    public ArrayList<PublicObjCard> getPublicObjCards() {
+    public List<PublicObjCard> getPublicObjCards() {
         return publicObjCards;
     }
 
@@ -91,7 +92,7 @@ public class Match {
      * @param newDraftPool object to set
      */
     public void setDraftPool(DiceContainer newDraftPool) {
-        // TODO
+        draftPool = newDraftPool;
     }
 
     /**
@@ -105,10 +106,8 @@ public class Match {
     /**
      * Performs a specific action and returns any error
      * @param action to perform
-     * @return any error
      */
     public void performAction(Action action) {
-        // TODO
         action.perform();
     }
 }
