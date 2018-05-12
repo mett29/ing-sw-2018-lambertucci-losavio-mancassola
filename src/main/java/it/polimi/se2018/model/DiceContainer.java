@@ -19,14 +19,13 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
      * @param other object to deep copy
      */
     public DiceContainer(DiceContainer other){
+        if(other == null)
+            throw new NullPointerException("'other' must be not null");
         container = new HashMap<>();
         maxSize = other.maxSize;
         for(Die i : other){
-            if(i == null){
-                insert(null);
-            } else {
+            if(i != null)
                 insert(new Die(i));
-            }
         }
     }
 

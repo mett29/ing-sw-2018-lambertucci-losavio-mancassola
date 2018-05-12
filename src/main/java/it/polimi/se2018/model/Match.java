@@ -33,7 +33,7 @@ public class Match {
         this.roundTracker = new DiceContainer(10);
         diceBag = initDiceBag();
 
-        draftPool = new DiceContainer(5);
+        draftPool = new DiceContainer(players.size() + 1);
 
         scores = new HashMap<>();
     }

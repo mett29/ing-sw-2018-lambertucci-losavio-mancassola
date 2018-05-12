@@ -8,13 +8,14 @@ public class DiceContainerCoord implements DieCoord {
     private DiceContainer savedContainer;
 
     public DiceContainerCoord(DiceContainer container, int index) {
-        if(container == null){
+        if(container == null)
             throw new NullPointerException();
-        }
+
         this.container = container;
-        if(0 > index || index > container.getMaxSize()){
+
+        if(0 > index || index > container.getMaxSize())
             throw new IndexOutOfBoundsException("index must be in [0, container.maxSize[");
-        }
+
         this.index = index;
         savedContainer = null;
     }
@@ -23,17 +24,13 @@ public class DiceContainerCoord implements DieCoord {
      * Getter of the Die pointed by this coordinate
      * @return `Die` pointed by DieCoord
      */
-    public Die get() {
-        return this.container.getDie(index);
-    }
+    public Die get() { return this.container.getDie(index); }
 
     /**
      * Setter of the Die pointed by this coordinate
      * @param die object to set
      */
-    public void set(Die die) {
-        this.container.setDie(index, die);
-    }
+    public void set(Die die) { this.container.setDie(index, die); }
 
     /**
      * Check possible errors if `die` was to be placed in coordinate

@@ -103,7 +103,7 @@ public class MatchTest {
         assertArrayEquals(pub1, m1.getPublicObjCards().toArray());
         assertArrayEquals(toolcards1, m1.getToolCards().toArray());
 
-        DiceContainer dp = new DiceContainer(5);
+        DiceContainer dp = new DiceContainer(players1.size() + 1);
         m1.setDraftPool(dp);
         assertEquals(dp, m1.getDraftPool());
 
