@@ -33,6 +33,14 @@ public class Player {
         return this.board;
     }
 
+    public void setBoard(Board board) {
+        if(board == null){
+            throw new NullPointerException("`board` must be not null");
+        }
+        this.board = board;
+        this.token = board.getBoardDifficulty();
+    }
+
     /**
      * @return the number of tokens of the player
      */
@@ -45,9 +53,10 @@ public class Player {
      * @param token number of tokens
      */
     public void setToken(int token) {
-        if (this.board.getBoardDifficulty() == token)
-            this.token = token;
-        else throw new InvalidParameterException("The number of tokens must be equal to the board's difficulty.");
+        if(token < 0){
+            throw new InvalidParameterException("`token` must be grater than 0");
+        }
+        this.token = token;
     }
 
     /**
@@ -83,4 +92,5 @@ public class Player {
     public void setState(PlayerState state){
         this.state = state;
     }
+    public PlayerState getState() { return state; }
 }

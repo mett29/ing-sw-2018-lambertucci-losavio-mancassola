@@ -1,23 +1,41 @@
 package it.polimi.se2018.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.security.InvalidParameterException;
+import java.util.*;
 
 //The class that describes the match
 public class Match {
-    private Map<Player, Board> boards;
-    private ArrayList<Player> players;
+    private List<Player> players;
     private Map<Player, Score> scores;
     private DiceContainer draftPool;
     private DiceContainer roundTracker;
-    private ArrayList<ToolCard> toolCards;
-    private ArrayList<PublicObjCard> publicObjCards;
+    private List<ToolCard> toolCards;
+    private List<PublicObjCard> publicObjCards;
     private Extractor<Die> diceBag;
 
     //constructor for `Match` class
-    public Match(int numOfPlayers){
-        // TODO
+    public Match(List<Player> players, ToolCard[] toolCards, PublicObjCard[] publicObjCards){
+        if(players.size() < 2){
+            throw new InvalidParameterException("players.size() must be at least 2");
+        }
+        this.players = players;
+
+        if(toolCards.length != 3){
+            throw new InvalidParameterException("toolCards.length must be 3");
+        }
+        if(publicObjCards.length != 3){
+            throw new InvalidParameterException("publicObjCards.length must be 3");
+        }
+
+        this.toolCards = Arrays.asList(toolCards);
+        this.publicObjCards = Arrays.asList(publicObjCards);
+
+        this.roundTracker = new DiceContainer(10);
+        diceBag = initDiceBag();
+
+        draftPool = new DiceContainer(5);
+
+        scores = new HashMap<>();
     }
 
     /**
@@ -26,14 +44,14 @@ public class Match {
      * @return the board of a player
      */
     public Board getBoard(Player player) {
-        return boards.get(player);
+        return player.getBoard();
     }
 
     /**
      * Getter of all players that are playing the match
      * @return the players
      */
-    public ArrayList<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
@@ -96,11 +114,17 @@ public class Match {
     }
 
     /**
-     * Getter of the dice bag of the match
-     * @return the dicebag
+     * Extract a die from the dice bag
+     * @return Extracted die (with randomized value)
      */
-    public Extractor<Die> getDiceBag() {
-        return diceBag;
+    public Die extractDie(){
+        Die extractedDie = diceBag.extract();
+        extractedDie.randomize();
+        return extractedDie;
+    }
+
+    public void insertDie(Die die){
+        diceBag.insert(die);
     }
 
     /**
@@ -109,5 +133,19 @@ public class Match {
      */
     public void performAction(Action action) {
         action.perform();
+    }
+
+    /**
+     * Create a new dice bag
+     * @return New dice bag initialized with 90 (18 * 5 colors) dice
+     */
+    private static Extractor<Die> initDiceBag() {
+        Extractor<Die> ret = new Extractor<>();
+        for(Color c : Color.values()){
+            for(int i = 0; i < 18; i++){
+                ret.insert(new Die(0, c));
+            }
+        }
+        return ret;
     }
 }

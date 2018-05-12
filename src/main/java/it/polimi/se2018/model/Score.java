@@ -26,9 +26,7 @@ public class Score {
      * @return the 4 scores
      */
     public int[] getValues() {
-        int[] ret = {privateObjCards, publicObjCards, tokens, emptyElems};
-
-        return ret;
+        return new int[]{privateObjCards, publicObjCards, tokens, emptyElems};
     }
 
     /**

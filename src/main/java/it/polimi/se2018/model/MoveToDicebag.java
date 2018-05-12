@@ -2,9 +2,11 @@ package it.polimi.se2018.model;
 
 public class MoveToDicebag implements Action {
     private DieCoord dieCoord;
+    private Match match;
 
-    public MoveToDicebag(DieCoord dieCoord) {
+    public MoveToDicebag(DieCoord dieCoord, Match match) {
         this.dieCoord = dieCoord;
+        this.match = match;
     }
 
     @Override
@@ -14,6 +16,7 @@ public class MoveToDicebag implements Action {
 
     @Override
     public void perform() {
-        //TODO: need Match to implement
+        match.insertDie(dieCoord.get());
+        dieCoord.set(null);
     }
 }
