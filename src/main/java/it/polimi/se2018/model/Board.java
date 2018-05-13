@@ -225,9 +225,7 @@ public class Board implements Iterable<Cell>, Memento<Board> {
                 return index % 5;
             }
 
-            private int getY() {
-                return index / 5; // integer division
-            }
+            private int getY() { return index / 5; /*integer division*/ }
 
             private int getNextX() {
                 return (index + 1) % 5;
