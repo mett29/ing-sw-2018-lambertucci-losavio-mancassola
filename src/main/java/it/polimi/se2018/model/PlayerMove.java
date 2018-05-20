@@ -32,4 +32,9 @@ public class PlayerMove<T> {
             throw new NullPointerException("`state` must be not null");
         actor.setState(state);
     }
+
+    /**
+     * @return the actor of the move
+     */
+    public Player getActor() { return actor; }
 }

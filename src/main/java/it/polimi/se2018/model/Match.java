@@ -1,11 +1,14 @@
 package it.polimi.se2018.model;
 
+import it.polimi.se2018.utils.Extractor;
+
 import java.security.InvalidParameterException;
 import java.util.*;
 
 //The class that describes the match
 public class Match {
     private List<Player> players;
+    private ArrayList<Player> playerQueue;
     private Map<Player, Score> scores;
     private DiceContainer draftPool;
     private DiceContainer roundTracker;
@@ -54,6 +57,12 @@ public class Match {
     public List<Player> getPlayers() {
         return players;
     }
+
+    /**
+     * Getter of the player queue of the round
+     * @return the player queue
+     */
+    public ArrayList<Player> getPlayerQueue() { return playerQueue; }
 
     /**
      * Getter of the round tracker of the match

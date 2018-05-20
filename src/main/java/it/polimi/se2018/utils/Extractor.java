@@ -1,4 +1,4 @@
-package it.polimi.se2018.model;
+package it.polimi.se2018.utils;
 
 import java.util.ArrayList;
 import java.util.Random;
