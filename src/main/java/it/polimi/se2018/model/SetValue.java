@@ -1,6 +1,9 @@
 package it.polimi.se2018.model;
 
-//The class that describes the SetValue action
+/**
+ * This class describes the action 'SetValue'
+ * @author MicheleLambertucci
+ */
 public class SetValue implements Action {
     private DieCoord die;
     private int value;

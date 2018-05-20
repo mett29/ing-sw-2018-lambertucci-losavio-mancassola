@@ -1,6 +1,9 @@
 package it.polimi.se2018.model;
 
-//The class that contains the dice container and its index
+/**
+ * This class contains the DiceContainer and its index
+ * @author ontech7
+ */
 public class DiceContainerCoord implements DieCoord {
     private DiceContainer container;
     private int index;
@@ -43,6 +46,9 @@ public class DiceContainerCoord implements DieCoord {
         return new PlacementError();
     }
 
+    /**
+     * Helpers of the Memento pattern
+     */
     @Override
     public void saveState() {
         savedContainer = container.saveState();

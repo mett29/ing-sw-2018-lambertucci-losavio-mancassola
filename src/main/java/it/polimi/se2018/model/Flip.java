@@ -1,6 +1,9 @@
 package it.polimi.se2018.model;
 
-//The class that describes the Flip action
+/**
+ * This class describers the action FLIP
+ * @author MicheleLambertucci
+ */
 public class Flip implements Action {
     private DieCoord dieCoord;
 

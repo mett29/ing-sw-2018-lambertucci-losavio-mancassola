@@ -2,7 +2,10 @@ package it.polimi.se2018.model;
 
 import java.security.InvalidParameterException;
 
-//The score of the player
+/**
+ * This class represents the player's score in the game
+ * @author ontech7
+ */
 public class Score {
     private int privateObjCards;
     private int publicObjCards;

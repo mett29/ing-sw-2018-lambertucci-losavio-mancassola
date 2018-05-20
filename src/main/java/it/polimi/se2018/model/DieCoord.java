@@ -1,5 +1,9 @@
 package it.polimi.se2018.model;
 
+/**
+ * The interface implemented by {@link DiceContainerCoord}
+ * @author MicheleLambertucci
+ */
 public interface DieCoord {
     /**
      * Getter of the Die pointed by this coordinate

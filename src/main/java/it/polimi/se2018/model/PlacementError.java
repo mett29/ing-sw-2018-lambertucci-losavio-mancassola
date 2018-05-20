@@ -2,7 +2,10 @@ package it.polimi.se2018.model;
 
 import java.util.EnumSet;
 
-//The class that describes if there is any error in the placement
+/**
+ * This class represents the generic placement error
+ * @author MicheleLambertucci, ontech7
+ */
 public class PlacementError {
     private EnumSet<Flags> errorByte;
 
@@ -12,8 +15,6 @@ public class PlacementError {
 
     private PlacementError(EnumSet<Flags> flags) { errorByte = flags; }
 
-    //returns true if the die placed near another die has the same value
-
     /**
      * Check if the die placed near another die has the same value
      * @return true if same value
@@ -22,16 +23,14 @@ public class PlacementError {
         return errorByte.contains(Flags.VALUE);
     }
 
-    //returns true if the die placed near another die has the same color
     /**
-     * Check if the die placed near another die has the same value
+     * Check if the die placed near another die has the same color
      * @return true if same color
      */
     public boolean isColorError() {
         return errorByte.contains(Flags.COLOR);
     }
 
-    //returns true if the player is trying to place a die in a not-empty cell
     /**
      * Check if the player is trying to place a die in a not-empty cell
      * @return true if not empty
@@ -40,7 +39,6 @@ public class PlacementError {
         return errorByte.contains(Flags.NOTEMPTY);
     }
 
-    //returns true if the die is not near another die
     /**
      * Check if the die is not near another die
      * @return true if not near die
@@ -49,7 +47,6 @@ public class PlacementError {
         return errorByte.contains(Flags.NEIGHBOURS);
     }
 
-    //returns true if the first die is not on an edge
     /**
      * Check if the first die is not on an edge
      * @return true if not on edge

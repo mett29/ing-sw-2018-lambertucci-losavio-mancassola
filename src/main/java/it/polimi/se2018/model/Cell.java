@@ -3,6 +3,7 @@ package it.polimi.se2018.model;
 
 /**
  * This class represents the object Cell of the board
+ * @author mett29
  * @version 1.0
  */
 public class Cell {

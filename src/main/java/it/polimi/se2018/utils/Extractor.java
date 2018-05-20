@@ -3,7 +3,11 @@ package it.polimi.se2018.utils;
 import java.util.ArrayList;
 import java.util.Random;
 
-//The class that describes the extractor with generic
+/**
+ * This class describes the Extractor object
+ * @author ontech7
+ * @param <T>, generic object that needs to be extracted
+ */
 public class Extractor<T> {
     private ArrayList<T> container;
 

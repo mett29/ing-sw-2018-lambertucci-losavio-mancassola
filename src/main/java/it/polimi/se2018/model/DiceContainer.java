@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-//The class that describes a dice container
+/**
+ * This class describes a generic object which contains dice
+ * @author ontech7
+ */
 public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
     private Map<Integer, Die> container;
     private int maxSize;
@@ -30,7 +33,6 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
     }
 
     /**
-     * Getter of the container list
      * @return the container
      */
     public Map<Integer, Die> getDice() {
@@ -38,13 +40,15 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
     }
 
     /**
-     * Getter of the size of the container
-     * @return the size
+     * @return the container's size
      */
     public int getCurrentSize() {
         return container.size();
     }
 
+    /**
+     * @return the max value of the container's size
+     */
     public int getMaxSize(){
         return maxSize;
     }
@@ -64,6 +68,11 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
         setDie(size, die);
     }
 
+    /**
+     * Check if the container is empty or not
+     * @param index, the hypotethical position in the container
+     * @return true or false
+     */
     boolean isEmpty(int index){
         return !container.containsKey(index);
     }
@@ -85,6 +94,9 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
         };
     }
 
+    /**
+     * Helpers of the Memento pattern
+     */
     @Override
     public DiceContainer saveState() {
         return new DiceContainer(this);

@@ -2,6 +2,10 @@ package it.polimi.se2018.model;
 
 import java.util.EnumSet;
 
+/**
+ * This class describes the action 'PickState'
+ * @author MicheleLambertucci
+ */
 public class PickState extends PlayerState {
     private EnumSet<Component> activeContainers;
     private EnumSet<CellState> cellStates;

@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-//The class that describes the tool card
+/**
+ * This class represents the object ToolCard
+ * @author MicheleLambertucci, mett29
+ */
 public class ToolCard implements Card{
     private int id = 0;
 
@@ -45,6 +48,9 @@ public class ToolCard implements Card{
         return CardInfos.titles.get(id);
     }
 
+    /**
+     * Static class containing all the ToolCard's infos
+     */
     private static class CardInfos {
         static final Map<Integer, String> titles;
         static final Map<Integer, String> descriptions;

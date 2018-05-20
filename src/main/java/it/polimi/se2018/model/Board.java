@@ -5,6 +5,7 @@ import java.util.*;
 
 /**
  * This class represent the player's board
+ * @author mett29, MicheleLambertucci
  * @version 1.1
  */
 public class Board implements Iterable<Cell>, Memento<Board> {
@@ -62,7 +63,7 @@ public class Board implements Iterable<Cell>, Memento<Board> {
 
         PlacementError ret = new PlacementError();
 
-        // Check if the placed Die violate the restriction
+        // Check if the placed Die violates the restriction
         ret = PlacementError.union(ret, getCell(x, y).isDieAllowed(die));
 
         List<Die> adjacentDies = getNeighbours(x, y);
@@ -89,6 +90,8 @@ public class Board implements Iterable<Cell>, Memento<Board> {
     }
 
     /**
+     * @param x first coordinate
+     * @param y second coordinate
      * @return the Die in a specific position on the board
      */
     public Die getDie(int x, int y) {
@@ -96,6 +99,11 @@ public class Board implements Iterable<Cell>, Memento<Board> {
     }
 
 
+    /**
+     * @param x first coordinate of the Die object
+     * @param y second coordinate of the Die object
+     * @return the related Cell
+     */
     public Cell getCell(int x, int y){
         if(!checkIndex(x, y))
             throw new IndexOutOfBoundsException();
@@ -256,6 +264,9 @@ public class Board implements Iterable<Cell>, Memento<Board> {
         };
     }
 
+    /**
+     * Helpers of Memento pattern
+     */
     @Override
     public Board saveState() {
         return new Board(this);
@@ -267,6 +278,12 @@ public class Board implements Iterable<Cell>, Memento<Board> {
         this.boardDifficulty = savedState.getBoardDifficulty();
     }
 
+    /**
+     * This method checks that the coordinates don't overflow the limit of the board
+     * @param x first coordinate
+     * @param y second coordinate
+     * @return true or false
+     */
     public static boolean checkIndex(int x, int y){
         return !(x < 0 || y < 0 || x > 4 || y > 3);
     }

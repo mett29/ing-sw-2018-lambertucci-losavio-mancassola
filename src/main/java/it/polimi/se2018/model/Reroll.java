@@ -1,6 +1,9 @@
 package it.polimi.se2018.model;
 
-//The class that describes the Reroll action
+/**
+ * This class describes the action 'Reroll'
+ * @author MicheleLambertucci
+ */
 public class Reroll implements Action {
     private DieCoord dieCoord;
 

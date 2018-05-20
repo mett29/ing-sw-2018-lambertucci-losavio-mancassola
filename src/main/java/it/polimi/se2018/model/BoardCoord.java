@@ -1,10 +1,8 @@
 package it.polimi.se2018.model;
 
-import java.util.Observable;
-import java.util.Observer;
-
 /**
  * This is the class that contains the board and the coordinates
+ * @author mett29, MicheleLambertucci
  * @version 1.0
  */
 public class BoardCoord implements DieCoord {
@@ -43,6 +41,9 @@ public class BoardCoord implements DieCoord {
         return board.isDieAllowed(x, y, die);
     }
 
+    /**
+     * Helpers of Memento pattern
+     */
     @Override
     public void saveState() {
         savedBoard = board.saveState();

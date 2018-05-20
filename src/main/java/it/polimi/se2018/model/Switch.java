@@ -1,6 +1,9 @@
 package it.polimi.se2018.model;
 
-//The class that describes the Switch action
+/**
+ * This class describes the action 'Switch'
+ * @author MicheleLambertucci
+ */
 public class Switch implements Action {
     private DieCoord coord1;
     private DieCoord coord2;

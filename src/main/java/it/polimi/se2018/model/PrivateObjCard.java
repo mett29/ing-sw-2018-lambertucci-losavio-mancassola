@@ -2,7 +2,11 @@ package it.polimi.se2018.model;
 
 import java.util.*;
 
-//The class that describes the private objective card
+/**
+ * This class describes the object PrivateObjCard
+ * Implements {@link ObjCard}
+ * @author MicheleLambertucci
+ */
 public class PrivateObjCard implements ObjCard {
     private Color cardColor;
 
@@ -11,21 +15,31 @@ public class PrivateObjCard implements ObjCard {
     }
 
     /**
-     * Get the color of the Private Objctive Card
-     * @return color of the card
+     * @return the PrivateObjCard's color
      */
     public Color getColor() {
         return cardColor;
     }
 
+    /**
+     * @return the PrivateObjCard's title
+     */
     public String getTitle(){
         return "Sfumature " + CardInfos.colorNames.get(cardColor);
     }
 
+    /**
+     * @return the PrivateObjCard's description
+     */
     public String getDescription(){
         return "Somma dei valori su tutti i dadi " + CardInfos.colorNames.get(cardColor);
     }
 
+    /**
+     * This method calculate the bonus according to the PrivateObjCard
+     * @param board Board to be judged
+     * @return the bonus value
+     */
     public int getBonus(Board board){
         int sum = 0;
         for(Cell cell : board){

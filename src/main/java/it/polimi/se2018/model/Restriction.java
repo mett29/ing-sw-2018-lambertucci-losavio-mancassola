@@ -3,6 +3,7 @@ package it.polimi.se2018.model;
 /**
  * This class represents the Restriction of color and value present in the board
  * @version 1.1
+ * @author mett29
  */
 public class Restriction {
     private Color color;

@@ -1,10 +1,13 @@
 package it.polimi.se2018.model;
 
-//The interface that describes an action of a player
+/**
+ * This interface describes an action taken by a player
+ * @author MicheleLambertucci
+ */
 public interface Action {
     /**
-     * Check possible errors if action was to be performed
-     * @return
+     * Check possible errors before the action is performed
+     * @return the related error
      */
     public PlacementError check();
 

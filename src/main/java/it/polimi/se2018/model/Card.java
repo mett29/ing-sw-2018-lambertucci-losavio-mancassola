@@ -1,16 +1,18 @@
 package it.polimi.se2018.model;
 
-//The class that describes the card (objective card or tool card)
+/**
+ * This class describes the object Card (both objective card and tool card)
+ * @author MicheleLambertucci
+ * Extended by {@link ObjCard}
+ */
 public interface Card {
     /**
-     * Get the description of the card
-     * @return description
+     * @return the card's description
      */
     public String getDescription();
 
     /**
-     * Get the name of the card
-     * @return name
+     * @return the card's name
      */
     public String getTitle();
 }

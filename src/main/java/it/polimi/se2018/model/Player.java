@@ -3,8 +3,9 @@ package it.polimi.se2018.model;
 import java.security.InvalidParameterException;
 
 /**
- * This class describes the Player
+ * This class describes the object Player
  * @version 1.1
+ * @author mett29
  */
 public class Player {
     private Board board;

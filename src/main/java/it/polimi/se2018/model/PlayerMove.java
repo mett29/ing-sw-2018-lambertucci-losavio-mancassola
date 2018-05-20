@@ -2,6 +2,7 @@ package it.polimi.se2018.model;
 
 /**
  * A general purpose class that represents a move created by a player
+ * @author MicheleLambertucci
  * @param <T> Type of content of the move (DieCoord[] for cell selections, Integer for value selection, etc...)
  */
 public class PlayerMove<T> {

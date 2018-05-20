@@ -1,6 +1,9 @@
 package it.polimi.se2018.model;
 
-//The class that describes the color of a die or a card
+/**
+ * Enumerator that contains all the possible colors
+ * @author ontech7
+ */
 public enum Color {
     RED, BLUE, GREEN, PURPLE, YELLOW;
 }

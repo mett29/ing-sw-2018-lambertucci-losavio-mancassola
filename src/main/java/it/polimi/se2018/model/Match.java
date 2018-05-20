@@ -5,7 +5,10 @@ import it.polimi.se2018.utils.Extractor;
 import java.security.InvalidParameterException;
 import java.util.*;
 
-//The class that describes the match
+/**
+ * This class represents the Match object, which contains all the components necessary for defining the game's state
+ * @author MicheleLambertucci
+ */
 public class Match {
     private List<Player> players;
     private ArrayList<Player> playerQueue;

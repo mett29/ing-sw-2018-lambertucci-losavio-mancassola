@@ -6,7 +6,11 @@ import java.util.function.Function;
 
 import static java.lang.Integer.min;
 
-//The class that describes the public objective card
+/**
+ * This class describes the object PublicObjCard
+ * Implements {@link ObjCard}
+ * @author MicheleLambertucci, mett29
+ */
 public class PublicObjCard implements ObjCard{
     private int id;
     public PublicObjCard(int id){
@@ -23,13 +27,20 @@ public class PublicObjCard implements ObjCard{
         return CardInfos.titles.get(id);
     }
 
+    /**
+     * This method calls the related bonusFunction according to the PublicObjCard
+     * @param board Board to be judged
+     * @return the calculated score
+     */
     @Override
     public int getBonus(Board board) {
         Function<Board, Integer> bonusFunction = CardInfos.bonuses.get(id);
         return bonusFunction.apply(board);
     }
 
-
+    /**
+     * Static class containing all the PublicObjCard's infos
+     */
     private static class CardInfos {
         static final Map<Integer, String> titles;
         static final Map<Integer, String> descriptions;
@@ -146,6 +157,11 @@ public class PublicObjCard implements ObjCard{
             bonuses = Collections.unmodifiableMap(tmpBonuses);
         }
 
+        /**
+         * This method checks if a row or a columns is full of dice
+         * @param elems
+         * @return true if full
+         */
         private static boolean fullList(List<Cell> elems) {
             for (Cell elem : elems)
                 if (elem.isEmpty()) return false;

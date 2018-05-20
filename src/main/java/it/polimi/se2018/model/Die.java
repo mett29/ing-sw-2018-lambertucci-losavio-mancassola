@@ -3,6 +3,10 @@ package it.polimi.se2018.model;
 import java.security.InvalidParameterException;
 import java.util.Random;
 
+/**
+ * This class describes the object Die
+ * @author ontech7
+ */
 public class Die {
     private Color color;
     private int value;
@@ -17,7 +21,7 @@ public class Die {
     }
 
     /**
-     * COpy constructor
+     * Copy constructor
      * @param die object to deep copy
      */
     public Die(Die die){
@@ -28,16 +32,14 @@ public class Die {
     }
 
     /**
-     * Getter of the Die value
-     * @return the value
+     * @return the Die's value
      */
     public int getValue() {
         return this.value;
     }
 
     /**
-     * Getter of the Die color
-     * @return the color
+     * @return the Die's color
      */
     public Color getColor() {
         return this.color;
