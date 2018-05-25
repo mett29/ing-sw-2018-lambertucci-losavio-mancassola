@@ -12,5 +12,5 @@ public class PlayerState {
         this.state = newState;
     }
 
-    public EnumState getState() { return this.state; }
+    public EnumState get() { return this.state; }
 }

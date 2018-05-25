@@ -5,5 +5,5 @@ package it.polimi.se2018.model;
  * @author ontech7
  */
 public enum Component {
-    DRAFTPOOL, BOARD, ROUNDTRACKER
+    DRAFTPOOL, BOARD, ROUNDTRACKER, DICEBAG
 }

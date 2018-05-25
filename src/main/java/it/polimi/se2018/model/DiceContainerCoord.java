@@ -47,6 +47,17 @@ public class DiceContainerCoord implements DieCoord {
     }
 
     /**
+     * Transform a 'Die' attribute in a 'DieCoord' one
+     * @param die object to transform
+     * @return the object transformed
+     */
+    public static DieCoord asDieCoord(Die die) {
+        DieCoord dieCoord = new DiceContainerCoord(new DiceContainer(1), 0);
+        dieCoord.set(die);
+        return dieCoord;
+    }
+
+    /**
      * Helpers of the Memento pattern
      */
     @Override

@@ -76,6 +76,14 @@ public class PlacementError {
         return !errorByte.isEmpty();
     }
 
+    public boolean hasErrorFilter(EnumSet<Flags> filters){
+        EnumSet<Flags> tmpErrs = errorByte.clone();
+        tmpErrs.removeAll(filters);
+        return !tmpErrs.isEmpty();
+    }
+
+    public boolean hasNoErrorExceptEdge(){ return isEqual(EnumSet.of(Flags.EDGE)) || !hasError(); }
+
     boolean isEqual(EnumSet<Flags> flags){
         return errorByte.containsAll(flags);
     }

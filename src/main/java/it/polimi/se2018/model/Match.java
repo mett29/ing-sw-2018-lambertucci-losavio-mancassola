@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class Match {
     private List<Player> players;
-    private ArrayList<Player> playerQueue;
+    private List<Player> playerQueue;
     private Map<Player, Score> scores;
     private DiceContainer draftPool;
     private DiceContainer roundTracker;
@@ -65,7 +65,13 @@ public class Match {
      * Getter of the player queue of the round
      * @return the player queue
      */
-    public ArrayList<Player> getPlayerQueue() { return playerQueue; }
+    public List<Player> getPlayerQueue() { return playerQueue; }
+
+    /**
+     * Setter of the player queue of the round
+     * @param pq player queue to set
+     */
+    public void setPlayerQueue(List<Player> pq) { playerQueue = pq; }
 
     /**
      * Getter of the round tracker of the match
