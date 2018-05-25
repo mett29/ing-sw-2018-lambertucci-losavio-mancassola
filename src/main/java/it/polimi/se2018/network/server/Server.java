@@ -22,7 +22,7 @@ public class Server {
     private RMIServer rmiServer;
 
     public Server() throws RemoteException {
-//        this.clients = new HashMap<>();
+        //this.clients = new HashMap<>();
         this.clients = new ArrayList<>();
 
         this.socketServer = new SocketServer(this);

@@ -293,7 +293,7 @@ public class ToolCardController {
                 memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.DRAFTPOOL),EnumSet.of(CellState.FULL));
             });
-            queue10.add((memory, pm) -> {
+            /*queue10.add((memory, pm) -> {
                 Action a = new MoveToDicebag(memory.get(0), match);
                 PlacementError err = a.check();
                 boolean isOkay = !err.hasError();
@@ -304,7 +304,7 @@ public class ToolCardController {
                     memory.add(asDieCoord((Die)pm.getMove()));
                     return new PickState(EnumSet.of(Component.DICEBAG), EnumSet.of(CellState.FULL));
                 }
-            });
+            });*/
             queue10.add((memory, pm) -> {
                 int value = (int) pm.getMove();
                 if(value > 0 && value < 7) {

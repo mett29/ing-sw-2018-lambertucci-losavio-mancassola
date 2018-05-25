@@ -19,8 +19,9 @@ public class NetworkHandler extends Thread implements ServerInterface {
     NetworkHandler(String host, int port, ClientInterface client) {
         try {
             this.socketClient = new Socket(host, port);
-            this.ois = new ObjectInputStream(socketClient.getInputStream());
-            this.oos = new ObjectOutputStream(socketClient.getOutputStream());
+            this.oos = new ObjectOutputStream(new BufferedOutputStream(socketClient.getOutputStream()));
+            this.oos.flush();
+            this.ois = new ObjectInputStream(new BufferedInputStream(socketClient.getInputStream()));
             this.client = client;
         } catch (IOException e) {
             e.printStackTrace();
