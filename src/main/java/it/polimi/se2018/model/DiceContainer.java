@@ -79,19 +79,7 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
 
     @Override
     public Iterator<Die> iterator() {
-        return new Iterator<Die>() {
-            private int index = 0;
-
-            @Override
-            public boolean hasNext() {
-                return index <= getCurrentSize();
-            }
-
-            @Override
-            public Die next() {
-                return container.get(index++);
-            }
-        };
+        return container.values().iterator();
     }
 
     /**

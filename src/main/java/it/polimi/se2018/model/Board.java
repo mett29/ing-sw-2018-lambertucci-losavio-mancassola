@@ -64,6 +64,11 @@ public class Board implements Iterable<Cell>, Memento<Board> {
         PlacementError ret = new PlacementError();
 
         // Check if the placed Die violates the restriction
+        if(die == null){
+            return ret;
+        }
+
+        // Check if the placed Die violate the restriction
         ret = PlacementError.union(ret, getCell(x, y).isDieAllowed(die));
 
         List<Die> adjacentDies = getNeighbours(x, y);
