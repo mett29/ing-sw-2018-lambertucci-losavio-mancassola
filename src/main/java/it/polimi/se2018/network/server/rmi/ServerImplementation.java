@@ -1,5 +1,6 @@
 package it.polimi.se2018.network.server.rmi;
 
+import it.polimi.se2018.network.Message;
 import it.polimi.se2018.network.client.ClientInterface;
 import it.polimi.se2018.network.server.Server;
 import java.rmi.RemoteException;
@@ -12,14 +13,14 @@ public class ServerImplementation extends UnicastRemoteObject implements ServerI
     protected ServerImplementation(Server server) throws RemoteException {
         this.server = server;
     }
-    // Method used by RMIClient to do the login operation
+    // Method used by RMIConnection to do the login operation
     @Override
-    public void sendRequest(String username, ClientInterface client) throws RemoteException {
+    public void register(String username, ClientInterface client) throws RemoteException {
         server.addClient(username, client);
     }
 
     @Override
-    public void send(String message) throws RemoteException {
-        server.sendToAll(message);
+    public void send(Message message) throws RemoteException {
+        server.onReceive(message);
     }
 }

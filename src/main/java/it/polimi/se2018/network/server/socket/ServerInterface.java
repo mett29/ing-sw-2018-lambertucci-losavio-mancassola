@@ -1,6 +1,11 @@
 package it.polimi.se2018.network.server.socket;
 
-public interface ServerInterface {
+import it.polimi.se2018.network.Message;
 
-    public void send(String message);
+public interface ServerInterface {
+    /**
+     * Send message to server
+     * @param message Message to be sent
+     */
+    void send(Message message);
 }

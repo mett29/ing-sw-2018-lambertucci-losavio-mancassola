@@ -1,5 +1,6 @@
 package it.polimi.se2018.network.server.socket;
 
+import it.polimi.se2018.network.Message;
 import it.polimi.se2018.network.client.socket.SocketClient;
 
 import java.io.*;
@@ -10,15 +11,15 @@ public class VirtualClient extends Thread implements SocketClient {
     private final SocketServer server;
     private Socket clientConnection;
 
-    private InputStream inputStream;
-    private OutputStream outputStream;
+    private ObjectInputStream ois;
+    private ObjectOutputStream oos;
 
     public VirtualClient(SocketServer server, Socket clientConnection) {
         this.server = server;
         this.clientConnection = clientConnection;
         try {
-            this.inputStream = clientConnection.getInputStream();
-            this.outputStream = clientConnection.getOutputStream();
+            this.ois = new ObjectInputStream(clientConnection.getInputStream());
+            this.oos = new ObjectOutputStream(clientConnection.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -27,29 +28,33 @@ public class VirtualClient extends Thread implements SocketClient {
     @Override
     public void run() {
         try {
-            BufferedReader bufIn = new BufferedReader(new InputStreamReader(inputStream));
             boolean loop = true;
             while(loop) {
-                //System.out.println("Waiting for messages...");
-                String message = bufIn.readLine();
+                //When a message is received, forward to Server
+                Message message = (Message) ois.readObject();
                 if (message == null) {
                     loop = false;
+                    System.out.println("Holy shit received!");
+
                 } else {
-                    server.send(message);
+                    System.out.println("Message received!");
+                    if(message.content.equals("login")){
+                        server.register(message.username, this);
+                    } else {
+                        server.onReceive(message);
+                    }
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException|ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public void notify(String message) {
-        BufferedWriter bufOut = new BufferedWriter(new OutputStreamWriter(outputStream));
+    @Override
+    public void notify(Message message) {
         try {
-            bufOut.write(message);
-            bufOut.newLine();
-            bufOut.flush();
+            oos.writeObject(message);
         } catch (IOException e) {
             e.printStackTrace();
         }

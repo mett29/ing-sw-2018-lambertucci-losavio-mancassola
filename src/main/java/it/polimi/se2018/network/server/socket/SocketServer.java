@@ -1,5 +1,7 @@
 package it.polimi.se2018.network.server.socket;
 
+import it.polimi.se2018.network.Message;
+import it.polimi.se2018.network.client.ClientInterface;
 import it.polimi.se2018.network.server.Server;
 
 import java.io.IOException;
@@ -8,7 +10,7 @@ import java.net.Socket;
 
 public class SocketServer extends Thread {
 
-    private static ServerSocket serverSocket;
+    private ServerSocket serverSocket;
     private Server server;
 
     public SocketServer(Server server) {
@@ -26,16 +28,11 @@ public class SocketServer extends Thread {
 
     @Override
     public void run() {
-
-        //System.out.println("Waiting for clients...\n");
-
         while(true) {
             Socket newClientConnection;
             try {
                 newClientConnection = serverSocket.accept();
-                System.out.println("A new client connected.");
                 VirtualClient virtualClient = new VirtualClient(this, newClientConnection);
-                server.addClient("username", virtualClient);
                 virtualClient.start();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -43,7 +40,16 @@ public class SocketServer extends Thread {
         }
     }
 
-    public void send(String message) {
-        server.sendToAll(message);
+    public void register(String username, ClientInterface client){
+        server.addClient(username, client);
+    }
+
+    /**
+     * Forward message to Server
+     * This function is triggered when a message is received from a client (VirtualClient)
+     * @param message Received message
+     */
+    public void onReceive(Message message) {
+        server.onReceive(message);
     }
 }
