@@ -10,15 +10,16 @@ public class GameManager {
     private RoundManager roundManager;
     private List<ToolCard> toolCardExtracted;
     private List<PublicObjCard> publicObjCardExtracted;
-    private List<Player> firstPlayerQueue;
+    private List<Player> players;
 
     GameManager() {
         this.toolCardExtracted = extractToolCards();
         this.publicObjCardExtracted = extractPublicObjCards();
-        extractPrivateObjCard();
 
-        this.match = new Match(firstPlayerQueue, (ToolCard[])(toolCardExtracted.toArray()), (PublicObjCard[])(publicObjCardExtracted.toArray()));
-        //TODO: playerQueue
+        this.match = new Match(players, (ToolCard[])(toolCardExtracted.toArray()), (PublicObjCard[])(publicObjCardExtracted.toArray()));
+        //TODO: players joined in the match after clicking "Start" in the CLI/GUI
+
+        extractPrivateObjCard();
 
         this.roundManager = new RoundManager(match);
     }
