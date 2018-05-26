@@ -1,8 +1,11 @@
 package it.polimi.se2018.network.client;
 
-import it.polimi.se2018.network.Message;
+import it.polimi.se2018.network.message.LoginResponse;
+import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.rmi.RMIConnection;
 import it.polimi.se2018.network.client.socket.SocketConnection;
+import it.polimi.se2018.network.message.MoveMessage;
+import it.polimi.se2018.network.message.ToolCardResponse;
 
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -22,7 +25,7 @@ public class Client {
 
         //TODO: Start view
 
-        client.username = "Giorgio";
+        client.username = "Giovanni";
         try {
             client.connect();
         } catch (Exception e) {
@@ -38,10 +41,32 @@ public class Client {
         }
     }
 
-    public void notify(Message message){
-        System.out.println("Received message:");
-        System.out.println(message.content);
+    private void sendMove(ClientMove move) throws RemoteException {
+        connection.send(new MoveMessage(username, move));
+    }
 
-        //TODO: handle incoming message
+    public void notify(Message message){
+        switch(message.content){
+            case LOGIN:
+                if(((LoginResponse) message).response == Message.Type.FAILURE){
+                    // display no connection
+                    System.out.println("Not able to login. Change username?");
+                }
+                break;
+
+            case TOOLCARD_RESPONSE:
+                // display toolcard activation status
+                System.out.println("ToolCard Activation status: " + ((ToolCardResponse) message).response);
+                break;
+
+            case MATCH_STATE:
+                // update view with new model state
+                System.out.println("New match state received");
+                break;
+
+            default:
+                // Strange message received. This shouldn't happen
+                System.out.println("Strange and stranger things might happen while programming");
+        }
     }
 }

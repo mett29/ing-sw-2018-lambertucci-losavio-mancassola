@@ -1,6 +1,7 @@
 package it.polimi.se2018.network.client.socket;
 
-import it.polimi.se2018.network.Message;
+import it.polimi.se2018.network.message.LoginRequest;
+import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.Client;
 import it.polimi.se2018.network.client.IConnection;
 import it.polimi.se2018.network.server.socket.ServerInterface;
@@ -17,7 +18,7 @@ public class SocketConnection implements IConnection, SocketClient {
         this.client = client;
         NetworkHandler netHand = new NetworkHandler(HOST, PORT, this);
         netHand.start();
-        netHand.send(new Message(username, "login"));
+        netHand.send(new LoginRequest(username));
         this.server = netHand;
     }
 

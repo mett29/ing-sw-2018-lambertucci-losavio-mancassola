@@ -1,6 +1,6 @@
 package it.polimi.se2018.network.server.socket;
 
-import it.polimi.se2018.network.Message;
+import it.polimi.se2018.network.message.Message;
 
 public interface ServerInterface {
     /**

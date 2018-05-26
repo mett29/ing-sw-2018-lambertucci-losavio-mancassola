@@ -1,6 +1,6 @@
 package it.polimi.se2018.network.server.socket;
 
-import it.polimi.se2018.network.Message;
+import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.ClientInterface;
 import it.polimi.se2018.network.server.Server;
 
@@ -32,16 +32,19 @@ public class SocketServer extends Thread {
             Socket newClientConnection;
             try {
                 newClientConnection = serverSocket.accept();
-                VirtualClient virtualClient = new VirtualClient(this, newClientConnection);
-                virtualClient.start();
+                (new VirtualClient(this, newClientConnection)).start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void register(String username, ClientInterface client){
+    void register(String username, ClientInterface client){
         server.addClient(username, client);
+    }
+
+    void onDisconnect(String username){
+        server.onDisconnect(username);
     }
 
     /**
@@ -49,7 +52,7 @@ public class SocketServer extends Thread {
      * This function is triggered when a message is received from a client (VirtualClient)
      * @param message Received message
      */
-    public void onReceive(Message message) {
+    void onReceive(Message message) {
         server.onReceive(message);
     }
 }

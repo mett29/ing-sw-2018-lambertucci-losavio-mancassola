@@ -1,6 +1,7 @@
 package it.polimi.se2018.network.server.socket;
 
-import it.polimi.se2018.network.Message;
+import it.polimi.se2018.network.message.LoginRequest;
+import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.socket.SocketClient;
 
 import java.io.*;
@@ -9,6 +10,7 @@ import java.net.Socket;
 public class VirtualClient extends Thread implements SocketClient {
 
     private final SocketServer server;
+    private String username;
     private Socket clientConnection;
 
     private ObjectInputStream ois;
@@ -34,20 +36,17 @@ public class VirtualClient extends Thread implements SocketClient {
                 Message message = (Message) ois.readObject();
                 if (message == null) {
                     loop = false;
-                    System.out.println("Holy shit received!");
-
                 } else {
-                    System.out.println("Message received!");
-                    if(message.content.equals("login")){
+                    if(message.content == Message.Content.LOGIN && ((LoginRequest) message).type == Message.Type.REQUEST){
+                        this.username = message.username;
                         server.register(message.username, this);
                     } else {
                         server.onReceive(message);
                     }
                 }
             }
-
         } catch (IOException|ClassNotFoundException e) {
-            e.printStackTrace();
+            server.onDisconnect(username);
         }
     }
 
