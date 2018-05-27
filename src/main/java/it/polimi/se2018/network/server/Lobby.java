@@ -9,6 +9,7 @@ import it.polimi.se2018.network.message.MatchStateMessage;
 import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.message.MoveMessage;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Lobby implements Observer{
@@ -27,7 +28,7 @@ public class Lobby implements Observer{
      * Start match
      * This function creates a new controller, a new match and starts the controller.
      */
-    private void startMatch(){
+    private void startMatch() throws IOException {
         controller = new Controller(this);
     }
 

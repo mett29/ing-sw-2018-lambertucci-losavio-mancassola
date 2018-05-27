@@ -4,16 +4,20 @@ import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.server.Lobby;
 import it.polimi.se2018.utils.Extractor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
     private Match match;
     private RoundManager roundManager;
+    private JsonParser jsonParser = new JsonParser();
 
-    GameManager(Lobby lobby) {
+    GameManager(Lobby lobby) throws IOException {
         this.match = new Match(lobby.getPlayers(), extractToolCards(), extractPublicObjCards(), lobby);
         extractPrivateObjCard();
+        List<ParsedBoard> parsedBoards = jsonParser.getParsedBoards();
+        choosePattern(lobby, parsedBoards);
         match.notifyObservers();
         this.roundManager = new RoundManager(match);
     }
@@ -63,6 +67,42 @@ public class GameManager {
             publicObjCardExtracted.add(publicObjCardDeck.extract());
 
         return publicObjCardExtracted.toArray(new PublicObjCard[3]);
+    }
+
+    /**
+     * @return 4 parsed boards between which the player will choose
+     * @throws IOException
+     */
+    private List<ParsedBoard> extractPatterns(List<ParsedBoard> parsedBoards) throws IOException {
+        Extractor<ParsedBoard> parsedBoardExtractor = new Extractor<>();
+        for (ParsedBoard pb : parsedBoards) {
+            parsedBoardExtractor.insert(pb);
+        }
+        List<ParsedBoard> parsedBoardExtracted = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            parsedBoardExtracted.add(parsedBoardExtractor.extract());
+        }
+        return parsedBoardExtracted;
+    }
+
+    /**
+     * This method extracts a set of 4 patterns for each player and ask him to choose one
+     * @param lobby, containing all the players
+     * @param parsedBoards, containing all the parsed boards, load once in the constructor
+     * @throws IOException
+     */
+    private void choosePattern(Lobby lobby, List<ParsedBoard> parsedBoards) throws IOException {
+        List<Player> lobbyPlayers = lobby.getPlayers();
+        for (Player player : lobbyPlayers) {
+            List<ParsedBoard> extractedPatterns = extractPatterns(parsedBoards);
+            // Ask the player what pattern he wants
+            // TODO: asking the player
+            // Assuming the player has already chosen the pattern
+            ParsedBoard chosenPattern = extractedPatterns.get(0);
+            // Create a board with the same characteristics as chosenPattern
+            //Board chosenBoard = new Board(RESTRICTION[][], chosenPattern.getDifficulty());
+            //player.setBoard(chosenBoard);
+        }
     }
 
     /**
