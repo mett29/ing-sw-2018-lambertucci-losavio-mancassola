@@ -9,18 +9,18 @@ import java.util.*;
  * This class represents the Match object, which contains all the components necessary for defining the game's state
  * @author MicheleLambertucci
  */
-public class Match {
+public class Match extends Observable{
     private List<Player> players;
-    private List<Player> playerQueue;
+    private Queue<Player> playerQueue;
     private Map<Player, Score> scores;
     private DiceContainer draftPool;
     private DiceContainer roundTracker;
-    private List<ToolCard> toolCards;
-    private List<PublicObjCard> publicObjCards;
+    private final ToolCard[] toolCards;
+    private final PublicObjCard[] publicObjCards;
     private Extractor<Die> diceBag;
 
     //constructor for `Match` class
-    public Match(List<Player> players, ToolCard[] toolCards, PublicObjCard[] publicObjCards){
+    public Match(List<Player> players, ToolCard[] toolCards, PublicObjCard[] publicObjCards, Observer observer){
         if(players.size() < 2){
             throw new InvalidParameterException("players.size() must be at least 2");
         }
@@ -33,8 +33,8 @@ public class Match {
             throw new InvalidParameterException("publicObjCards.length must be 3");
         }
 
-        this.toolCards = Arrays.asList(toolCards);
-        this.publicObjCards = Arrays.asList(publicObjCards);
+        this.toolCards = toolCards;
+        this.publicObjCards = publicObjCards;
 
         this.roundTracker = new DiceContainer(10);
         diceBag = initDiceBag();
@@ -42,6 +42,8 @@ public class Match {
         draftPool = new DiceContainer(players.size() + 1);
 
         scores = new HashMap<>();
+
+        addObserver(observer);
     }
 
     /**
@@ -65,13 +67,15 @@ public class Match {
      * Getter of the player queue of the round
      * @return the player queue
      */
-    public List<Player> getPlayerQueue() { return playerQueue; }
+    public Queue<Player> getPlayerQueue() { return playerQueue; }
 
     /**
      * Setter of the player queue of the round
      * @param pq player queue to set
      */
-    public void setPlayerQueue(List<Player> pq) { playerQueue = pq; }
+    public void setPlayerQueue(Queue<Player> pq) {
+        playerQueue = pq;
+    }
 
     /**
      * Getter of the round tracker of the match
@@ -103,7 +107,7 @@ public class Match {
      * Getter of all the toolcards of the current match
      * @return all the toolcards
      */
-    public List<ToolCard> getToolCards() {
+    public ToolCard[] getToolCards() {
         return toolCards;
     }
 
@@ -111,7 +115,7 @@ public class Match {
      * Getter of all the public objective cards of the current match
      * @return all the public objective cards
      */
-    public List<PublicObjCard> getPublicObjCards() {
+    public PublicObjCard[] getPublicObjCards() {
         return publicObjCards;
     }
 
@@ -143,14 +147,6 @@ public class Match {
 
     public void insertDie(Die die){
         diceBag.insert(die);
-    }
-
-    /**
-     * Performs a specific action and returns any error
-     * @param action to perform
-     */
-    public void performAction(Action action) {
-        action.perform();
     }
 
     /**

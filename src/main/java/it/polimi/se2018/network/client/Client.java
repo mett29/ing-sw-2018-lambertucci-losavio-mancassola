@@ -41,7 +41,7 @@ public class Client {
         }
     }
 
-    private void sendMove(ClientMove move) throws RemoteException {
+    private void sendPick(ClientMove move) throws RemoteException {
         connection.send(new MoveMessage(username, move));
     }
 

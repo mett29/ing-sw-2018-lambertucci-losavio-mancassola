@@ -2,21 +2,21 @@ package it.polimi.se2018.controller;
 
 import it.polimi.se2018.model.Match;
 import it.polimi.se2018.model.PlayerMove;
+import it.polimi.se2018.network.server.Lobby;
 
 import java.util.Observable;
 import java.util.Observer;
 
-public class Controller implements Observer{
-    //private Match match;
+public class Controller {
     private GameManager gameManager;
 
-    public Controller() {
-        //this.match = match;
-        this.gameManager = new GameManager();
+    public Controller(Lobby lobby) {
+        this.gameManager = new GameManager(lobby);
     }
 
-    public void update(Observable o, Object move) {
-        if(gameManager.handleMove((PlayerMove)move))
+    public void handleMove(PlayerMove move) {
+        boolean matchEnded = gameManager.handleMove(move);
+        if(matchEnded)
             gameManager.calculateScore();
         //TODO
     }

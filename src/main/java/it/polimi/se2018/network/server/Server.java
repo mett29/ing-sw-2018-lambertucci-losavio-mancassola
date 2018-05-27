@@ -19,6 +19,7 @@ public class Server {
 
     private List<String> queue;
     private Map<String, Client> usernames;
+    private Map<String, Lobby> lobbies;
 
     private SocketServer socketServer;
     private RMIServer rmiServer;
@@ -26,6 +27,7 @@ public class Server {
     private Server() throws RemoteException {
         this.queue = new ArrayList<>();
         this.usernames = new HashMap<>();
+        this.lobbies = new HashMap<>();
 
         this.socketServer = new SocketServer(this);
         this.rmiServer = new RMIServer(this);
@@ -51,6 +53,14 @@ public class Server {
         socketServer.startServer(socketPort);
         socketServer.start();
         rmiServer.startServer(rmiPort);
+    }
+
+    private void newLobby(List<String> players){
+        Lobby lobby = new Lobby(players, this);
+        for (String username : players) {
+            lobbies.put(username, lobby);
+        }
+
     }
 
     public void addClient(String username, ClientInterface clientInterface) {
@@ -83,12 +93,24 @@ public class Server {
         }
     }
 
+    public void send(String username, Message message){
+        if(usernames.containsKey(username)){
+            usernames.get(username).notify(message);
+        }
+    }
+
     /**
      * Forward message to player's lobby
      * Function called when a client sends a message.
      * @param message Message received
      */
     public void onReceive(Message message){
-        System.out.println(message.username + ": " + message.content);
+        if(lobbies.containsKey(message.username)){
+            lobbies.get(message.username).onReceive(message);
+        } else {
+            System.err.println("Unhandled message received from: " + message.username);
+            // Ignore message received from unknown client
+            // He needs to re-register
+        }
     }
 }

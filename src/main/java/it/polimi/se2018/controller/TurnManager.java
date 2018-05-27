@@ -116,8 +116,10 @@ public class TurnManager {
          * @return true if it's on his 1st turn, false if it's on his 2nd turn
          */
         private static boolean checkTurn(Match match) {
-            for(int i = 1; i < match.getPlayerQueue().size(); i++) {
-                if(match.getPlayerQueue().get(i) == match.getPlayerQueue().get(0))
+            int queueSize = match.getPlayerQueue().size();
+            Player[] tmp = match.getPlayerQueue().toArray(new Player[queueSize]);
+            for(int i = 1; i < queueSize; i++) {
+                if(tmp[i] == tmp[0])
                     return true;
             }
             return false;
@@ -134,7 +136,7 @@ public class TurnManager {
         }
 
         /**
-         * Check if there are any die on match's roundtracker
+         * Check if there is any die on match's roundtracker
          * @param match of the game
          * @param number of dice on roundtracker
          * @return true if dice on roundtracker exceed the number, false otherwise

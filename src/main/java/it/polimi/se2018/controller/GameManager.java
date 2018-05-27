@@ -1,26 +1,20 @@
 package it.polimi.se2018.controller;
 
 import it.polimi.se2018.model.*;
+import it.polimi.se2018.network.server.Lobby;
 import it.polimi.se2018.utils.Extractor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
     private Match match;
     private RoundManager roundManager;
-    private List<ToolCard> toolCardExtracted;
-    private List<PublicObjCard> publicObjCardExtracted;
-    private List<Player> players;
 
-    GameManager() {
-        this.toolCardExtracted = extractToolCards();
-        this.publicObjCardExtracted = extractPublicObjCards();
-
-        this.match = new Match(players, (ToolCard[])(toolCardExtracted.toArray()), (PublicObjCard[])(publicObjCardExtracted.toArray()));
-        //TODO: players joined in the match after clicking "Start" in the CLI/GUI
-
+    GameManager(Lobby lobby) {
+        this.match = new Match(lobby.getPlayers(), extractToolCards(), extractPublicObjCards(), lobby);
         extractPrivateObjCard();
-
+        match.notifyObservers();
         this.roundManager = new RoundManager(match);
     }
 
@@ -41,32 +35,34 @@ public class GameManager {
      * Creates a deck of toolcards. Returns a set of 3 cards.
      * @return 3 toolcards randomly extracted.
      */
-    private List<ToolCard> extractToolCards() {
+    private static ToolCard[] extractToolCards() {
         Extractor<ToolCard> toolCardDeck = new Extractor<>();
 
         for(int n = 0; n < 12; n++)
             toolCardDeck.insert(new ToolCard(n));
 
+        List<ToolCard> toolCardExtracted = new ArrayList<>();
         for(int i = 0; i < 3; i++)
             toolCardExtracted.add(toolCardDeck.extract());
 
-        return toolCardExtracted;
+        return toolCardExtracted.toArray(new ToolCard[3]);
     }
 
     /**
      * Creates a deck of public objective cards. Return a set of 3 cards.
      * @return 3 public objective cards randomly extracted.
      */
-    private List<PublicObjCard> extractPublicObjCards() {
+    private static PublicObjCard[] extractPublicObjCards() {
         Extractor<PublicObjCard> publicObjCardDeck = new Extractor<>();
 
         for(int n = 0; n < 10; n++)
             publicObjCardDeck.insert(new PublicObjCard(n));
 
+        List<PublicObjCard> publicObjCardExtracted = new ArrayList<>();
         for(int i = 0; i < 3; i++)
             publicObjCardExtracted.add(publicObjCardDeck.extract());
 
-        return publicObjCardExtracted;
+        return publicObjCardExtracted.toArray(new PublicObjCard[3]);
     }
 
     /**
@@ -78,7 +74,7 @@ public class GameManager {
 
             privCards = player.getPrivateObjCard().getBonus(player.getBoard());
 
-            for (PublicObjCard publicObjCard : publicObjCardExtracted)
+            for (PublicObjCard publicObjCard : match.getPublicObjCards())
                 publCards += publicObjCard.getBonus(player.getBoard());
 
             tok = player.getToken();
@@ -86,6 +82,8 @@ public class GameManager {
             empty = 20 - player.getBoard().countDices();
 
             match.setScore(player, new Score(privCards, publCards, tok, empty));
+
+            match.notifyObservers();
         }
     }
 
@@ -95,9 +93,13 @@ public class GameManager {
      * @return true if the match is finished, false otherwise
      */
     boolean handleMove(PlayerMove move) {
-        if(roundManager.handleMove(move))
-            roundManager.newRound(match);
-
-        return match.getRoundTracker().getCurrentSize() == 10;
+        boolean roundFinished = roundManager.handleMove(move);
+        if(roundFinished) roundManager.newRound();
+        if(match.getRoundTracker().getCurrentSize() == 10){
+            return true;
+        } else {
+            match.notifyObservers();
+            return false;
+        }
     }
 }

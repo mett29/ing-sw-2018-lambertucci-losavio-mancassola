@@ -7,11 +7,11 @@ public class MatchStateMessage extends Message{
 
     /**
      * Constructor
-     *
      * @param match Match state contained in message
      */
-    protected MatchStateMessage(Match match) {
+    public MatchStateMessage(Match match) {
         super("admin", Content.MATCH_STATE);
+        //TODO
         payload = match;
     }
 }
