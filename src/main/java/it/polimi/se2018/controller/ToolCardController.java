@@ -29,7 +29,7 @@ public class ToolCardController {
      * @return the new state at the end of the operation
      */
     PlayerState handleMove(PlayerMove playerMove) {
-        PlayerState newState = operations.peek().apply(this, playerMove);
+            PlayerState newState = operations.peek().apply(this, playerMove);
 
         if(newState.get() != EnumState.REPEAT) {
             operations.poll();

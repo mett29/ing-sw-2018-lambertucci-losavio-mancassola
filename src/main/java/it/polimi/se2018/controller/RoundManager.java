@@ -33,7 +33,7 @@ public class RoundManager {
     /**
      * Creates a new round passing the first turn to the player next to him (clockwise procedure).
      */
-    void newQueue(){
+    private void newQueue(){
         Queue<Player> playerQueue = new PriorityQueue<>();
 
         List<Player> playerList = match.getPlayers();

@@ -5,7 +5,6 @@ import it.polimi.se2018.model.*;
 import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class TurnManager {
     private Match match;
@@ -52,7 +51,7 @@ public class TurnManager {
     boolean handleMove(PlayerMove playerMove) {
         PlayerState newState;
 
-        if(playerMove.getMove() == ToolCard.class) {
+        if(playerMove.getMove() instanceof ToolCard) {
             if(Checks.get(((ToolCard)playerMove.getMove()).getId()).apply(match, playerMove)) {
                 this.toolcard = new ToolCardController(match, (ToolCard) playerMove.getMove());
                 playerMove.getActor().setActivatedToolcard((ToolCard) playerMove.getMove());

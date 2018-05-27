@@ -2,12 +2,12 @@ package it.polimi.se2018.model;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 
-import javax.tools.Tool;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import static org.junit.Assert.*;
 
@@ -19,6 +19,8 @@ public class MatchTest {
     private ToolCard[] toolcards1, toolcards2;
 
     private PublicObjCard[] pub1, pub2;
+
+    private Observer observer;
 
     @Before
     public void setUp() throws Exception {
@@ -61,28 +63,29 @@ public class MatchTest {
         pub1 = new PublicObjCard[]{c1, c2, c3};
         pub2 = new PublicObjCard[]{c1};
 
+        observer = (obs, obj) -> { /*do nothing*/ };
     }
 
     @Test
     public void creationTest() throws Exception {
-        new Match(players1, toolcards1, pub1);
+        new Match(players1, toolcards1, pub1, observer);
 
         try {
-            new Match(players3, toolcards1, pub1);
+            new Match(players3, toolcards1, pub1, observer);
             fail("`players.size() == 1");
         } catch(InvalidParameterException e){
             // do nothing
         }
 
         try {
-            new Match(players1, toolcards2, pub1);
+            new Match(players1, toolcards2, pub1, observer);
             fail("`toolcards2.length != 3`");
         } catch(InvalidParameterException e){
             // do nothing
         }
 
         try {
-            new Match(players1, toolcards1, pub2);
+            new Match(players1, toolcards1, pub2, observer);
             fail("`pub2.length != 3`");
         } catch(InvalidParameterException e){
             // do nothing
@@ -91,7 +94,7 @@ public class MatchTest {
 
     @Test
     public void getSetTest() throws Exception {
-        Match m1 = new Match(players1, toolcards1, pub1);
+        Match m1 = new Match(players1, toolcards1, pub1, observer);
 
         assertArrayEquals(players1.toArray(), m1.getPlayers().toArray());
         for(Player p : players1){
@@ -100,8 +103,8 @@ public class MatchTest {
 
         assertEquals(10, m1.getRoundTracker().getMaxSize());
 
-        assertArrayEquals(pub1, m1.getPublicObjCards().toArray());
-        assertArrayEquals(toolcards1, m1.getToolCards().toArray());
+        assertArrayEquals(pub1, m1.getPublicObjCards());
+        assertArrayEquals(toolcards1, m1.getToolCards());
 
         DiceContainer dp = new DiceContainer(players1.size() + 1);
         m1.setDraftPool(dp);
