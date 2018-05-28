@@ -100,8 +100,20 @@ public class GameManager {
             // Assuming the player has already chosen the pattern
             ParsedBoard chosenPattern = extractedPatterns.get(0);
             // Create a board with the same characteristics as chosenPattern
-            //Board chosenBoard = new Board(RESTRICTION[][], chosenPattern.getDifficulty());
-            //player.setBoard(chosenBoard);
+            // Getting all the color and value restrictions and create a matrix containing all of them
+            Restriction[][] restrictions = new Restriction[4][5];
+            for (ColorRestrictions cr : chosenPattern.getColorRestrictions()) {
+                for (int[] coords : cr.getCoords()) {
+                    restrictions[coords[0]][coords[1]] = new Restriction(Color.valueOf(cr.getColor().toUpperCase()));
+                }
+            }
+            for (ValueRestrictions vr : chosenPattern.getValueRestrictions()) {
+                for (int[] coords : vr.getCoords()) {
+                    restrictions[coords[0]][coords[1]] = new Restriction(vr.getValue());
+                }
+            }
+            Board chosenBoard = new Board(restrictions, chosenPattern.getDifficulty());
+            player.setBoard(chosenBoard);
         }
     }
 

@@ -1,11 +1,9 @@
 package it.polimi.se2018.controller;
 
 import it.polimi.se2018.model.*;
-import it.polimi.se2018.utils.Extractor;
 
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import static it.polimi.se2018.model.DiceContainerCoord.asDieCoord;
 
@@ -19,7 +17,7 @@ public class ToolCardController {
         this.match = match;
         this.id = toolCard.getId();
         this.memory = new ArrayList<>();
-        //TODO: this.operations = Operations.ops.get(this.id).clone();
+        this.operations = Operations.ops.get(this.id);
     }
 
     /**
@@ -383,8 +381,6 @@ public class ToolCardController {
             ops = Collections.unmodifiableMap(tmpOps);
         }
 
-        //TODO: clone queue
-
         /**
          * Gets a specified queue of operations.
          * @param mapIndex toolcard id selected
@@ -400,7 +396,11 @@ public class ToolCardController {
          * @return cloned queue
          */
         private static Queue cloneQueue(Queue q){
-            return q;
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> clonedQueue = new PriorityQueue<>();
+            for (Object obj : q.toArray()) {
+                clonedQueue.add((BiFunction<ToolCardController, PlayerMove, PlayerState>) obj);
+            }
+            return clonedQueue;
         }
     }
 }
