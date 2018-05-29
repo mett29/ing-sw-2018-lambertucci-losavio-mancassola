@@ -10,7 +10,7 @@ import static it.polimi.se2018.model.DiceContainerCoord.asDieCoord;
 public class ToolCardController {
     private Match match;
     private int id;
-    private Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> operations;
+    private List<BiFunction<ToolCardController, PlayerMove, PlayerState>> operations;
     private List<DieCoord> memory;
 
     ToolCardController(Match match, ToolCard toolCard) {
@@ -20,6 +20,10 @@ public class ToolCardController {
         this.operations = Operations.ops.get(this.id);
     }
 
+    public List<BiFunction<ToolCardController, PlayerMove, PlayerState>> getOperations() {
+        return operations;
+    }
+
     /**
      * Applies the player's move on the first operation of the ops Queue.
      * If the returned state is REPEAT, the operation must be repeated. Poll it otherwise.
@@ -27,10 +31,10 @@ public class ToolCardController {
      * @return the new state at the end of the operation
      */
     PlayerState handleMove(PlayerMove playerMove) {
-            PlayerState newState = operations.peek().apply(this, playerMove);
+        PlayerState newState = operations.get(0).apply(this, playerMove);
 
         if(newState.get() != EnumState.REPEAT) {
-            operations.poll();
+            operations.remove(0);
         }
 
         return newState;
@@ -40,12 +44,12 @@ public class ToolCardController {
      * A static class where belongs all operations of every toolcard.
      */
     private static class Operations{
-        static final Map<Integer, Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>>> ops;
+        static final Map<Integer, List<BiFunction<ToolCardController, PlayerMove, PlayerState>>> ops;
 
         static {
-            Map<Integer, Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>>> tmpOps = new HashMap<>();
+            Map<Integer, List<BiFunction<ToolCardController, PlayerMove, PlayerState>>> tmpOps = new HashMap<>();
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue0 = new PriorityQueue<>(3);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue0 = new ArrayList<>();
 
             queue0.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue0.add((tcc, pm) -> {
@@ -77,7 +81,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue1 = new PriorityQueue<>(3);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue1 = new ArrayList<>();
+
             queue1.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue1.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -100,7 +105,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue2 = new PriorityQueue<>(3);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue2 = new ArrayList<>();
+
             queue2.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue2.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -123,7 +129,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue3 = new PriorityQueue<>(6);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue3 = new ArrayList<>();
+
             queue3.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue3.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -163,7 +170,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue4 = new PriorityQueue<>(3);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue4 = new ArrayList<>();
+
             queue4.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
@@ -188,7 +196,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue5 = new PriorityQueue<>(2);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue5 = new ArrayList<>();
+
             queue5.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
@@ -209,7 +218,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue6 = new PriorityQueue<>(1);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue6 = new ArrayList<>();
+
             queue6.add((tcc, pm) -> {
                 for(DieCoord die : (DieCoord[])(pm.getMove())){
                     Action a = new Reroll(die);
@@ -222,7 +232,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue7 = new PriorityQueue<>(2);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue7 = new ArrayList<>();
+
             queue7.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
@@ -243,7 +254,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue8 = new PriorityQueue<>(2);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue8 = new ArrayList<>();
+
             queue8.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
@@ -265,7 +277,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue9 = new PriorityQueue<>(2);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue9 = new ArrayList<>();
+
             queue9.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
@@ -286,7 +299,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue10 = new PriorityQueue<>(4);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue10 = new ArrayList<>();
+
             queue10.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.DRAFTPOOL),EnumSet.of(CellState.FULL));
@@ -330,7 +344,8 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue11 = new PriorityQueue<>(2);
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue11 = new ArrayList<>();
+
             queue11.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.ROUNDTRACKER), EnumSet.of(CellState.FULL));
@@ -386,21 +401,21 @@ public class ToolCardController {
          * @param mapIndex toolcard id selected
          * @return a cloned queue of operations.
          */
-        Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> get(int mapIndex){
+        /*static List<BiFunction<ToolCardController, PlayerMove, PlayerState>> get(int mapIndex){
             return cloneQueue(ops.get(mapIndex));
-        }
+        }*/
 
         /**
          * Clone a queue
          * @param q queue to clone
          * @return cloned queue
          */
-        private static Queue cloneQueue(Queue q){
-            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> clonedQueue = new PriorityQueue<>();
+        /*private static List cloneQueue(Queue q){
+            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> clonedQueue = new ArrayList<>();
             for (Object obj : q.toArray()) {
                 clonedQueue.add((BiFunction<ToolCardController, PlayerMove, PlayerState>) obj);
             }
             return clonedQueue;
-        }
+        }*/
     }
 }
