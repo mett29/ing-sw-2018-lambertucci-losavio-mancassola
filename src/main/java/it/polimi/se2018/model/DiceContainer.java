@@ -73,7 +73,7 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
      * @param index, the hypotethical position in the container
      * @return true or false
      */
-   public boolean isEmpty(int index){
+    public boolean isEmpty(int index){
         return !container.containsKey(index);
     }
 

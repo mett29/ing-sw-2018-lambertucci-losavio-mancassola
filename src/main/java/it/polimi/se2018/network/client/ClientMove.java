@@ -8,16 +8,20 @@ import it.polimi.se2018.model.PlayerMove;
  * Since client can't reference any object in Model (i.e. the board), there is the need to have some kind of object representing a move in the client.
  * This object can be sent over the network and can be translated to PlayerMove in server via `toPlayerMove()`.
  */
-public class ClientMove {
-    //TODO
+public abstract class ClientMove {
+    public final ContentType contentType;
+    protected ClientMove(ContentType contentType){
+        this.contentType = contentType;
+    }
+
+    public enum ContentType {
+        BOARD_COORD, DICE_CONTAINER_COORD, VALUE, UPDOWN, PICK_DIE, PASS
+    }
 
     /**
      * Translate ClientMove to a PlayerMove object, which helds references to `match` components
      * @param match
      * @return
      */
-    public PlayerMove toPlayerMove(Match match){
-        //TODO
-        return null;
-    }
+    public abstract PlayerMove toPlayerMove(Match match);
 }

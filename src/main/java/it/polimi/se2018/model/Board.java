@@ -125,12 +125,12 @@ public class Board implements Iterable<Cell>, Memento<Board> {
     }
 
     /**
-     * This method returns the 8 Dies that are adjacent to a specific cell
+     * This method returns the 4 Dice that are adjacent to a specific cell
      * @param x first coordinate of the Die
      * @param y second coordinate of the Die
-     * @return Die[] containing the 8 adjacent dies
+     * @return Die[] containing the 4 adjacent dies
      */
-    private List<Die> getNeighbours(int x, int y) {
+    public List<Die> getNeighbours(int x, int y) {
         List<Die> adjacentDies = new ArrayList<>();
 
         int leftX = (x - 1 + boardWidth) % boardWidth;

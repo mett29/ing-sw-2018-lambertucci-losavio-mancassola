@@ -1,11 +1,11 @@
 package it.polimi.se2018.network.client;
 
-import it.polimi.se2018.network.message.LoginResponse;
-import it.polimi.se2018.network.message.Message;
+import it.polimi.se2018.network.message.*;
 import it.polimi.se2018.network.client.rmi.RMIConnection;
 import it.polimi.se2018.network.client.socket.SocketConnection;
-import it.polimi.se2018.network.message.MoveMessage;
-import it.polimi.se2018.network.message.ToolCardResponse;
+import it.polimi.se2018.view.GUI.GUI;
+import it.polimi.se2018.view.ViewInterface;
+import javafx.application.Application;
 
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -15,25 +15,51 @@ public class Client {
     private boolean rmi;
     private String username;
     private IConnection connection;
+    private ViewInterface view;
 
-    private Client(){
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setConnection(boolean isRmi){
+        rmi = isRmi;
+    }
+
+    public boolean isRmi(){
+        return rmi;
+    }
+
+    public Client(){
         rmi = false;
     }
 
-    public static void main(String[] args){
-        Client client = new Client();
+    private static boolean useFX = true;
 
-        //TODO: Start view
+    public static void main(String[] args) {
+        if(useFX) {
+            Application.launch(GUI.class, args);
+        } else {
+            ViewInterface view = new GUI();
+            Client client = new Client();
+            client.setView(view);
 
-        client.username = "Giovanni";
-        try {
-            client.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
+            view.askLogin();
+            view.askTypeOfConnection();
+
+            try {
+                client.connect();
+                view.waitFor();
+            } catch (Exception e) {
+                view.onConnectionError();
+            }
         }
     }
 
-    private void connect() throws RemoteException, NotBoundException, MalformedURLException {
+    public void connect() throws RemoteException, NotBoundException, MalformedURLException {
         if(rmi){
             connection = new RMIConnection(this, username);
         } else {
@@ -41,32 +67,44 @@ public class Client {
         }
     }
 
-    private void sendPick(ClientMove move) throws RemoteException {
-        connection.send(new MoveMessage(username, move));
+    public void sendMove(ClientMove move) {
+        try {
+            connection.send(new MoveMessage(username, move));
+        } catch (RemoteException e) {
+            view.onConnectionError();
+        }
     }
 
     public void notify(Message message){
         switch(message.content){
             case LOGIN:
-                if(((LoginResponse) message).response == Message.Type.FAILURE){
-                    // display no connection
-                    System.out.println("Not able to login. Change username?");
-                }
+                view.onConnect();
                 break;
 
             case TOOLCARD_RESPONSE:
-                // display toolcard activation status
-                System.out.println("ToolCard Activation status: " + ((ToolCardResponse) message).response);
+                view.onToolCardActivationResponse(((ToolCardResponse) message).response == Message.Type.OK);
                 break;
 
             case MATCH_STATE:
-                // update view with new model state
-                System.out.println("New match state received");
+                view.updateMatch(((MatchStateMessage) message).payload);
                 break;
 
             default:
                 // Strange message received. This shouldn't happen
                 System.out.println("Strange and stranger things might happen while programming");
+        }
+    }
+
+    public void setView(ViewInterface view) {
+        this.view = view;
+    }
+
+    public void activateToolCard(int index) {
+        Message message = new ToolCardRequest(username, index);
+        try {
+            connection.send(message);
+        } catch (Exception e) {
+            view.onConnectionError();
         }
     }
 }

@@ -5,5 +5,19 @@ package it.polimi.se2018.model;
  * @author ontech7
  */
 public enum Component {
-    DRAFTPOOL, BOARD, ROUNDTRACKER, DICEBAG
+    DRAFTPOOL, BOARD, ROUNDTRACKER, DICEBAG;
+
+    @Override
+    public String toString() {
+        switch(this.ordinal()){
+            case 0:
+                return "Draft Pool";
+            case 1:
+                return "Board";
+            case 2:
+                return "Round Tracker";
+            default:
+                return "Component";
+        }
+    }
 }

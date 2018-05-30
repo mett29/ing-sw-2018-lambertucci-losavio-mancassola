@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.LoginController">
+   <children>
+      <HBox prefHeight="200.0" prefWidth="600.0">
+         <children>
+            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Label contentDisplay="CENTER" text="Sagrada Online" textAlignment="CENTER" />
+            <Region layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <VBox prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <HBox alignment="CENTER">
+               <children>
+                  <TextField fx:id="username" prefHeight="25.0" prefWidth="144.0" promptText="username">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onClickLogin" text="Login" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="27.0" prefWidth="600.0">
+               <children>
+                  <ChoiceBox fx:id="connectionTypeBox" prefHeight="25.0" prefWidth="200.0" />
+               </children>
+            </HBox>
+            <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

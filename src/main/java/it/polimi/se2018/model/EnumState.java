@@ -5,5 +5,26 @@ package it.polimi.se2018.model;
  * @author ontech7
  */
 public enum EnumState {
-    IDLE, YOUR_TURN, PICK, VALUE, UPDOWN, NEXT, REPEAT
+    IDLE, YOUR_TURN, PICK, VALUE, UPDOWN, NEXT, REPEAT;
+
+    @Override
+    public String toString() {
+        switch(this){
+            case IDLE:
+                return "Idle";
+            case YOUR_TURN:
+                return "Your turn";
+            case PICK:
+                return "Pick cell";
+            case VALUE:
+                return "Pick value";
+            case UPDOWN:
+                return "Pick +/-";
+            case NEXT:
+                return "???";
+            case REPEAT:
+                return "Repeat";
+        }
+        return "";
+    }
 }

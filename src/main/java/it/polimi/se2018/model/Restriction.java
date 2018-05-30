@@ -45,4 +45,13 @@ public class Restriction {
     private enum RestrictionType {
         COLOR, VALUE
     }
+
+    @Override
+    public String toString() {
+        if(type == RestrictionType.COLOR){
+            return this.color.toString();
+        } else {
+            return "" + this.value;
+        }
+    }
 }
