@@ -1,12 +1,12 @@
-package it.polimi.se2018.controller;
+package it.polimi.se2018.utils;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
-import it.polimi.se2018.model.Board;
 import com.google.gson.Gson;
+import it.polimi.se2018.network.server.ParsedBoard;
+
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,61 +41,5 @@ public class JsonParser {
      */
     public List<ParsedBoard> getParsedBoards() {
         return parsedBoards;
-    }
-}
-
-// These classes are needed by GSON for the loading process
-class ParsedBoard {
-    private List<Board> boards = new ArrayList<>();
-    private String name;
-    private int difficulty;
-    private List<ColorRestrictions> colorRestrictions;
-    private List<ValueRestrictions> valueRestrictions;
-
-
-    public List<Board> getBoards() {
-        return boards;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getDifficulty() {
-        return difficulty;
-    }
-
-    public List<ColorRestrictions> getColorRestrictions() {
-        return colorRestrictions;
-    }
-
-    public List<ValueRestrictions> getValueRestrictions() {
-        return valueRestrictions;
-    }
-}
-
-class ColorRestrictions {
-    private String color;
-    private int[][] coords;
-
-    public String getColor() {
-        return color;
-    }
-
-    public int[][] getCoords() {
-        return coords;
-    }
-}
-
-class ValueRestrictions {
-    private Integer value;
-    private int[][] coords;
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public int[][] getCoords() {
-        return coords;
     }
 }

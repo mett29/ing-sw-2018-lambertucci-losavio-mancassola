@@ -2,8 +2,10 @@ package it.polimi.se2018.controller;
 
 import it.polimi.se2018.model.PlayerMove;
 import it.polimi.se2018.network.server.Lobby;
+import it.polimi.se2018.network.server.ParsedBoard;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Controller {
     private GameManager gameManager;
@@ -33,5 +35,12 @@ public class Controller {
      */
     public boolean activateToolcard(String username, int toolCardId) {
         return gameManager.activateToolcard(username, toolCardId);
+    }
+
+    /**
+     * @return the 4 extracted patterns between which the player will chose
+     */
+    public List<ParsedBoard> extractPatterns() {
+        return this.gameManager.extractPatterns();
     }
 }

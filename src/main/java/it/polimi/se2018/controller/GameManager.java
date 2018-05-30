@@ -2,7 +2,8 @@ package it.polimi.se2018.controller;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.server.Lobby;
-import it.polimi.se2018.utils.Extractor;
+import it.polimi.se2018.network.server.ParsedBoard;
+import it.polimi.se2018.utils.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,13 +12,13 @@ import java.util.List;
 class GameManager {
     private Match match;
     private RoundManager roundManager;
+    private List<ParsedBoard> parsedBoards;
     private JsonParser jsonParser = new JsonParser();
 
     GameManager(Lobby lobby) throws IOException {
         this.match = new Match(lobby.getPlayers(), extractToolCards(), extractPublicObjCards(), lobby);
         extractPrivateObjCard();
-        List<ParsedBoard> parsedBoards = jsonParser.getParsedBoards();
-        choosePattern(lobby, parsedBoards);
+        this.parsedBoards = jsonParser.getParsedBoards();
         match.notifyObservers();
         this.roundManager = new RoundManager(match);
     }
@@ -71,11 +72,10 @@ class GameManager {
 
     /**
      * @return 4 parsed boards between which the player will choose
-     * @throws IOException
      */
-    private List<ParsedBoard> extractPatterns(List<ParsedBoard> parsedBoards) throws IOException {
+    protected List<ParsedBoard> extractPatterns() {
         Extractor<ParsedBoard> parsedBoardExtractor = new Extractor<>();
-        for (ParsedBoard pb : parsedBoards) {
+        for (ParsedBoard pb : this.parsedBoards) {
             parsedBoardExtractor.insert(pb);
         }
         List<ParsedBoard> parsedBoardExtracted = new ArrayList<>();
@@ -83,38 +83,6 @@ class GameManager {
             parsedBoardExtracted.add(parsedBoardExtractor.extract());
         }
         return parsedBoardExtracted;
-    }
-
-    /**
-     * This method extracts a set of 4 patterns for each player and ask him to choose one
-     * @param lobby, containing all the players
-     * @param parsedBoards, containing all the parsed boards, load once in the constructor
-     * @throws IOException
-     */
-    private void choosePattern(Lobby lobby, List<ParsedBoard> parsedBoards) throws IOException {
-        List<Player> lobbyPlayers = lobby.getPlayers();
-        for (Player player : lobbyPlayers) {
-            List<ParsedBoard> extractedPatterns = extractPatterns(parsedBoards);
-            // Ask the player what pattern he wants
-            // TODO: asking the player
-            // Assuming the player has already chosen the pattern
-            ParsedBoard chosenPattern = extractedPatterns.get(0);
-            // Create a board with the same characteristics as chosenPattern
-            // Getting all the color and value restrictions and create a matrix containing all of them
-            Restriction[][] restrictions = new Restriction[4][5];
-            for (ColorRestrictions cr : chosenPattern.getColorRestrictions()) {
-                for (int[] coords : cr.getCoords()) {
-                    restrictions[coords[0]][coords[1]] = new Restriction(Color.valueOf(cr.getColor().toUpperCase()));
-                }
-            }
-            for (ValueRestrictions vr : chosenPattern.getValueRestrictions()) {
-                for (int[] coords : vr.getCoords()) {
-                    restrictions[coords[0]][coords[1]] = new Restriction(vr.getValue());
-                }
-            }
-            Board chosenBoard = new Board(restrictions, chosenPattern.getDifficulty());
-            player.setBoard(chosenBoard);
-        }
     }
 
     /**
