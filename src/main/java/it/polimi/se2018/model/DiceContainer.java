@@ -53,17 +53,17 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
         return maxSize;
     }
 
-    Die getDie(int index){
+    public Die getDie(int index){
         return container.getOrDefault(index, null);
     }
 
-    void setDie(int index, Die die){
+    public void setDie(int index, Die die){
         if(index > maxSize)
             throw new IndexOutOfBoundsException();
         container.put(index, die);
     }
 
-    void insert(Die die) {
+    public void insert(Die die) {
         int size = getCurrentSize();
         setDie(size, die);
     }
@@ -73,7 +73,7 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
      * @param index, the hypotethical position in the container
      * @return true or false
      */
-    boolean isEmpty(int index){
+   public boolean isEmpty(int index){
         return !container.containsKey(index);
     }
 

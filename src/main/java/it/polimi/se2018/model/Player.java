@@ -1,6 +1,8 @@
 package it.polimi.se2018.model;
 
 import java.security.InvalidParameterException;
+import java.util.EnumSet;
+import java.util.Iterator;
 
 /**
  * This class describes the object Player
@@ -14,6 +16,7 @@ public class Player {
     private PrivateObjCard privateObjCard;
     private ToolCard activatedToolcard;
     private PlayerState state;
+    private EnumSet<PossibleAction> possibleActions;
 
     // Player constructor
     public Player(String name) {
@@ -96,6 +99,11 @@ public class Player {
     }
 
     /**
+     * Deactivate a toolcard
+     */
+    public void deactivateToolcard() { activatedToolcard = null; }
+
+    /**
      * Setter of the player's state
      * @param state object to set
      */
@@ -109,4 +117,34 @@ public class Player {
      * @return the player's state
      */
     public PlayerState getState() { return state; }
+
+    /**
+     * Sets up all possible actions of the player at the start of the round
+     */
+    public void possibleActionsSetUp() {
+        possibleActions = EnumSet.of(PossibleAction.ACTIVATE_TOOLCARD, PossibleAction.PICK_DIE, PossibleAction.PASS_TURN);
+    }
+
+    /**
+     * Removes all possible actions of the player
+     */
+    public void possibleActionsRemoveAll() {
+        possibleActions = EnumSet.noneOf(PossibleAction.class);
+    }
+
+    /**
+     * Removes a single possible action
+     * @param action to be removed
+     * @return true if the action is in the EnumSet, false otherwise
+     */
+    public boolean possibleActionsRemove(PossibleAction action) {
+        return possibleActions.remove(action);
+    }
+
+    /**
+     * @return all possible actions of the player
+     */
+    public EnumSet<PossibleAction> getPossibleActions() {
+        return possibleActions;
+    }
 }

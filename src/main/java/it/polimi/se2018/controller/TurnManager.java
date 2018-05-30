@@ -6,7 +6,7 @@ import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.function.BiFunction;
 
-public class TurnManager {
+class TurnManager {
     private Match match;
     private ToolCardController toolcard;
     private List<DieCoord> memory;
@@ -20,12 +20,14 @@ public class TurnManager {
     /**
      * Creates a new turn and delegates it to the next player
      * Resets the ArrayList 'memory' for the new player
-     * Sets the player state as 'PICK' on 'DRAFTPOOL'
+     * Sets the player state as 'YOUR_TURN'
+     * Sets up all possible actions to the current player
      * @param player to delegate
      */
     void newTurn(Player player) {
         memory = new ArrayList<>();
-        player.setState(new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
+        player.setState(new PlayerState(EnumState.YOUR_TURN));
+        player.possibleActionsSetUp();
     }
 
     /**
@@ -39,59 +41,96 @@ public class TurnManager {
 
     /**
      * Handles the basic move of the player: picking a Die from the draftpool.
-     * Checks if there is any intention of using a toolcard, otherwise the handleMove delegates the action to ToolCardController.
-     * Before delegating the handleMove to ToolCardController there will be some checks based on the toolcard selected.
-     * ------------------------
-     * There will be two handleMoves:
-     *  1) Picking a Die from the draftpool
-     *  2) Selecting the Cell where to put the die in
-     * @param playerMove of the player
+     * Checks the type of action of the player move.
+     * @param move of the player
      * @return true if the state is 'IDLE', false if not
      */
-    boolean handleMove(PlayerMove playerMove) {
-        PlayerState newState;
+    boolean handleMove(PlayerMove move) {
+        PlayerState newState = null;
 
-        if(playerMove.getMove() instanceof ToolCard) {
-            if(Checks.get(((ToolCard)playerMove.getMove()).getId()).apply(match, playerMove)) {
-                this.toolcard = new ToolCardController(match, (ToolCard) playerMove.getMove());
-                playerMove.getActor().setActivatedToolcard((ToolCard) playerMove.getMove());
-            } else {
-                newState = new PlayerState(EnumState.REPEAT);
-                playerMove.getActor().setState(newState);
-                return false;
-            }
-        }
-
-        if (toolcard != null && playerMove.getActor().getActivatedToolcard() != null) {
-            newState = toolcard.handleMove(playerMove);
-            if (newState.get() == EnumState.IDLE) {
-                toolcard = null;
-                playerMove.getActor().setActivatedToolcard(null);
-            }
-        } else {
-            DieCoord coord = (DieCoord) playerMove.getMove();
-            if (memory.isEmpty()) {
-                memory.add(coord);
-                newState = new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
-            } else {
-                memory.add(coord);
-                DieCoord[] coords = (DieCoord[]) (memory.toArray());
-                if (isMoveDieMovement(coords)) {
-                    throw new InvalidParameterException("playerMove must contain DieCoord[2]");
-                }
-                Action move = new Switch(coords[0], coords[1]);
-                PlacementError err = move.check();
-                if (!err.hasNoErrorExceptEdge()) {
-                    newState = new PlayerState(EnumState.REPEAT);
-                } else {
-                    move.perform();
+        switch (move.getTypeAction()) {
+            case PASS_TURN:
+                if(move.getActor().getPossibleActions().contains(PossibleAction.PASS_TURN)) {
                     newState = new PlayerState(EnumState.IDLE);
+                    move.getActor().possibleActionsRemoveAll();
+                } else {
+                    System.out.println("Can't do this action");
+                    newState = move.getActor().getState();
                 }
-            }
+                break;
+            case ACTIVATE_TOOLCARD:
+                if(move.getActor().getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD)) {
+                    newState = toolcard.handleMove(move);
+                    if(move.getActor().getState().get() == EnumState.YOUR_TURN) {
+                        toolcard = null;
+                        move.getActor().deactivateToolcard();
+                    }
+                } else {
+                    System.out.println("Can't do this action");
+                    newState = move.getActor().getState();
+                }
+                break;
+            case PICK_DIE:
+                if(move.getActor().getPossibleActions().contains(PossibleAction.PICK_DIE)) {
+                    DieCoord coord = (DieCoord) move.getMove();
+                    if (memory.isEmpty()) {
+                        memory.add(coord);
+                        newState = new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
+                    } else {
+                        memory.add(coord);
+                        DieCoord[] coords = (DieCoord[]) (memory.toArray());
+                        if (isMoveDieMovement(coords)) {
+                            throw new InvalidParameterException("playerMove must contain DieCoord[2]");
+                        }
+                        Action moveDice = new Switch(coords[0], coords[1]);
+                        PlacementError err = moveDice.check();
+                        if (!err.hasNoErrorExceptEdge()) {
+                            newState = new PlayerState(EnumState.REPEAT);
+                        } else {
+                            moveDice.perform();
+                            move.getActor().possibleActionsRemove(PossibleAction.PICK_DIE);
+                            newState = new PlayerState(EnumState.YOUR_TURN);
+                        }
+                    }
+                } else {
+                    System.out.println("Can't do this action");
+                    newState = move.getActor().getState();
+                }
+                break;
+            case NO_ACTION:
+                System.out.println("No action");
+                newState = move.getActor().getState();
+                break;
         }
 
-        playerMove.getActor().setState(newState);
-        return newState.get() == EnumState.IDLE;
+        move.getActor().setState(newState);
+        return move.getActor().getState().get() == EnumState.IDLE;
+    }
+
+    /**
+     * Activate one of the 3 toolcards.
+     * Checks if it's possible to use the toolcard and if the player has enough tokens. Increase the cost of the toolcard if activated.
+     * @param toolCardId index of toolcard selected
+     * @return true if successfully activated
+     */
+    boolean activateToolcard(int toolCardId) {
+        PlayerState newState;
+        PlayerMove playerMove = new PlayerMove<>(match.getPlayerQueue().peek(), null, PossibleAction.ACTIVATE_TOOLCARD);
+        ToolCard toolCardActivated = match.getToolCards()[toolCardId];
+
+        if (Checks.get(toolCardActivated.getId()).apply(match, playerMove) && match.getPlayerQueue().peek().getToken() >= toolCardActivated.getCost()) {
+            this.toolcard = new ToolCardController(match, toolCardActivated);
+            playerMove.getActor().setActivatedToolcard(toolCardActivated);
+            newState = toolcard.handleMove(playerMove);
+            playerMove.getActor().setState(newState);
+            playerMove.getActor().setToken(playerMove.getActor().getToken() - toolCardActivated.getCost());
+            toolCardActivated.increaseCost();
+            return true;
+        } else {
+            newState = new PlayerState(EnumState.YOUR_TURN);
+            playerMove.getActor().setState(newState);
+            return false;
+        }
     }
 
     /**
@@ -106,7 +145,7 @@ public class TurnManager {
          * @return true if picked, false if not
          */
         private static boolean checkDiePicked(PlayerMove state) {
-            return state.getActor().getState().get() == EnumState.PICK;
+            return state.getActor().getPossibleActions().contains(PossibleAction.PICK_DIE);
         }
 
         /**
@@ -131,7 +170,7 @@ public class TurnManager {
          * @return true if dice on board exceed the number, false otherwise
          */
         private static boolean checkDiceOnBoard(PlayerMove move, int number) {
-            return move.getActor().getBoard().countDices() >= number;
+            return move.getActor().getBoard().countDice() >= number;
         }
 
         /**

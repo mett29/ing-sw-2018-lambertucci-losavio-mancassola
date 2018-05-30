@@ -5,5 +5,5 @@ package it.polimi.se2018.model;
  * @author ontech7
  */
 public enum EnumState {
-    IDLE, PICK, VALUE, UPDOWN, NEXT, REPEAT
+    IDLE, YOUR_TURN, PICK, VALUE, UPDOWN, NEXT, REPEAT
 }

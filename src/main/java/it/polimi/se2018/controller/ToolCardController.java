@@ -7,20 +7,20 @@ import java.util.function.BiFunction;
 
 import static it.polimi.se2018.model.DiceContainerCoord.asDieCoord;
 
-public class ToolCardController {
+class ToolCardController {
     private Match match;
     private int id;
-    private List<BiFunction<ToolCardController, PlayerMove, PlayerState>> operations;
+    private Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> operations;
     private List<DieCoord> memory;
 
     ToolCardController(Match match, ToolCard toolCard) {
         this.match = match;
         this.id = toolCard.getId();
         this.memory = new ArrayList<>();
-        this.operations = Operations.ops.get(this.id);
+        this.operations = Operations.get(this.id);
     }
 
-    public List<BiFunction<ToolCardController, PlayerMove, PlayerState>> getOperations() {
+    Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> getOperations() {
         return operations;
     }
 
@@ -31,10 +31,10 @@ public class ToolCardController {
      * @return the new state at the end of the operation
      */
     PlayerState handleMove(PlayerMove playerMove) {
-        PlayerState newState = operations.get(0).apply(this, playerMove);
+        PlayerState newState = operations.peek().apply(this, playerMove);
 
         if(newState.get() != EnumState.REPEAT) {
-            operations.remove(0);
+            operations.poll();
         }
 
         return newState;
@@ -44,12 +44,12 @@ public class ToolCardController {
      * A static class where belongs all operations of every toolcard.
      */
     private static class Operations{
-        static final Map<Integer, List<BiFunction<ToolCardController, PlayerMove, PlayerState>>> ops;
+        static final Map<Integer, Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>>> ops;
 
         static {
-            Map<Integer, List<BiFunction<ToolCardController, PlayerMove, PlayerState>>> tmpOps = new HashMap<>();
+            Map<Integer, Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>>> tmpOps = new HashMap<>();
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue0 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue0 = new LinkedList<>();
 
             queue0.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue0.add((tcc, pm) -> {
@@ -74,14 +74,15 @@ public class ToolCardController {
                 }
                 Action a = new SetValue(tcc.memory.get(0), targetValue);
                 a.perform();
-                return new PlayerState(EnumState.IDLE);
+                pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                return new PlayerState(EnumState.YOUR_TURN);
             });
 
             tmpOps.put(0, queue0);
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue1 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue1 = new LinkedList<>();
 
             queue1.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue1.add((tcc, pm) -> {
@@ -97,7 +98,8 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -105,7 +107,7 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue2 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue2 = new LinkedList<>();
 
             queue2.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue2.add((tcc, pm) -> {
@@ -121,7 +123,8 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -129,7 +132,7 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue3 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue3 = new LinkedList<>();
 
             queue3.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue3.add((tcc, pm) -> {
@@ -145,7 +148,7 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    return new PlayerState(EnumState.NEXT);
                 }
             });
             queue3.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
@@ -162,7 +165,8 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     b.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -170,7 +174,7 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue4 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue4 = new LinkedList<>();
 
             queue4.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -188,7 +192,8 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -196,7 +201,7 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue5 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue5 = new LinkedList<>();
 
             queue5.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -210,7 +215,8 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -218,21 +224,21 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue6 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue6 = new LinkedList<>();
 
             queue6.add((tcc, pm) -> {
-                for(DieCoord die : (DieCoord[])(pm.getMove())){
-                    Action a = new Reroll(die);
-                    a.perform();
+                for(Die die : tcc.match.getDraftPool()){
+                    die.randomize();
                 }
-                return new PlayerState(EnumState.IDLE);
+                pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                return new PlayerState(EnumState.YOUR_TURN);
             });
 
             tmpOps.put(6, queue6);
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue7 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue7 = new LinkedList<>();
 
             queue7.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -246,7 +252,8 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -254,7 +261,7 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue8 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue8 = new LinkedList<>();
 
             queue8.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -269,7 +276,8 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -277,7 +285,7 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue9 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue9 = new LinkedList<>();
 
             queue9.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -291,7 +299,8 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -299,7 +308,7 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue10 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue10 = new LinkedList<>();
 
             queue10.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -336,7 +345,8 @@ public class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
-                    return new PlayerState(EnumState.IDLE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -344,7 +354,7 @@ public class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue11 = new ArrayList<>();
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue11 = new LinkedList<>();
 
             queue11.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
@@ -367,6 +377,7 @@ public class ToolCardController {
                 if(!isOkay) {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
+                    move.perform();
                     return new PlayerState(EnumState.NEXT);
                 }
             });
@@ -387,7 +398,9 @@ public class ToolCardController {
                 if(!isOkay) {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
-                    return new PlayerState(EnumState.IDLE);
+                    move.perform();
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
 
@@ -396,26 +409,10 @@ public class ToolCardController {
             ops = Collections.unmodifiableMap(tmpOps);
         }
 
-        /**
-         * Gets a specified queue of operations.
-         * @param mapIndex toolcard id selected
-         * @return a cloned queue of operations.
-         */
-        /*static List<BiFunction<ToolCardController, PlayerMove, PlayerState>> get(int mapIndex){
-            return cloneQueue(ops.get(mapIndex));
-        }*/
-
-        /**
-         * Clone a queue
-         * @param q queue to clone
-         * @return cloned queue
-         */
-        /*private static List cloneQueue(Queue q){
-            List<BiFunction<ToolCardController, PlayerMove, PlayerState>> clonedQueue = new ArrayList<>();
-            for (Object obj : q.toArray()) {
-                clonedQueue.add((BiFunction<ToolCardController, PlayerMove, PlayerState>) obj);
-            }
-            return clonedQueue;
-        }*/
+        public static Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> get(int mapIndex) {
+            Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> tmpQueue = new LinkedList<>();
+            tmpQueue.addAll(ops.get(mapIndex));
+            return tmpQueue;
+        }
     }
 }

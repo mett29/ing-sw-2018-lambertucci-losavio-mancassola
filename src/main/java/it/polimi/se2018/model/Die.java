@@ -51,4 +51,9 @@ public class Die {
     public void randomize() {
         this.value = new Random().nextInt(6) + 1;
     }
+
+    @Override
+    public String toString() {
+        return "(" + this.value + "," + this.color + ")";
+    }
 }

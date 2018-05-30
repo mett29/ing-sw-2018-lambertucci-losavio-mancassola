@@ -8,12 +8,14 @@ package it.polimi.se2018.model;
 public class PlayerMove<T> {
     private Player actor;
     private T move;
+    private PossibleAction typeAction;
 
-    public PlayerMove(Player actor, T move){
+    public PlayerMove(Player actor, T move, PossibleAction typeAction){
         if(actor == null)
             throw new NullPointerException("The actor doesn't exist");
         this.actor = actor;
         this.move = move;
+        this.typeAction = typeAction;
     }
 
     /**
@@ -22,6 +24,10 @@ public class PlayerMove<T> {
      */
     public T getMove(){
         return move;
+    }
+
+    public PossibleAction getTypeAction() {
+        return typeAction;
     }
 
     /**

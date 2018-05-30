@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.security.InvalidParameterException;
+import java.util.EnumSet;
 
 import static org.junit.Assert.*;
 
@@ -100,5 +101,19 @@ public class PlayerTest {
         } catch (NullPointerException e) {
             //do nothing
         }
+    }
+
+    @Test
+    public void possibleActionsTest() throws Exception {
+        Player player = new Player("Test");
+
+        player.possibleActionsSetUp();
+        assertEquals(EnumSet.of(PossibleAction.ACTIVATE_TOOLCARD, PossibleAction.PICK_DIE, PossibleAction.PASS_TURN),player.getPossibleActions());
+
+        player.possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+        assertEquals(EnumSet.of(PossibleAction.PICK_DIE, PossibleAction.PASS_TURN),player.getPossibleActions());
+
+        player.possibleActionsRemoveAll();
+        assertEquals(EnumSet.noneOf(PossibleAction.class),player.getPossibleActions());
     }
 }

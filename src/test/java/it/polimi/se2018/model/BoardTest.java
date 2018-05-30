@@ -183,7 +183,7 @@ public class BoardTest {
         board.setDie(1, 2, green1);
         board.setDie(3, 0, green1);
 
-        assertEquals(6, board.countDices());
+        assertEquals(6, board.countDice());
     }
 
     @Test

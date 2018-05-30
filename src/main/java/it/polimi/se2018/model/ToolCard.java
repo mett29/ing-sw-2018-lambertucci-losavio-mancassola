@@ -11,6 +11,8 @@ import java.util.function.Function;
  */
 public class ToolCard implements Card{
     private int id = 0;
+    private int cost = 1;
+    private boolean firstUse = false;
 
     public ToolCard(int id){
         this.id = id;
@@ -46,6 +48,22 @@ public class ToolCard implements Card{
     @Override
     public String getTitle() {
         return CardInfos.titles.get(id);
+    }
+
+    /**
+     * Get the actual cost of the toolcard
+     * @return object to get
+     */
+    public int getCost() {
+        return cost;
+    }
+
+    /**
+     * Increase the cost of the toolcard (max: 2)
+     */
+    public void increaseCost() {
+        if(cost != 2)
+            cost++;
     }
 
     /**

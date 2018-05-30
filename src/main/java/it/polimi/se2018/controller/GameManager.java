@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameManager {
+class GameManager {
     private Match match;
     private RoundManager roundManager;
     private JsonParser jsonParser = new JsonParser();
@@ -131,7 +131,7 @@ public class GameManager {
 
             tok = player.getToken();
 
-            empty = 20 - player.getBoard().countDices();
+            empty = 20 - player.getBoard().countDice();
 
             match.setScore(player, new Score(privCards, publCards, tok, empty));
 
@@ -153,5 +153,20 @@ public class GameManager {
             match.notifyObservers();
             return false;
         }
+    }
+
+    /**
+     * Activate one of the 3 toolcards.
+     * Checks if the username coincide with the first player's name of the queue
+     * Checks if it's possible to use the toolcard and if the player has enough tokens. Increase the cost of the toolcard if activated.
+     * @param username of the player
+     * @param toolCardId index of toolcard selected
+     * @return true if successfully activated
+     */
+    boolean activateToolcard(String username, int toolCardId) {
+        if(match.getPlayerQueue().peek().getName().equals(username))
+            return roundManager.activateToolcard(toolCardId);
+        else
+            return false;
     }
 }
