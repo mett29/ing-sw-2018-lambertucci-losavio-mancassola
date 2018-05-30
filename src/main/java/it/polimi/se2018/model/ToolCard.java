@@ -12,7 +12,6 @@ import java.util.function.Function;
 public class ToolCard implements Card{
     private int id = 0;
     private int cost = 1;
-    private boolean firstUse = false;
 
     public ToolCard(int id){
         this.id = id;
