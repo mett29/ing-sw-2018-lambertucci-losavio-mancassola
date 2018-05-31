@@ -137,4 +137,8 @@ class GameManager {
         else
             return false;
     }
+
+    public Match getMatch() {
+        return match;
+    }
 }

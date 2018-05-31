@@ -2,7 +2,6 @@ package it.polimi.se2018.network.server;
 
 import it.polimi.se2018.controller.Controller;
 import it.polimi.se2018.model.*;
-import it.polimi.se2018.network.client.ClientMove;
 import it.polimi.se2018.network.message.*;
 
 import java.io.IOException;
@@ -18,6 +17,7 @@ public class Lobby implements Observer{
     private Map<String, String> playerWithBoard;
 
     Lobby(List<String> usernames, Server server){
+        System.out.println("New lobby created");
         this.usernames = usernames;
         newPlayerMap();
         this.server = server;
@@ -88,11 +88,13 @@ public class Lobby implements Observer{
     public void onReceive(Message message){
         switch(message.content){
             case TOOLCARD_REQUEST:
-                //Controller -> Activate toolcard
+                int toolCardIndex = ((ToolCardRequest) message).index;
+                controller.activateToolcard(message.username, toolCardIndex);
                 break;
             case PLAYER_MOVE:
-                //Controller -> HandleMove
-                PlayerMove move = convertMove(((MoveMessage) message).payload);
+                // Convert Message to PlayerMove and send to controller
+                Match match = controller.getMatch();
+                PlayerMove move = ((MoveMessage) message).payload.toPlayerMove(match.getPlayerByName(message.username), match);
                 controller.handleMove(move);
                 break;
             case PATTERN_RESPONSE:
@@ -143,15 +145,6 @@ public class Lobby implements Observer{
 
         // Set the chosen board to the equivalent player
         playerMap.get(username).setBoard(chosenBoard);
-    }
-
-    /**
-     * Convert a ClientMove (created by client) to a PlayerMove (which contains references to objects in server)
-     * @param move Move to convert
-     * @return Converted move
-     */
-    private static PlayerMove convertMove(ClientMove move){
-        return null;
     }
 
     @Override

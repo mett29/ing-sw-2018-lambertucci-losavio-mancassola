@@ -1,5 +1,6 @@
 package it.polimi.se2018.network.server;
 
+import it.polimi.se2018.network.client.QueueRequest;
 import it.polimi.se2018.network.message.LoginResponse;
 import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.ClientInterface;
@@ -7,17 +8,17 @@ import it.polimi.se2018.network.server.rmi.RMIServer;
 import it.polimi.se2018.network.server.socket.SocketServer;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Server {
 
     private static final int SOCKET_PORT = 1111;
     private static final int RMI_PORT = 1099;
 
-    private List<String> queue;
+    private PlayerQueue duoQueue;
+    private PlayerQueue trioQueue;
+    private PlayerQueue quadroQueue;
+
     private Map<String, Client> usernames;
     private Map<String, Lobby> lobbies;
 
@@ -25,7 +26,10 @@ public class Server {
     private RMIServer rmiServer;
 
     private Server() throws RemoteException {
-        this.queue = new ArrayList<>();
+        this.duoQueue = new PlayerQueue(2, this);
+        this.trioQueue = new PlayerQueue(3, this);
+        this.quadroQueue = new PlayerQueue(4, this);
+
         this.usernames = new HashMap<>();
         this.lobbies = new HashMap<>();
 
@@ -55,7 +59,7 @@ public class Server {
         rmiServer.startServer(rmiPort);
     }
 
-    private void newLobby(List<String> players){
+    void newLobby(List<String> players){
         Lobby lobby = new Lobby(players, this);
         for (String username : players) {
             lobbies.put(username, lobby);
@@ -69,7 +73,6 @@ public class Server {
             Client client = new Client(username, clientInterface);
             if(usernames.containsKey(username)) throw new InvalidUsernameException();
             usernames.put(username, client);
-            queue.add(username);
             clientInterface.notify(new LoginResponse(true));
         } catch (InvalidUsernameException e) {
             try {
@@ -82,7 +85,6 @@ public class Server {
             onDisconnect(username);
         }
 
-        System.out.println(queue);
         System.out.println(usernames);
     }
 
@@ -107,10 +109,30 @@ public class Server {
     public void onReceive(Message message){
         if(lobbies.containsKey(message.username)){
             lobbies.get(message.username).onReceive(message);
+        } else if(usernames.containsKey(message.username) && message.content == Message.Content.QUEUE) {
+            handleQueueRequest((QueueRequest) message);
         } else {
             System.err.println("Unhandled message received from: " + message.username);
             // Ignore message received from unknown client
             // He needs to re-register
+        }
+    }
+
+    private void handleQueueRequest(QueueRequest message){
+        int playerNumber = message.playerNumber;
+        switch(playerNumber) {
+            case 2:
+                duoQueue.add(message.username);
+                break;
+            case 3:
+                trioQueue.add(message.username);
+                break;
+            case 4:
+                quadroQueue.add(message.username);
+                break;
+            default:
+                System.err.println("Unhandled message received from: " + message.username);
+
         }
     }
 }

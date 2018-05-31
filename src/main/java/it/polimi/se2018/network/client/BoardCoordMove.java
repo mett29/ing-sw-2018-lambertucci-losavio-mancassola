@@ -1,11 +1,10 @@
 package it.polimi.se2018.network.client;
 
-import it.polimi.se2018.model.Match;
-import it.polimi.se2018.model.PlayerMove;
+import it.polimi.se2018.model.*;
 
 public class BoardCoordMove extends ClientMove {
-    public final int x;
-    public final int y;
+    private final int x;
+    private final int y;
     public BoardCoordMove(int x, int y) {
         super(ContentType.BOARD_COORD);
         this.x = x;
@@ -14,8 +13,8 @@ public class BoardCoordMove extends ClientMove {
 
 
     @Override
-    public PlayerMove toPlayerMove(Match match) {
-        //TODO
-        return null;
+    public PlayerMove toPlayerMove(Player player, Match match) {
+        Board board = match.getBoard(player);
+        return new PlayerMove<>(player, new BoardCoord(board, x, y));
     }
 }

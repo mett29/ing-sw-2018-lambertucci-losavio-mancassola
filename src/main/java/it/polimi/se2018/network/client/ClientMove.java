@@ -1,6 +1,7 @@
 package it.polimi.se2018.network.client;
 
 import it.polimi.se2018.model.Match;
+import it.polimi.se2018.model.Player;
 import it.polimi.se2018.model.PlayerMove;
 
 /**
@@ -20,8 +21,10 @@ public abstract class ClientMove {
 
     /**
      * Translate ClientMove to a PlayerMove object, which helds references to `match` components
+     *
+     * @param player
      * @param match
      * @return
      */
-    public abstract PlayerMove toPlayerMove(Match match);
+    public abstract PlayerMove toPlayerMove(Player player, Match match);
 }

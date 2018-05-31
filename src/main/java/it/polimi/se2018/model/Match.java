@@ -46,6 +46,10 @@ public class Match extends Observable{
         addObserver(observer);
     }
 
+    public Player getPlayerByName(String username){
+        return getPlayers().stream().filter(p -> p.getName().equals(username)).findAny().orElse(null);
+    }
+
     /**
      * Getter of a specific board of the match
      * @param player object to refer

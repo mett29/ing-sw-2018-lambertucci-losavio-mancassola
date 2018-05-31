@@ -1,5 +1,6 @@
 package it.polimi.se2018.controller;
 
+import it.polimi.se2018.model.Match;
 import it.polimi.se2018.model.PlayerMove;
 import it.polimi.se2018.network.server.Lobby;
 import it.polimi.se2018.network.server.ParsedBoard;
@@ -42,5 +43,9 @@ public class Controller {
      */
     public List<ParsedBoard> extractPatterns() {
         return this.gameManager.extractPatterns();
+    }
+
+    public Match getMatch() {
+        return gameManager.getMatch();
     }
 }

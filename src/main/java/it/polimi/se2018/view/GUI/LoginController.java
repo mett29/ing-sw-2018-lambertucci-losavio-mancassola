@@ -4,17 +4,16 @@ import it.polimi.se2018.network.client.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import javafx.scene.layout.AnchorPane;
 
 public class LoginController {
     @FXML
     public TextField username;
+
+    @FXML
     public ChoiceBox connectionTypeBox;
+    public AnchorPane content;
 
     private Client client;
 
@@ -24,7 +23,6 @@ public class LoginController {
         connectionTypeBox.getItems().addAll("Connessione con RMI", "Connessione con Socket");
         connectionTypeBox.getSelectionModel().select(0);
     }
-
 
     public void setClient(Client client){
         this.client = client;
@@ -39,7 +37,7 @@ public class LoginController {
         try {
             client.connect();
         } catch (Exception e) {
-            System.err.println("Connection Error");
+            client.onConnectionError();
         }
     }
 }

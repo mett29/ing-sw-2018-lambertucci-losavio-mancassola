@@ -3,6 +3,7 @@ package it.polimi.se2018.network.client;
 import it.polimi.se2018.network.message.*;
 import it.polimi.se2018.network.client.rmi.RMIConnection;
 import it.polimi.se2018.network.client.socket.SocketConnection;
+import it.polimi.se2018.view.CLI;
 import it.polimi.se2018.view.GUI.GUI;
 import it.polimi.se2018.view.ViewInterface;
 import javafx.application.Application;
@@ -43,8 +44,8 @@ public class Client {
         if(useFX) {
             Application.launch(GUI.class, args);
         } else {
-            ViewInterface view = new GUI();
             Client client = new Client();
+            ViewInterface view = new CLI(client);
             client.setView(view);
 
             view.askLogin();
@@ -93,6 +94,23 @@ public class Client {
                 // Strange message received. This shouldn't happen
                 System.out.println("Strange and stranger things might happen while programming");
         }
+    }
+
+    /**
+     * Send a QueueRequest to the server.
+     * Communicate to the server that this client wants to play
+     * @param playerNumber Type of queue (desired number of players in match)
+     */
+    public void sendQueueRequest(int playerNumber) {
+        try {
+            connection.send(new QueueRequest(username, playerNumber));
+        } catch(Exception e){
+            onConnectionError();
+        }
+    }
+
+    public void onConnectionError(){
+        view.onConnectionError();
     }
 
     public void setView(ViewInterface view) {

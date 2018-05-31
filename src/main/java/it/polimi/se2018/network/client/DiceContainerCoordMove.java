@@ -1,7 +1,6 @@
 package it.polimi.se2018.network.client;
 
-import it.polimi.se2018.model.Match;
-import it.polimi.se2018.model.PlayerMove;
+import it.polimi.se2018.model.*;
 
 public class DiceContainerCoordMove extends ClientMove{
     public final int index;
@@ -13,9 +12,14 @@ public class DiceContainerCoordMove extends ClientMove{
     }
 
     @Override
-    public PlayerMove toPlayerMove(Match match) {
-        //TODO
-        return null;
+    public PlayerMove toPlayerMove(Player player, Match match) {
+        DiceContainer diceContainer;
+        if (container == DiceContainerName.DRAFT_POOL) {
+            diceContainer = match.getDraftPool();
+        } else {
+            diceContainer = match.getRoundTracker();
+        }
+        return new PlayerMove<>(player, new DiceContainerCoord(diceContainer, index));
     }
 
     public enum DiceContainerName {
