@@ -1,5 +1,6 @@
 package it.polimi.se2018.network.client;
 
+import it.polimi.se2018.model.Match;
 import it.polimi.se2018.network.message.*;
 import it.polimi.se2018.network.client.rmi.RMIConnection;
 import it.polimi.se2018.network.client.socket.SocketConnection;
@@ -88,6 +89,11 @@ public class Client {
 
             case MATCH_STATE:
                 view.updateMatch(((MatchStateMessage) message).payload);
+                break;
+
+            case MATCH_START:
+                Match match = ((MatchStartMessage) message).payload;
+                view.onMatchStart(match);
                 break;
 
             default:

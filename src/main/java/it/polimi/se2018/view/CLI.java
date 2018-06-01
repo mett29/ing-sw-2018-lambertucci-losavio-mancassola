@@ -62,6 +62,11 @@ public class CLI implements ViewInterface {
         System.out.println("Please wait...");
     }
 
+    @Override
+    public void onMatchStart(Match match) {
+        //TODO
+    }
+
     private void displayMatch(Match match){
         System.out.println("+ ROUND TRACKER +                                      + DRAFT POOL +");
         printLines(display2(toStrings(match.getRoundTracker()), toStrings(match.getDraftPool())));

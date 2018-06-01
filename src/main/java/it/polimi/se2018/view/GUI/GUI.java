@@ -71,6 +71,21 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
+    public void onMatchStart(Match match) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/MatchGUI.fxml"));
+            Parent matchParent = loader.load();
+            loader.setController(new MatchController(match));
+            MatchController controller = loader.getController();
+            controller.setClient(client);
+            stage.getScene().setRoot(matchParent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/LoginGUI.fxml"));

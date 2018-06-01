@@ -15,6 +15,7 @@ public class BoardCoordMove extends ClientMove {
     @Override
     public PlayerMove toPlayerMove(Player player, Match match) {
         Board board = match.getBoard(player);
-        return new PlayerMove<>(player, new BoardCoord(board, x, y));
+        //return new PlayerMove<>(player, new BoardCoord(board, x, y));
+        return null;
     }
 }

@@ -10,4 +10,6 @@ public interface ViewInterface {
     void onConnect();
     void onConnectionError();
     void waitFor();
+
+    void onMatchStart(Match match);
 }

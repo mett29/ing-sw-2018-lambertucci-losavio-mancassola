@@ -2,6 +2,7 @@ package it.polimi.se2018.network.server;
 
 import it.polimi.se2018.controller.Controller;
 import it.polimi.se2018.model.*;
+import it.polimi.se2018.network.message.MatchStartMessage;
 import it.polimi.se2018.network.message.*;
 
 import java.io.IOException;
@@ -105,6 +106,9 @@ public class Lobby implements Observer{
                 if (playerWithBoard.size() == 4) {
                     // The match can be started
                     // TODO
+                    // Set match to new match created by controller
+                    match = null;
+                    updateAll(new MatchStartMessage(match));
                 }
                 break;
             default:
