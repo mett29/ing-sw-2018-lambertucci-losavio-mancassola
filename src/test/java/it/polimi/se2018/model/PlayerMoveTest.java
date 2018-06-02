@@ -21,7 +21,7 @@ public class PlayerMoveTest {
         PlayerMove<Integer> playerMove1;
 
         try {
-            playerMove1 = new PlayerMove<>(null, 0, PossibleAction.NO_ACTION);
+            playerMove1 = new PlayerMove<>(null, 0);
             fail();
         } catch (NullPointerException e) {
             //do nothing
@@ -29,14 +29,14 @@ public class PlayerMoveTest {
 
         PlayerMove<Integer> playerMove2;
 
-        playerMove2 = new PlayerMove<>(player, 0, PossibleAction.NO_ACTION);
+        playerMove2 = new PlayerMove<>(player, 0);
     }
 
     @Test
     public void getMoveTest() throws Exception {
         Integer move = 1;
-        PlayerMove<Integer> playerMove1 = new PlayerMove<>(player, 1, PossibleAction.NO_ACTION);
-        PlayerMove<Integer> playerMove2 = new PlayerMove<>(player, 2, PossibleAction.NO_ACTION);
+        PlayerMove<Integer> playerMove1 = new PlayerMove<>(player, 1);
+        PlayerMove<Integer> playerMove2 = new PlayerMove<>(player, 2);
 
         assertEquals(move, playerMove1.getMove());
 
@@ -45,7 +45,7 @@ public class PlayerMoveTest {
 
     @Test
     public void stateGetSetTest() throws Exception {
-        PlayerMove<Integer> playerMove = new PlayerMove<>(player, 1, PossibleAction.NO_ACTION);
+        PlayerMove<Integer> playerMove = new PlayerMove<>(player, 1);
 
         try {
             playerMove.setActorState(null);

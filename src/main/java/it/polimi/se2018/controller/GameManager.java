@@ -108,19 +108,12 @@ class GameManager {
     }
 
     /**
-     * Handle the player's move through RoundManager and checks if the match is finished.
+     * Handle the player's move.
      * @param move of the player
-     * @return true if the match is finished, false otherwise
+     * @return true if all moves are finished, false otherwise
      */
     boolean handleMove(PlayerMove move) {
-        boolean roundFinished = roundManager.handleMove(move);
-        if(roundFinished) roundManager.newRound();
-        if(match.getRoundTracker().getCurrentSize() == 10){
-            return true;
-        } else {
-            match.notifyObservers();
-            return false;
-        }
+        return roundManager.handleMove(move);
     }
 
     /**
@@ -132,12 +125,40 @@ class GameManager {
      * @return true if successfully activated
      */
     boolean activateToolcard(String username, int toolCardId) {
-        if(match.getPlayerQueue().peek().getName().equals(username))
-            return roundManager.activateToolcard(toolCardId);
-        else
-            return false;
+        return roundManager.activateToolcard(username, toolCardId);
     }
 
+    /**
+     * Activate pick_die move
+     * Checks if it's possible to make a move.
+     * @param username of the player
+     * @return true if successfully activated
+     */
+    boolean activateNormalMove(String username) {
+        return roundManager.activateNormalMove(username);
+    }
+
+    /**
+     * Pass the current player's turn
+     * Checks if it's possible to pass the turn
+     * @param username of the player
+     * @return true if successfully passed the turn
+     */
+    boolean passTurn(String username) {
+        boolean roundFinished = roundManager.passTurn(username);
+
+        if(match.getRoundTracker().getCurrentSize() == 10){
+            return true;
+        } else {
+            if(roundFinished) roundManager.newRound();
+            match.notifyObservers();
+            return false;
+        }
+    }
+
+    /**
+     * @return the current match
+     */
     public Match getMatch() {
         return match;
     }

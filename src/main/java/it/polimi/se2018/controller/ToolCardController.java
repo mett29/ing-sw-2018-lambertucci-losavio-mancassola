@@ -49,9 +49,11 @@ class ToolCardController {
         static {
             Map<Integer, Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>>> tmpOps = new HashMap<>();
 
+
+
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue0 = new LinkedList<>();
 
-            queue0.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
+            queue0.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue0.add((tcc, pm) -> {
                 DieCoord selection = (DieCoord) pm.getMove();
                 tcc.memory.add(selection);

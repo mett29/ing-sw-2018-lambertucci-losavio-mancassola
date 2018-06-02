@@ -44,42 +44,42 @@
         [
             {
                 "color": "yellow",
-                "coords": [[0,0],[2,1]]
+                "coords": [[0,3],[1,1]]
             },
             {
                 "color": "red",
-                "coords": [[2,2],[3,4]]
+                "coords": [[2,1],[4,0]]
             },
             {
                 "color": "purple",
-                "coords": [[0,0],[2,1]]
+                "coords": [[3,1]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[1,1]]
-            },
-            {
-                "value": 2,
-                "coords": [[1,4]]
-            },
-            {
-                "value": 3,
-                "coords": [[2,0],[3,3]]
-            },
-            {
-                "value": 4,
-                "coords": [[3,2]]
-            },
-            {
-                "value": 5,
                 "coords": [[1,2]]
             },
             {
+                "value": 2,
+                "coords": [[4,2]]
+            },
+            {
+                "value": 3,
+                "coords": [[3,0],[0,1]]
+            },
+            {
+                "value": 4,
+                "coords": [[2,0]]
+            },
+            {
+                "value": 5,
+                "coords": [[2,2]]
+            },
+            {
                 "value": 6,
-                "coords": [[0,2]]
+                "coords": [[2,3]]
             }
         ]
     },
@@ -90,42 +90,42 @@
         [
             {
                 "color": "blue",
-                "coords": [[0,0],[1,2]]
+                "coords": [[0,3],[2,2]]
             },
             {
                 "color": "yellow",
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             },
             {
                 "color": "green",
-                "coords": [[3,4]]
+                "coords": [[4,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[3,3]]
+                "coords": [[3,0]]
             },
             {
                 "value": 2,
-                "coords": [[2,3]]
-            },
-            {
-                "value": 3,
-                "coords": [[1,1]]
-            },
-            {
-                "value": 4,
                 "coords": [[3,1]]
             },
             {
+                "value": 3,
+                "coords": [[1,2]]
+            },
+            {
+                "value": 4,
+                "coords": [[1,0]]
+            },
+            {
                 "value": 5,
-                "coords": [[2,1]]
+                "coords": [[1,1]]
             },
             {
                 "value": 6,
-                "coords": [[0,1],[2,2]]
+                "coords": [[1,3],[2,1]]
             }
         ]
     },
@@ -136,42 +136,42 @@
         [
             {
                 "color": "yellow",
-                "coords": [[0,0],[3,4]]
+                "coords": [[0,3],[4,0]]
             },
             {
                 "color": "blue",
-                "coords": [[0,1],[3,3]]
+                "coords": [[1,3],[3,0]]
             },
             {
                 "color": "green",
-                "coords": [[1,0],[2,4]]
+                "coords": [[0,2],[4,1]]
             },
             {
                 "color": "red",
-                "coords": [[2,2]]
+                "coords": [[2,1]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             },
             {
                 "value": 2,
-                "coords": [[3,0]]
+                "coords": [[0,0]]
             },
             {
                 "value": 3,
-                "coords": [[2,0]]
+                "coords": [[0,1]]
             },
             {
                 "value": 4,
-                "coords": [[1,4]]
+                "coords": [[4,2]]
             },
             {
                 "value": 5,
-                "coords": [[1,2]]
+                "coords": [[2,2]]
             }
         ]
     },
@@ -182,42 +182,42 @@
         [
             {
                 "color": "green",
-                "coords": [[0,1],[3,3]]
+                "coords": [[1,3],[3,0]]
             },
             {
                 "color": "blue",
-                "coords": [[0,2],[3,3]]
+                "coords": [[2,3]]
             },
             {
                 "color": "purple",
-                "coords": [[0,3],[1,0],[2,4]]
+                "coords": [[3,3],[0,2],[4,1]]
             },
             {
                 "color": "yellow",
-                "coords": [[1,4],[2,0]]
+                "coords": [[4,2],[0,1]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[3,0]]
-            },
-            {
-                "value": 2,
-                "coords": [[0,4]]
-            },
-            {
-                "value": 4,
-                "coords": [[3,4]]
-            },
-            {
-                "value": 5,
                 "coords": [[0,0]]
             },
             {
+                "value": 2,
+                "coords": [[4,3]]
+            },
+            {
+                "value": 4,
+                "coords": [[4,0]]
+            },
+            {
+                "value": 5,
+                "coords": [[0,3]]
+            },
+            {
                 "value": 6,
-                "coords": [[2,2]]
+                "coords": [[2,1]]
             }
         ]
     },
@@ -228,42 +228,42 @@
         [
             {
                 "color": "blue",
-                "coords": [[0,1]]
-            },
-            {
-                "color": "yellow",
-                "coords": [[0,4],[2,3]]
-            },
-            {
-                "color": "red",
                 "coords": [[1,3]]
             },
             {
+                "color": "yellow",
+                "coords": [[4,3],[3,1]]
+            },
+            {
+                "color": "red",
+                "coords": [[3,2]]
+            },
+            {
                 "color": "green",
-                "coords": [[3,0]]
+                "coords": [[0,0]]
             },
             {
                 "color": "purple",
-                "coords": [[3,4]]
+                "coords": [[4,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 2,
-                "coords": [[0,2]]
+                "coords": [[2,3]]
             },
             {
                 "value": 3,
-                "coords": [[3,1]]
+                "coords": [[1,0]]
             },
             {
                 "value": 4,
-                "coords": [[1,1]]
+                "coords": [[1,2]]
             },
             {
                 "value": 5,
-                "coords": [[2,2]]
+                "coords": [[2,1]]
             }
         ]
     },
@@ -274,34 +274,34 @@
         [
             {
                 "color": "purple",
-                "coords": [[0,0],[1,1],[2,2],[3,3]]
+                "coords": [[0,3],[1,2],[2,1],[3,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[2,3],[3,1]]
+                "coords": [[1,0],[3,1]]
             },
             {
                 "value": 2,
-                "coords": [[2,1]]
+                "coords": [[1,1]]
             },
             {
                 "value": 3,
-                "coords": [[0,4],[1,2]]
+                "coords": [[2,2],[4,3]]
             },
             {
                 "value": 4,
-                "coords": [[3,4]]
+                "coords": [[4,0]]
             },
             {
                 "value": 5,
-                "coords": [[1,0],[3,2]]
+                "coords": [[0,2],[2,0]]
             },
             {
                 "value": 6,
-                "coords": [[0,1]]
+                "coords": [[1,3]]
             }
         ]
     },
@@ -312,50 +312,50 @@
         [
             {
                 "color": "red",
-                "coords": [[0,0]]
+                "coords": [[0,3]]
             },
             {
                 "color": "blue",
-                "coords": [[0,2]]
+                "coords": [[2,3]]
             },
             {
                 "color": "yellow",
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             },
             {
                 "color": "purple",
-                "coords": [[1,1]]
+                "coords": [[1,2]]
             },
             {
                 "color": "green",
-                "coords": [[1,3]]
+                "coords": [[3,2]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[2,1]]
+                "coords": [[1,1]]
             },
             {
                 "value": 2,
-                "coords": [[1,4]]
+                "coords": [[4,2]]
             },
             {
                 "value": 3,
-                "coords": [[1,2]]
+                "coords": [[2,2]]
             },
             {
                 "value": 4,
-                "coords": [[1,0]]
+                "coords": [[0,2]]
             },
             {
                 "value": 5,
-                "coords": [[2,3]]
+                "coords": [[3,1]]
             },
             {
                 "value": 6,
-                "coords": [[3,2]]
+                "coords": [[2,0]]
             }
         ]
     },
@@ -366,34 +366,34 @@
         [
             {
                 "color": "purple",
-                "coords": [[0,1],[1,2],[2,3]]
+                "coords": [[1,3],[2,2],[3,1]]
             },
             {
                 "color": "red",
-                "coords": [[2,0],[3,1]]
+                "coords": [[0,1],[1,0]]
             },
             {
                 "color": "yellow",
-                "coords": [[3,0]]
+                "coords": [[0,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 3,
-                "coords": [[3,4]]
+                "coords": [[4,0]]
             },
             {
                 "value": 4,
-                "coords": [[3,3]]
+                "coords": [[3,0]]
             },
             {
                 "value": 5,
-                "coords": [[0,4],[1,0],[3,2]]
+                "coords": [[0,2],[4,3],[2,0]]
             },
             {
                 "value": 6,
-                "coords": [[0,0],[2,1]]
+                "coords": [[0,3],[1,1]]
             }
         ]
     },
@@ -404,50 +404,50 @@
         [
             {
                 "color": "blue",
-                "coords": [[1,2]]
-            },
-            {
-                "color": "yellow",
                 "coords": [[2,2]]
             },
             {
-                "color": "green",
+                "color": "yellow",
                 "coords": [[2,1]]
             },
             {
+                "color": "green",
+                "coords": [[1,1]]
+            },
+            {
                 "color": "purple",
-                "coords": [[2,3]]
+                "coords": [[3,1]]
             },
             {
                 "color": "red",
-                "coords": [[3,2]]
+                "coords": [[2,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[3,0]]
+                "coords": [[0,0]]
             },
             {
                 "value": 2,
-                "coords": [[2,4]]
+                "coords": [[4,1]]
             },
             {
                 "value": 3,
-                "coords": [[2,0],[3,4]]
+                "coords": [[4,0],[0,1]]
             },
             {
                 "value": 4,
-                "coords": [[1,3],[3,1]]
+                "coords": [[3,2],[1,0]]
             },
             {
                 "value": 5,
-                "coords": [[1,1],[3,3]]
+                "coords": [[3,0],[1,2]]
             },
             {
                 "value": 6,
-                "coords": [[0,2]]
+                "coords": [[2,3]]
             }
         ]
     },
@@ -458,34 +458,34 @@
         [
             {
                 "color": "red",
-                "coords": [[0,1],[1,2],[2,3],[3,4]]
+                "coords": [[1,3],[2,2],[3,1],[4,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[0,0],[2,4]]
+                "coords": [[0,3],[4,1]]
             },
             {
                 "value": 2,
-                "coords": [[1,3]]
+                "coords": [[3,2]]
             },
             {
                 "value": 3,
-                "coords": [[0,2],[3,3]]
+                "coords": [[2,3],[3,0]]
             },
             {
                 "value": 4,
-                "coords": [[1,1]]
+                "coords": [[1,2]]
             },
             {
                 "value": 5,
-                "coords": [[1,0],[2,2]]
+                "coords": [[0,2],[2,1]]
             },
             {
                 "value": 6,
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             }
         ]
     },
@@ -496,50 +496,50 @@
         [
             {
                 "color": "yellow",
-                "coords": [[0,1]]
+                "coords": [[0,2]]
             },
             {
                 "color": "blue",
-                "coords": [[2,1]]
+                "coords": [[1,1]]
             },
             {
                 "color": "purple",
-                "coords": [[1,2]]
+                "coords": [[2,2]]
             },
             {
                 "color": "green",
-                "coords": [[2,3]]
+                "coords": [[3,1]]
             },
             {
                 "color": "red",
-                "coords": [[1,4]]
+                "coords": [[4,2]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             },
             {
                 "value": 2,
-                "coords": [[0,0],[1,3]]
+                "coords": [[3,2],[0,3]]
             },
             {
                 "value": 3,
-                "coords": [[3,1]]
+                "coords": [[1,0]]
             },
             {
                 "value": 4,
-                "coords": [[2,2]]
+                "coords": [[2,1]]
             },
             {
                 "value": 5,
-                "coords": [[0,2],[3,3]]
+                "coords": [[2,3],[3,0]]
             },
             {
                 "value": 6,
-                "coords": [[1,1]]
+                "coords": [[1,2]]
             }
         ]
     },
@@ -550,38 +550,38 @@
         [
             {
                 "color": "yellow",
-                "coords": [[1,4],[2,3],[3,2]]
+                "coords": [[2,0],[3,1],[4,2]]
             },
             {
                 "color": "red",
-                "coords": [[2,4],[3,3]]
+                "coords": [[4,1],[3,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[0,2]]
-            },
-            {
-                "value": 2,
-                "coords": [[1,2]]
-            },
-            {
-                "value": 3,
                 "coords": [[0,0]]
             },
             {
+                "value": 2,
+                "coords": [[2,1]]
+            },
+            {
+                "value": 3,
+                "coords": [[0,3]]
+            },
+            {
                 "value": 4,
-                "coords": [[0,1]]
+                "coords": [[1,3]]
             },
             {
                 "value": 5,
-                "coords": [[0,3],[3,0]]
+                "coords": [[3,3],[0,0]]
             },
             {
                 "value": 6,
-                "coords": [[1,1],[3,4]]
+                "coords": [[1,2],[4,0]]
             }
         ]
     },
@@ -592,38 +592,38 @@
         [
             {
                 "color": "green",
-                "coords": [[0,2],[1,4],[2,1]]
+                "coords": [[2,3],[4,2],[1,1]]
             },
             {
                 "color": "purple",
-                "coords": [[0,3],[1,1],[2,4]]
+                "coords": [[3,3],[1,2],[4,1]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[0,1],[2,0]]
+                "coords": [[1,3],[0,1]]
             },
             {
                 "value": 2,
-                "coords": [[1,2]]
+                "coords": [[2,2]]
             },
             {
                 "value": 3,
-                "coords": [[2,3]]
+                "coords": [[3,1]]
             },
             {
                 "value": 4,
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             },
             {
                 "value": 5,
-                "coords": [[1,3],[2,2]]
+                "coords": [[3,2],[2,1]]
             },
             {
                 "value": 6,
-                "coords": [[1,0]]
+                "coords": [[0,2]]
             }
         ]
     },
@@ -634,34 +634,34 @@
         [
             {
                 "color": "blue",
-                "coords": [[0,3],[1,2],[2,1],[3,0]]
+                "coords": [[3,3],[2,2],[1,1],[0,3]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[0,0],[3,4]]
+                "coords": [[0,3],[4,0]]
             },
             {
                 "value": 2,
-                "coords": [[1,1],[3,2]]
+                "coords": [[1,2],[2,0]]
             },
             {
                 "value": 3,
-                "coords": [[0,2]]
-            },
-            {
-                "value": 4,
                 "coords": [[2,3]]
             },
             {
-                "value": 5,
+                "value": 4,
                 "coords": [[3,1]]
             },
             {
+                "value": 5,
+                "coords": [[1,0]]
+            },
+            {
                 "value": 6,
-                "coords": [[2,0]]
+                "coords": [[0,1]]
             }
         ]
     },
@@ -672,46 +672,46 @@
         [
             {
                 "color": "red",
-                "coords": [[0,2]]
-            },
-            {
-                "color": "purple",
-                "coords": [[1,0]]
-            },
-            {
-                "color": "green",
-                "coords": [[1,3]]
-            },
-            {
-                "color": "blue",
                 "coords": [[2,3]]
             },
             {
-                "color": "yellow",
+                "color": "purple",
+                "coords": [[0,2]]
+            },
+            {
+                "color": "green",
+                "coords": [[3,2]]
+            },
+            {
+                "color": "blue",
                 "coords": [[3,1]]
+            },
+            {
+                "color": "yellow",
+                "coords": [[1,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 2,
-                "coords": [[3,2]]
+                "coords": [[2,0]]
             },
             {
                 "value": 3,
-                "coords": [[1,4]]
+                "coords": [[4,2]]
             },
             {
                 "value": 4,
-                "coords": [[1,1]]
+                "coords": [[1,2]]
             },
             {
                 "value": 5,
-                "coords": [[0,3]]
+                "coords": [[3,3]]
             },
             {
                 "value": 6,
-                "coords": [[2,0]]
+                "coords": [[0,1]]
             }
         ]
     },
@@ -722,50 +722,50 @@
         [
             {
                 "color": "green",
-                "coords": [[0,2]]
+                "coords": [[2,3]]
             },
             {
                 "color": "yellow",
-                "coords": [[1,1]]
+                "coords": [[1,2]]
             },
             {
                 "color": "blue",
-                "coords": [[1,3]]
+                "coords": [[3,2]]
             },
             {
                 "color": "red",
-                "coords": [[2,1]]
+                "coords": [[1,1]]
             },
             {
                 "color": "purple",
-                "coords": [[2,3]]
+                "coords": [[3,1]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[1,4],[3,0]]
+                "coords": [[4,2],[0,0]]
             },
             {
                 "value": 2,
-                "coords": [[1,0]]
+                "coords": [[0,2]]
             },
             {
                 "value": 3,
-                "coords": [[2,2]]
+                "coords": [[2,1]]
             },
             {
                 "value": 4,
-                "coords": [[3,4]]
+                "coords": [[4,0]]
             },
             {
                 "value": 5,
-                "coords": [[1,2]]
+                "coords": [[2,2]]
             },
             {
                 "value": 6,
-                "coords": [[3,2]]
+                "coords": [[2,0]]
             }
         ]
     },
@@ -776,38 +776,38 @@
         [
             {
                 "color": "yellow",
-                "coords": [[0,3],[3,1]]
+                "coords": [[3,3],[1,0]]
             },
             {
                 "color": "red",
-                "coords": [[1,0],[2,2]]
+                "coords": [[0,2],[2,1]]
             },
             {
                 "color": "purple",
-                "coords": [[2,3]]
+                "coords": [[3,1]]
             },
             {
                 "color": "blue",
-                "coords": [[3,0]]
+                "coords": [[0,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[2,4]]
+                "coords": [[4,1]]
             },
             {
                 "value": 2,
-                "coords": [[1,2]]
+                "coords": [[2,2]]
             },
             {
                 "value": 4,
-                "coords": [[0,1]]
+                "coords": [[1,3]]
             },
             {
                 "value": 6,
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             }
         ]
     },
@@ -818,50 +818,50 @@
         [
             {
                 "color": "red",
-                "coords": [[0,3],[3,4]]
+                "coords": [[3,3],[4,0]]
             },
             {
                 "color": "purple",
-                "coords": [[1,2]]
+                "coords": [[2,2]]
             },
             {
                 "color": "blue",
-                "coords": [[1,4],[2,1]]
+                "coords": [[4,2],[1,1]]
             },
             {
                 "color": "yellow",
-                "coords": [[2,3],[3,0]]
+                "coords": [[3,1],[0,0]]
             },
             {
                 "color": "green",
-                "coords": [[3,2]]
+                "coords": [[2,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[3,3]]
+                "coords": [[3,0]]
             },
             {
                 "value": 2,
-                "coords": [[3,1]]
+                "coords": [[1,0]]
             },
             {
                 "value": 3,
-                "coords": [[2,2]]
+                "coords": [[2,1]]
             },
             {
                 "value": 4,
-                "coords": [[1,3]]
+                "coords": [[3,2]]
             },
             {
                 "value": 5,
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             },
             {
                 "value": 6,
-                "coords": [[2,4]]
+                "coords": [[4,1]]
             }
         ]
     },
@@ -872,34 +872,34 @@
         [
             {
                 "color": "yellow",
-                "coords": [[0,0],[1,4],[2,3],[3,2]]
+                "coords": [[0,3],[4,2],[3,1],[2,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[3,0]]
+                "coords": [[0,0]]
             },
             {
                 "value": 2,
-                "coords": [[0,2],[3,1]]
+                "coords": [[2,3],[1,0]]
             },
             {
                 "value": 3,
-                "coords": [[3,3]]
+                "coords": [[3,0]]
             },
             {
                 "value": 4,
-                "coords": [[1,1]]
+                "coords": [[1,2]]
             },
             {
                 "value": 5,
-                "coords": [[1,3],[2,4]]
+                "coords": [[3,2],[4,1]]
             },
             {
                 "value": 6,
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             }
         ]
     },
@@ -910,38 +910,38 @@
         [
             {
                 "color": "blue",
-                "coords": [[0,1],[1,4],[2,0]]
+                "coords": [[1,3],[4,2],[0,1]]
             },
             {
                 "color": "red",
-                "coords": [[0,2],[2,3],[3,1]]
+                "coords": [[2,3],[3,1],[1,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[3,3]]
+                "coords": [[3,0]]
             },
             {
                 "value": 2,
-                "coords": [[2,1]]
-            },
-            {
-                "value": 3,
-                "coords": [[3,2]]
-            },
-            {
-                "value": 4,
                 "coords": [[1,1]]
             },
             {
+                "value": 3,
+                "coords": [[2,0]]
+            },
+            {
+                "value": 4,
+                "coords": [[1,2]]
+            },
+            {
                 "value": 5,
-                "coords": [[1,2],[2,4]]
+                "coords": [[2,2],[4,1]]
             },
             {
                 "value": 6,
-                "coords": [[3,0]]
+                "coords": [[0,0]]
             }
         ]
     },
@@ -952,50 +952,50 @@
         [
             {
                 "color": "blue",
-                "coords": [[0,1],[1,2],[2,3]]
+                "coords": [[1,3],[2,2],[3,1]]
             },
             {
                 "color": "red",
-                "coords": [[2,1]]
+                "coords": [[1,1]]
             },
             {
                 "color": "green",
-                "coords": [[3,0]]
+                "coords": [[0,0]]
             },
             {
                 "color": "yellow",
-                "coords": [[3,2]]
+                "coords": [[2,0]]
             },
             {
                 "color": "purple",
-                "coords": [[3,4]]
+                "coords": [[4,0]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[0,4]]
+                "coords": [[4,3]]
             },
             {
                 "value": 2,
-                "coords": [[2,2]]
+                "coords": [[2,1]]
             },
             {
                 "value": 3,
-                "coords": [[3,3]]
+                "coords": [[3,0]]
             },
             {
                 "value": 4,
-                "coords": [[2,0]]
+                "coords": [[0,1]]
             },
             {
                 "value": 5,
-                "coords": [[1,1]]
+                "coords": [[1,2]]
             },
             {
                 "value": 6,
-                "coords": [[0,0],[3,1]]
+                "coords": [[0,3],[1,0]]
             }
         ]
     },
@@ -1006,38 +1006,38 @@
         [
             {
                 "color": "green",
-                "coords": [[1,1],[2,4],[3,3]]
+                "coords": [[1,2],[3,0],[4,1]]
             },
             {
                 "color": "blue",
-                "coords": [[1,3],[2,0],[3,1]]
+                "coords": [[3,2],[1,0],[0,1]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[0,2],[1,0]]
+                "coords": [[2,3],[0,2]]
             },
             {
                 "value": 2,
-                "coords": [[1,4]]
+                "coords": [[4,2]]
             },
             {
                 "value": 3,
-                "coords": [[1,2]]
-            },
-            {
-                "value": 4,
                 "coords": [[2,2]]
             },
             {
+                "value": 4,
+                "coords": [[2,1]]
+            },
+            {
                 "value": 5,
-                "coords": [[2,1],[3,2]]
+                "coords": [[1,1],[2,0]]
             },
             {
                 "value": 6,
-                "coords": [[2,3]]
+                "coords": [[3,1]]
             }
         ]
     },
@@ -1048,38 +1048,38 @@
         [
             {
                 "color": "purple",
-                "coords": [[0,1],[1,0]]
+                "coords": [[1,3],[0,2]]
             },
             {
                 "color": "yellow",
-                "coords": [[0,2],[1,1],[2,0]]
+                "coords": [[2,3],[1,2],[0,1]]
             }
         ],
         "valueRestrictions":
         [
             {
                 "value": 1,
-                "coords": [[0,0],[3,4]]
+                "coords": [[0,3],[4,0]]
             },
             {
                 "value": 2,
-                "coords": [[3,3]]
+                "coords": [[3,0]]
             },
             {
                 "value": 3,
-                "coords": [[2,4]]
+                "coords": [[4,1]]
             },
             {
                 "value": 4,
-                "coords": [[0,4],[3,2]]
+                "coords": [[4,3],[2,0]]
             },
             {
                 "value": 5,
-                "coords": [[2,4],[3,2]]
+                "coords": [[3,1],[1,0]]
             },
             {
                 "value": 6,
-                "coords": [[1,4]]
+                "coords": [[4,2]]
             }
         ]
     }

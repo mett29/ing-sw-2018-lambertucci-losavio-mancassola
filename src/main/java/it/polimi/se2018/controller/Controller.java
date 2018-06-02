@@ -16,14 +16,11 @@ public class Controller {
     }
 
     /**
-     * Handle player's move. If the match is ended, it calculates the final score.
+     * Handle player's move.
      * @param move of the player
      */
-    public void handleMove(PlayerMove move) {
-        boolean matchEnded = gameManager.handleMove(move);
-        if(matchEnded)
-            gameManager.calculateScore();
-        //TODO
+    public /*boolean*/ void handleMove(PlayerMove move) {
+        /*return*/ gameManager.handleMove(move);
     }
 
     /**
@@ -39,12 +36,37 @@ public class Controller {
     }
 
     /**
+     * Activate pick_die move
+     * Checks if it's possible to make a move.
+     * @param username of the player
+     * @return true if successfully activated
+     */
+    public boolean activateNormalMove(String username) {
+        return gameManager.activateNormalMove(username);
+    }
+
+    /**
+     * Pass the current player's turn
+     * Checks if it's possible to pass the turn
+     * @param username of the player
+     * @return true if successfully passed the turn
+     */
+    public void passTurn(String username) {
+        boolean matchEnded = gameManager.passTurn(username);
+        if(matchEnded)
+            gameManager.calculateScore();
+    }
+
+    /**
      * @return the 4 extracted patterns between which the player will chose
      */
     public List<ParsedBoard> extractPatterns() {
         return this.gameManager.extractPatterns();
     }
 
+    /**
+     * @return the current match
+     */
     public Match getMatch() {
         return gameManager.getMatch();
     }

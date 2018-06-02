@@ -31,80 +31,91 @@ class TurnManager {
     }
 
     /**
-     * Checks if the length of DieCoords is 2
-     * @param dc array of DieCoord
-     * @return true if the length is 2, false otherwise
+     * Process a move of the player.
+     * Checks if there is any toolcard active.
+     * Checks possible actions.
+     * @param move of the player
+     * @return true if the state is 'YOUR_TURN'
      */
-    private static boolean isMoveDieMovement(DieCoord[] dc){
-        return dc.length != 2;
+    boolean handleMove(PlayerMove move) {
+        Player currentPlayer = match.getPlayerQueue().peek();
+        PlayerState newState = null;
+
+        boolean isToolcardActive = (currentPlayer.getActivatedToolcard() != null);
+
+        if(isToolcardActive && currentPlayer.getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD)) {
+            newState = toolcard.handleMove(move);
+            if(newState.get() == EnumState.YOUR_TURN) {
+                toolcard = null;
+                currentPlayer.deactivateToolcard();
+            }
+        } else if(currentPlayer.getState().get() != EnumState.YOUR_TURN && currentPlayer.getPossibleActions().contains(PossibleAction.PICK_DIE)) {
+            DieCoord coord = (DieCoord) move.getMove();
+            if (memory.isEmpty()) {
+                memory.add(coord);
+                newState = new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
+            } else {
+                memory.add(coord);
+                if (memory.size() != 2) {
+                    throw new InvalidParameterException("playerMove must contain DieCoord[2]");
+                }
+                Action moveDice = new Switch(memory.get(0), memory.get(1));
+                PlacementError err = moveDice.check();
+                System.out.println(err.getErrorByte());
+                int diceOnBoard = currentPlayer.getBoard().countDice();
+                if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
+                    newState = new PlayerState(EnumState.REPEAT);
+                    memory.remove(1);
+                } else {
+                    moveDice.perform();
+                    currentPlayer.possibleActionsRemove(PossibleAction.PICK_DIE);
+                    newState = new PlayerState(EnumState.YOUR_TURN);
+                }
+            }
+        }
+
+        currentPlayer.setState(newState);
+        return currentPlayer.getState().get() == EnumState.YOUR_TURN;
     }
 
     /**
-     * Handles the basic move of the player: picking a Die from the draftpool.
-     * Checks the type of action of the player move.
-     * @param move of the player
-     * @return true if the state is 'IDLE', false if not
+     * Activate pick_die move
+     * Checks if it's possible to make a move.
+     * @param username of the player
+     * @return true if successfully activated
      */
-    boolean handleMove(PlayerMove move) {
-        PlayerState newState = null;
+    boolean activateNormalMove(String username) {
+        Player currentPlayer = match.getPlayerQueue().peek();
 
-        switch (move.getTypeAction()) {
-            case PASS_TURN:
-                if(move.getActor().getPossibleActions().contains(PossibleAction.PASS_TURN)) {
-                    newState = new PlayerState(EnumState.IDLE);
-                    move.getActor().possibleActionsRemoveAll();
-                } else {
-                    System.out.println("Can't do this action");
-                    newState = move.getActor().getState();
-                }
-                break;
-            case ACTIVATE_TOOLCARD:
-                if(move.getActor().getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD)) {
-                    newState = toolcard.handleMove(move);
-                    if(move.getActor().getState().get() == EnumState.YOUR_TURN) {
-                        toolcard = null;
-                        move.getActor().deactivateToolcard();
-                    }
-                } else {
-                    System.out.println("Can't do this action");
-                    newState = move.getActor().getState();
-                }
-                break;
-            case PICK_DIE:
-                if(move.getActor().getPossibleActions().contains(PossibleAction.PICK_DIE)) {
-                    DieCoord coord = (DieCoord) move.getMove();
-                    if (memory.isEmpty()) {
-                        memory.add(coord);
-                        newState = new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
-                    } else {
-                        memory.add(coord);
-                        DieCoord[] coords = (DieCoord[]) (memory.toArray());
-                        if (isMoveDieMovement(coords)) {
-                            throw new InvalidParameterException("playerMove must contain DieCoord[2]");
-                        }
-                        Action moveDice = new Switch(coords[0], coords[1]);
-                        PlacementError err = moveDice.check();
-                        if (!err.hasNoErrorExceptEdge()) {
-                            newState = new PlayerState(EnumState.REPEAT);
-                        } else {
-                            moveDice.perform();
-                            move.getActor().possibleActionsRemove(PossibleAction.PICK_DIE);
-                            newState = new PlayerState(EnumState.YOUR_TURN);
-                        }
-                    }
-                } else {
-                    System.out.println("Can't do this action");
-                    newState = move.getActor().getState();
-                }
-                break;
-            case NO_ACTION:
-                System.out.println("No action");
-                newState = move.getActor().getState();
-                break;
+        boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
+        boolean isYourTurnState = currentPlayer.getState().get() == EnumState.YOUR_TURN;
+
+        if(isPlayerEqual && isYourTurnState && currentPlayer.getPossibleActions().contains(PossibleAction.PICK_DIE)) {
+            currentPlayer.setState(new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
+            return true;
         }
 
-        move.getActor().setState(newState);
-        return move.getActor().getState().get() == EnumState.IDLE;
+        return false;
+    }
+
+    /**
+     * Pass the current player's turn
+     * Checks if it's possible to pass the turn
+     * @param username of the player
+     * @return true if successfully passed the turn
+     */
+    boolean passTurn(String username) {
+        Player currentPlayer = match.getPlayerQueue().peek();
+
+        boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
+
+        if(isPlayerEqual && currentPlayer.getPossibleActions().contains(PossibleAction.PASS_TURN)) {
+            currentPlayer.possibleActionsRemoveAll();
+            currentPlayer.setState(new PlayerState(EnumState.IDLE));
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -113,24 +124,27 @@ class TurnManager {
      * @param toolCardId index of toolcard selected
      * @return true if successfully activated
      */
-    boolean activateToolcard(int toolCardId) {
+    boolean activateToolcard(String username, int toolCardId) {
         PlayerState newState;
-        PlayerMove playerMove = new PlayerMove<>(match.getPlayerQueue().peek(), null, PossibleAction.ACTIVATE_TOOLCARD);
+        Player currentPlayer = match.getPlayerQueue().peek();
+        PlayerMove playerMove = new PlayerMove<>(currentPlayer, null);
         ToolCard toolCardActivated = match.getToolCards()[toolCardId];
 
-        if (Checks.get(toolCardActivated.getId()).apply(match, playerMove) && match.getPlayerQueue().peek().getToken() >= toolCardActivated.getCost()) {
+        boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
+        boolean isPossibleActionActivateToolcard = (currentPlayer.getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD));
+        boolean isPlayerEnoughTokens = (currentPlayer.getToken() >= toolCardActivated.getCost());
+
+        if (isPlayerEqual && isPossibleActionActivateToolcard && Checks.get(toolCardActivated.getId()).apply(match, playerMove) && isPlayerEnoughTokens) {
             this.toolcard = new ToolCardController(match, toolCardActivated);
-            playerMove.getActor().setActivatedToolcard(toolCardActivated);
+            currentPlayer.setActivatedToolcard(toolCardActivated);
             newState = toolcard.handleMove(playerMove);
-            playerMove.getActor().setState(newState);
-            playerMove.getActor().setToken(playerMove.getActor().getToken() - toolCardActivated.getCost());
+            currentPlayer.setToken(currentPlayer.getToken() - toolCardActivated.getCost());
+            currentPlayer.setState(newState);
             toolCardActivated.increaseCost();
             return true;
-        } else {
-            newState = new PlayerState(EnumState.YOUR_TURN);
-            playerMove.getActor().setState(newState);
-            return false;
         }
+
+        return false;
     }
 
     /**

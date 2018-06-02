@@ -4,7 +4,6 @@ import it.polimi.se2018.model.*;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 class RoundManager {
@@ -72,30 +71,53 @@ class RoundManager {
     }
 
     /**
-     * Handle the player's move through TurnManager and checks if the round is finished or not.
+     * Handle the player's move.
      * @param playerMove of the player
-     * @return true if the round is finished, false otherwise
+     * @return true if the all moves are finished, false otherwise
      */
     boolean handleMove(PlayerMove playerMove) {
-        if(turnManager.handleMove(playerMove)) {
-            if(match.getPlayerQueue().isEmpty()){
-                return true;
-            } else {
-                turnManager.newTurn(match.getPlayerQueue().poll());
-                return false;
-            }
-        } else {
-            return false;
-        }
+        return turnManager.handleMove(playerMove);
     }
 
     /**
      * Activate one of the 3 toolcards.
      * Checks if it's possible to use the toolcard and if the player has enough tokens. Increase the cost of the toolcard if activated.
+     * @param username of the player
      * @param toolCardId index of toolcard selected
      * @return true if successfully activated
      */
-    boolean activateToolcard(int toolCardId) {
-        return turnManager.activateToolcard(toolCardId);
+    boolean activateToolcard(String username, int toolCardId) {
+        return turnManager.activateToolcard(username, toolCardId);
+    }
+
+    /**
+     * Activate pick_die move
+     * Checks if it's possible to make a move.
+     * @param username of the player
+     * @return true if successfully activated
+     */
+    boolean activateNormalMove(String username) {
+        return turnManager.activateNormalMove(username);
+    }
+
+    /**
+     * Pass the current player's turn to the next one of the queue.
+     * Checks if it's possible to pass the turn.
+     * Checks if the round if finished.
+     * @param username of the player
+     * @return true if successfully passed the turn
+     */
+    boolean passTurn(String username) {
+        if(turnManager.passTurn(username)) {
+            if(match.getPlayerQueue().isEmpty()){
+                return true;
+            } else {
+                match.getPlayerQueue().poll();
+                turnManager.newTurn(match.getPlayerQueue().peek());
+                return false;
+            }
+        } else {
+            return  false;
+        }
     }
 }

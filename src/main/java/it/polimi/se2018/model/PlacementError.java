@@ -15,6 +15,10 @@ public class PlacementError {
 
     private PlacementError(EnumSet<Flags> flags) { errorByte = flags; }
 
+    public EnumSet<Flags> getErrorByte() {
+        return errorByte;
+    }
+
     /**
      * Check if the die placed near another die has the same value
      * @return true if same value
@@ -85,7 +89,7 @@ public class PlacementError {
     public boolean hasNoErrorExceptEdge(){ return isEqual(EnumSet.of(Flags.EDGE)) || !hasError(); }
 
     boolean isEqual(EnumSet<Flags> flags){
-        return errorByte.containsAll(flags);
+        return errorByte.equals(flags);
     }
 
     boolean isEqual(PlacementError other){

@@ -58,49 +58,102 @@ public class TurnManagerTest {
     @Test
     public void precheckFalse() throws Exception {
         TurnManager turnManager = new TurnManager(match);
+        playerQueue.peek().possibleActionsSetUp();
+        playerQueue.peek().setState(new PlayerState(EnumState.YOUR_TURN));
         playerQueue.peek().setToken(5);
 
-        assertFalse(turnManager.activateToolcard(1));
+        assertFalse(turnManager.activateToolcard("Pino", 1));
     }
 
     @Test
-    public void precheckTrue() throws Exception {
+    public void pickDieTest() throws Exception {
         TurnManager turnManager = new TurnManager(match);
+        Player currentPlayer = playerQueue.peek();
+        currentPlayer.possibleActionsSetUp();
+        currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
 
-        playerQueue.peek().getBoard().setDie(0, 0, new Die(2, Color.RED));
-        playerQueue.peek().getBoard().setDie(0, 1, new Die(3, Color.RED));
+        DiceContainer dc = new DiceContainer(5);
+        dc.insert(new Die(2, Color.RED));
 
-        /*
-         * (2R),(3R),(no),(no),(no)
-         * (no),(no),(no),(no),(no)
-         * (no),(no),(no),(no),(no)
-         * (no),(no),(no),(no),(no)
-         */
+        assertTrue(turnManager.activateNormalMove("Pino"));
 
-        playerQueue.peek().possibleActionsSetUp();
-        playerQueue.peek().setToken(5);
+        PlayerMove<DieCoord> pm1 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(dc, 0));
+        assertFalse(turnManager.handleMove(pm1));
+
+        currentPlayer.getBoard().setDie(0, 0, new Die(1, Color.RED));
+        currentPlayer.getBoard().setDie(0, 1, new Die(3, Color.YELLOW));
+
+        PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 0));
+        assertFalse(turnManager.handleMove(pm2));
+
+        pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 1));
+        assertTrue(turnManager.handleMove(pm2));
+
+        System.out.println(currentPlayer.getBoard().getDie(1,1));
+        System.out.println(dc.getDie(0));
+    }
+
+    @Test
+    public void pickFirstDie() throws Exception {
+        TurnManager turnManager = new TurnManager(match);
+        Player currentPlayer = playerQueue.peek();
+        currentPlayer.possibleActionsSetUp();
+        currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
+
+        DiceContainer dc = new DiceContainer(5);
+        dc.insert(new Die(2, Color.RED));
+        dc.insert(new Die(3, Color.YELLOW));
+
+        assertTrue(turnManager.activateNormalMove("Pino"));
+
+        PlayerMove<DieCoord> pm1 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(dc, 0));
+        assertFalse(turnManager.handleMove(pm1));
+
+        PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 1));
+        assertTrue(turnManager.handleMove(pm2));
+
+        System.out.println(currentPlayer.getBoard().getDie(0,1));
+        System.out.println(dc.getDie(0));
+
+        turnManager = new TurnManager(match);
+        currentPlayer.possibleActionsSetUp();
+
+        assertTrue(turnManager.activateNormalMove("Pino"));
+
+        pm1 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(dc, 1));
+        assertFalse(turnManager.handleMove(pm1));
+
+        pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 1));
+        assertTrue(turnManager.handleMove(pm2));
+
+        System.out.println(currentPlayer.getBoard().getDie(1,1));
+        System.out.println(dc.getDie(1));
+    }
+
+    @Test
+    public void precheckTrue_activationToolcardTest() throws Exception {
+        TurnManager turnManager = new TurnManager(match);
+        Player currentPlayer = playerQueue.peek();
+        currentPlayer.possibleActionsSetUp();
+        currentPlayer.setToken(5);
+
+        currentPlayer.getBoard().setDie(0, 0, new Die(2, Color.RED));
+        currentPlayer.getBoard().setDie(0, 1, new Die(3, Color.RED));
 
         //Attivo la seconda toolcard -> Vado in stato PICK
-        assertTrue(turnManager.activateToolcard(1));
+        assertTrue(turnManager.activateToolcard("Pino", 1));
         System.out.println(playerQueue.peek().getState().get());
 
         //Seleziono un dado dalla Board -> Vado in stato PICK
-        PlayerMove<DieCoord> pm2 = new PlayerMove<>(playerQueue.peek(), new BoardCoord(playerQueue.peek().getBoard(), 0, 0), PossibleAction.ACTIVATE_TOOLCARD);
+        PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 0));
 
         assertFalse(turnManager.handleMove(pm2));
         System.out.println(playerQueue.peek().getState().get());
 
-        //Seleziono una casella dalla Board -> TERMINATO -> Vado in stato IDLE
-        PlayerMove<DieCoord> pm3 = new PlayerMove<>(playerQueue.peek(), new BoardCoord(playerQueue.peek().getBoard(), 1, 1), PossibleAction.ACTIVATE_TOOLCARD);
+        //Seleziono una casella dalla Board -> TERMINATO -> Vado in stato YOUR_TURN
+        PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 1));
 
-        assertFalse(turnManager.handleMove(pm3));
-
-        /*
-         * (no),(3R),(no),(no),(no)
-         * (no),(2R),(no),(no),(no)
-         * (no),(no),(no),(no),(no)
-         * (no),(no),(no),(no),(no)
-         */
+        assertTrue(turnManager.handleMove(pm3));
 
         System.out.println(playerQueue.peek().getState().get());
 
@@ -110,29 +163,30 @@ public class TurnManagerTest {
     @Test
     public void passTurnTest() throws Exception {
         TurnManager turnManager = new TurnManager(match);
-        playerQueue.peek().setToken(5);
+        Player currentPlayer = playerQueue.peek();
+        currentPlayer.possibleActionsSetUp();
+        currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
 
-        PlayerMove pm = new PlayerMove<>(playerQueue.peek(), null, PossibleAction.PASS_TURN);
-        pm.getActor().possibleActionsSetUp();
+        assertTrue(turnManager.passTurn("Pino"));
 
-        assertTrue(turnManager.handleMove(pm));
-        System.out.println(pm.getActor().getState().get());
-
-        assertTrue(turnManager.handleMove(pm));
-        System.out.println(pm.getActor().getState().get());
+        assertFalse(turnManager.passTurn("Pino"));
+        System.out.println(currentPlayer.getState().get());
     }
 
     @Test
     public void sufficient_insufficientTokens() throws Exception {
         TurnManager turnManager = new TurnManager(match);
-        playerQueue.peek().setToken(3);
+        Player currentPlayer = playerQueue.peek();
+        currentPlayer.possibleActionsSetUp();
+        currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
+        currentPlayer.setToken(3);
 
-        assertTrue(turnManager.activateToolcard(0));
+        assertTrue(turnManager.activateToolcard("Pino", 0));
 
-        assertTrue(turnManager.activateToolcard(0));
+        assertTrue(turnManager.activateToolcard("Pino", 0));
 
         assertEquals(0, playerQueue.peek().getToken());
 
-        assertFalse(turnManager.activateToolcard(0));
+        assertFalse(turnManager.activateToolcard("Pino", 0));
     }
 }

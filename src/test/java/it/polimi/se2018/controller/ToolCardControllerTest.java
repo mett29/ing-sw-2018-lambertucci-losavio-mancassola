@@ -46,20 +46,20 @@ public class ToolCardControllerTest {
         dice.set(new Die(2, Color.RED));
 
         //PlayerMove random giusto per fare la prima Function
-        PlayerMove<Integer> pm1 = new PlayerMove<>(players.get(0), 10, PossibleAction.ACTIVATE_TOOLCARD);
+        PlayerMove<Integer> pm1 = new PlayerMove<>(players.get(0), 10);
         pm1.getActor().possibleActionsSetUp();
         PlayerState ps1 = tcc.handleMove(pm1);
 
         assertEquals(ps1.get(),EnumState.PICK);
 
         //PlayerMove dove prendo una DieCoord random (l'ho voluta testare con DiceContainerCoord per semplicità)
-        PlayerMove<DieCoord> pm2 = new PlayerMove<>(players.get(0), dice, PossibleAction.ACTIVATE_TOOLCARD);
+        PlayerMove<DieCoord> pm2 = new PlayerMove<>(players.get(0), dice);
         PlayerState ps2 = tcc.handleMove(pm2);
 
         assertEquals(ps2.get(),EnumState.UPDOWN);
 
         //Alzo di 1 il valore del dado
-        PlayerMove<Boolean> pm3 = new PlayerMove<>(players.get(0), true, PossibleAction.ACTIVATE_TOOLCARD);
+        PlayerMove<Boolean> pm3 = new PlayerMove<>(players.get(0), true);
         PlayerState ps3 = tcc.handleMove(pm3);
 
         assertEquals(ps3.get(),EnumState.YOUR_TURN);
@@ -78,26 +78,26 @@ public class ToolCardControllerTest {
         dice.set(new Die(6, Color.RED));
 
         //PlayerMove random giusto per fare la prima Function -> Vado in stato PICK
-        PlayerMove<Integer> pm1 = new PlayerMove<>(players.get(0), 10, PossibleAction.ACTIVATE_TOOLCARD);
+        PlayerMove<Integer> pm1 = new PlayerMove<>(players.get(0), 10);
         pm1.getActor().possibleActionsSetUp();
         PlayerState ps1 = tcc.handleMove(pm1);
 
         assertEquals(ps1.get(),EnumState.PICK);
 
         //PlayerMove dove prendo una DieCoord random (l'ho voluta testare con DiceContainerCoord per semplicità) -> Vado in stato UPDOWN
-        PlayerMove<DieCoord> pm2 = new PlayerMove<>(players.get(0), dice, PossibleAction.ACTIVATE_TOOLCARD);
+        PlayerMove<DieCoord> pm2 = new PlayerMove<>(players.get(0), dice);
         PlayerState ps2 = tcc.handleMove(pm2);
 
         assertEquals(ps2.get(),EnumState.UPDOWN);
 
         //Alzo di 1 il valore del dado -> ERRORE -> Vado in stato REPEAT
-        PlayerMove<Boolean> pm3 = new PlayerMove<>(players.get(0), true, PossibleAction.ACTIVATE_TOOLCARD);
+        PlayerMove<Boolean> pm3 = new PlayerMove<>(players.get(0), true);
         PlayerState ps3 = tcc.handleMove(pm3);
 
         assertEquals(ps3.get(),EnumState.REPEAT);
 
         //Abbasso di 1 il valore del dado -> FINE QUEUE azioni -> Vado in stato IDLE
-        PlayerMove<Boolean> pm4 = new PlayerMove<>(players.get(0), false, PossibleAction.ACTIVATE_TOOLCARD);
+        PlayerMove<Boolean> pm4 = new PlayerMove<>(players.get(0), false);
         PlayerState ps4 = tcc.handleMove(pm4);
 
         assertEquals(ps4.get(),EnumState.YOUR_TURN);
@@ -122,7 +122,7 @@ public class ToolCardControllerTest {
 
         match.setDraftPool(draftpool);
 
-        PlayerMove<ToolCard> playerMove = new PlayerMove<>(players.get(0), match.getToolCards()[2], PossibleAction.ACTIVATE_TOOLCARD);
+        PlayerMove<ToolCard> playerMove = new PlayerMove<>(players.get(0), match.getToolCards()[2]);
         playerMove.getActor().possibleActionsSetUp();
         PlayerState ps = tcc.handleMove(playerMove);
 
