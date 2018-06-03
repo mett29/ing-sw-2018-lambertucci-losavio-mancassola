@@ -103,11 +103,10 @@ public class Lobby implements Observer{
                 String chosenPatternName = ((PatternResponse) message).patternName;
                 handlePatternChoice(username, chosenPatternName);
                 playerWithBoard.put(username, chosenPatternName);
-                if (playerWithBoard.size() == 4) {
+                if (playerWithBoard.size() == this.getPlayers().size()) {
                     // The match can be started
-                    // TODO
                     // Set match to new match created by controller
-                    match = null;
+                    match = controller.getMatch();
                     updateAll(new MatchStartMessage(match));
                 }
                 break;

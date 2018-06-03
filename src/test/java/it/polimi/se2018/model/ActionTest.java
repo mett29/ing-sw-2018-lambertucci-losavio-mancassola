@@ -32,6 +32,7 @@ public class ActionTest {
         c2 = new BoardCoord(b2, 4, 3);
     }
 
+    /*
     @Test
     public void moveDiceTest() throws Exception{
         c1.set(d1);
@@ -53,6 +54,7 @@ public class ActionTest {
         assertEquals(d1.getValue(), c2.get().getValue());
 
     }
+    */
 
     @Test
     public void switchDieTest() throws Exception{

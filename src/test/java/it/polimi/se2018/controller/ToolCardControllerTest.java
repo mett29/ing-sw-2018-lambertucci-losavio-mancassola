@@ -67,19 +67,19 @@ public class ToolCardControllerTest {
         pm1.getActor().possibleActionsSetUp();
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove prendo una DieCoord random (l'ho voluta testare con DiceContainerCoord per semplicità)
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(players.get(0), dice);
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.UPDOWN);
+        assertEquals(EnumState.UPDOWN, ps2.get());
 
         //Alzo di 1 il valore del dado
         PlayerMove<Boolean> pm3 = new PlayerMove<>(players.get(0), true);
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps3.get());
 
         assertEquals(3, dice.get().getValue());
 
@@ -101,25 +101,25 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove prendo una DieCoord random (l'ho voluta testare con DiceContainerCoord per semplicità) -> Vado in stato UPDOWN
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, dice);
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.UPDOWN);
+        assertEquals(EnumState.UPDOWN, ps2.get());
 
         //Alzo di 1 il valore del dado -> ERRORE -> Vado in stato REPEAT
         PlayerMove<Boolean> pm3 = new PlayerMove<>(currentPlayer, true);
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.REPEAT);
+        assertEquals(EnumState.REPEAT, ps3.get());
 
         //Abbasso di 1 il valore del dado -> FINE QUEUE azioni -> Vado in stato IDLE
         PlayerMove<Boolean> pm4 = new PlayerMove<>(currentPlayer, false);
         PlayerState ps4 = tcc.handleMove(pm4);
 
-        assertEquals(ps4.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps4.get());
 
         assertEquals(5, dice.get().getValue());
 
@@ -142,19 +142,19 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla board -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps2.get());
 
         //PlayerMove dove seleziono la cella vuota dalla board -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 1));
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps3.get());
     }
 
     @Test
@@ -171,19 +171,19 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla board -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps2.get());
 
         //PlayerMove dove seleziono la cella vuota dalla board -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 2));
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps3.get());
     }
 
     @Test
@@ -200,31 +200,31 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla board -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 2, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps2.get());
 
         //PlayerMove dove seleziono la cella vuota dalla board -> Vado in stato PICK
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 0));
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps3.get());
 
         //PlayerMove dove seleziono il dado dalla board -> Vado in stato PICK
         PlayerMove<DieCoord> pm4 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 3));
         PlayerState ps4 = tcc.handleMove(pm4);
 
-        assertEquals(ps4.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps4.get());
 
         //PlayerMove dove seleziono la cella vuota dalla board -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<DieCoord> pm5 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 2, 0));
         PlayerState ps5 = tcc.handleMove(pm5);
 
-        assertEquals(ps5.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps5.get());
     }
 
     @Test
@@ -243,19 +243,19 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla draftpool -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(draftpool, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps2.get());
 
         //PlayerMove dove seleziono il dado dal roundtracker -> Vado in stato PICK
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(roundtracker, 0));
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps3.get());
 
         System.out.println(roundtracker.getDie(0));
         System.out.println(draftpool.getDie(0));
@@ -274,13 +274,13 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla draftpool -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(draftpool, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.YESNO);
+        assertEquals(EnumState.YESNO, ps2.get());
 
         System.out.println(draftpool.getDie(0));
 
@@ -288,7 +288,7 @@ public class ToolCardControllerTest {
         PlayerMove<Boolean> pm3 = new PlayerMove<>(currentPlayer, false);
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps3.get());
 
         System.out.println(draftpool.getDie(0));
     }
@@ -308,13 +308,13 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla draftpool -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(draftpool, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.YESNO);
+        assertEquals(EnumState.YESNO, ps2.get());
 
         System.out.println(draftpool.getDie(0));
 
@@ -322,13 +322,13 @@ public class ToolCardControllerTest {
         PlayerMove<Boolean> pm3 = new PlayerMove<>(currentPlayer, true);
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps3.get());
 
         //PlayerMove dove seleziono il dado dal roundtracker -> Vado in stato PICK
         PlayerMove<DieCoord> pm4 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 2));
         PlayerState ps4 = tcc.handleMove(pm4);
 
-        assertEquals(ps4.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps4.get());
     }
 
     @Test
@@ -376,7 +376,7 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla board -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(draftpool, 0));
@@ -388,7 +388,7 @@ public class ToolCardControllerTest {
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 2));
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps3.get());
 
         System.out.println(match.getPlayerQueue());
     }
@@ -408,13 +408,13 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla board -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(draftpool, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps2.get());
 
         //PlayerMove dove seleziono la cella vuota dalla board -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 2));
@@ -422,7 +422,7 @@ public class ToolCardControllerTest {
 
         //TODO: Restrizioni scritte con x e y invertite
 
-        assertEquals(ps3.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps3.get());
     }
 
     @Test
@@ -438,13 +438,13 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla draftpool -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(draftpool, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps2.get());
 
         System.out.println(draftpool.getDie(0));
     }
@@ -464,25 +464,25 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dalla board -> Vado in stato VALUE
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(draftpool, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.VALUE);
+        assertEquals(EnumState.VALUE, ps2.get());
 
         //PlayerMove dove seleziono il valore del dado compreso tra 1 e 6 -> Vado in stato PICK
         PlayerMove<Integer> pm3 = new PlayerMove<>(currentPlayer, 5);
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps3.get());
 
         //PlayerMove dove seleziono una cella vuota della board -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<DieCoord> pm4 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 0));
         PlayerState ps4 = tcc.handleMove(pm4);
 
-        assertEquals(ps4.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps4.get());
     }
 
     @Test
@@ -502,31 +502,31 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dal roundtracker -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(roundtracker, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps2.get());
 
         //PlayerMove dove seleziono un dado della board -> Vado in stato PICK
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 0));
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps3.get());
 
         //PlayerMove dove seleziono una cella vuota della board -> Vado in stato YESNO
         PlayerMove<DieCoord> pm4 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 1));
         PlayerState ps4 = tcc.handleMove(pm4);
 
-        assertEquals(ps4.get(),EnumState.YESNO);
+        assertEquals(EnumState.YESNO, ps4.get());
 
         //PlayerMove dove scelgo se selezionare o meno il prossimo dado -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<Boolean> pm5 = new PlayerMove<>(currentPlayer, false);
         PlayerState ps5 = tcc.handleMove(pm5);
 
-        assertEquals(ps5.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps5.get());
     }
 
     @Test
@@ -546,42 +546,42 @@ public class ToolCardControllerTest {
         PlayerMove<Integer> pm1 = new PlayerMove<>(currentPlayer, 10);
         PlayerState ps1 = tcc.handleMove(pm1);
 
-        assertEquals(ps1.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps1.get());
 
         //PlayerMove dove seleziono il dado dal roundtracker -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(roundtracker, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps2.get());
 
         //PlayerMove dove seleziono un dado della board -> Vado in stato PICK
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 0));
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        assertEquals(ps3.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps3.get());
 
         //PlayerMove dove seleziono una cella vuota della board -> Vado in stato YESNO
         PlayerMove<DieCoord> pm4 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 1));
         PlayerState ps4 = tcc.handleMove(pm4);
 
-        assertEquals(ps4.get(),EnumState.YESNO);
+        assertEquals(EnumState.YESNO, ps4.get());
 
         //PlayerMove dove scelgo se selezionare o meno il prossimo dado -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<Boolean> pm5 = new PlayerMove<>(currentPlayer, true);
         PlayerState ps5 = tcc.handleMove(pm5);
 
-        assertEquals(ps5.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps5.get());
 
         //PlayerMove dove seleziono un dado della board -> Vado in stato PICK
         PlayerMove<DieCoord> pm6 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 3));
         PlayerState ps6 = tcc.handleMove(pm6);
 
-        assertEquals(ps6.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps6.get());
 
         //PlayerMove dove seleziono una cella vuota della board -> Vado in stato YESNO
         PlayerMove<DieCoord> pm7 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 2));
         PlayerState ps7 = tcc.handleMove(pm7);
 
-        assertEquals(ps7.get(),EnumState.YOUR_TURN);
+        assertEquals(EnumState.YOUR_TURN, ps7.get());
     }
 }
