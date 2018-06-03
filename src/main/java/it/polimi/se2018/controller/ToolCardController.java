@@ -31,8 +31,10 @@ class ToolCardController {
      * @return the new state at the end of the operation
      */
     PlayerState handleMove(PlayerMove playerMove) {
+        //Applies the first operation of the Queue of BiFunctions based on this toolcard controller and the playerMove of the player.
         PlayerState newState = operations.peek().apply(this, playerMove);
 
+        //If the state returned is not REPEAT, poll the Queue. Otherwise the player must repeat that operation of the Queue.
         if(newState.get() != EnumState.REPEAT) {
             operations.poll();
         }
@@ -421,6 +423,10 @@ class ToolCardController {
             ops = Collections.unmodifiableMap(tmpOps);
         }
 
+        /**
+         * @param mapIndex of the HashMap of operations
+         * @return a cloned Queue of BiFunctions
+         */
         public static Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> get(int mapIndex) {
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> tmpQueue = new LinkedList<>();
             tmpQueue.addAll(ops.get(mapIndex));

@@ -23,6 +23,7 @@ public class Player {
         if(name == null)
             throw new NullPointerException("`name` must be not null");
         this.name = name;
+        this.state = new PlayerState(EnumState.IDLE);
     }
 
     /**

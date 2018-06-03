@@ -189,4 +189,23 @@ public class TurnManagerTest {
 
         assertFalse(turnManager.activateToolcard("Pino", 0));
     }
+
+    @Test
+    public void prechecksFalse() throws Exception {
+        TurnManager turnManager = new TurnManager(match);
+        Player currentPlayer = playerQueue.peek();
+        currentPlayer.possibleActionsSetUp();
+        currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
+        currentPlayer.setToken(4);
+
+        toolCards[0] = new ToolCard(4);
+        toolCards[1] = new ToolCard(6);
+        toolCards[2] = new ToolCard(7);
+
+        assertFalse(turnManager.activateToolcard("Pino", 0));
+
+        assertFalse(turnManager.activateToolcard("Pino", 1));
+
+        assertTrue(turnManager.activateToolcard("Pino", 2));
+    }
 }

@@ -31,7 +31,6 @@ public class DiceContainerTest {
             assertEquals(diceContainer1.getDice().get(i).getValue(), diceContainer2.getDice().get(i).getValue());
             assertEquals(diceContainer1.getDice().get(i).getColor(), diceContainer2.getDice().get(i).getColor());
         }
-        //TODO : Qua andrebbe Iterator per coprire quella parte di codice
     }
 
     @Test

@@ -13,22 +13,24 @@ class RoundManager {
     RoundManager(Match match) {
         this.match = match;
         turnManager = new TurnManager(match);
+        this.match.setPlayerQueue(newQueue());
+        this.match.setDraftPool(newDraftpool());
+        turnManager.newTurn(this.match.getPlayerQueue().peek());
     }
 
     /**
      * Create new round.
-     * Insert last die from Draft Pool to Round Tracker
-     * Initializes new player queue (as specified by rules)
-     * Extracts new DraftPool
      */
     void newRound() {
-        int lastDieIndex = match.getDraftPool().getCurrentSize() - 1;
-        Die lastDieDraftpool = match.getDraftPool().getDice().get(lastDieIndex);
+        Die lastDieDraftpool = match.getDraftPool().getLastDie();
 
+        //Insert last die from Draft Pool to Round Tracker
         match.getRoundTracker().insert(lastDieDraftpool);
 
-        newQueue();
+        //Initializes new player queue (as specified by rules)
+        match.setPlayerQueue(newQueue());
 
+        //Extracts new DraftPool
         match.setDraftPool(newDraftpool());
     }
 
@@ -46,7 +48,7 @@ class RoundManager {
     /**
      * Creates a new round passing the first turn to the player next to him (clockwise procedure).
      */
-    private void newQueue(){
+    private Queue<Player> newQueue(){
         Queue<Player> playerQueue = new LinkedList<>();
 
         List<Player> playerList = match.getPlayers();
@@ -67,7 +69,7 @@ class RoundManager {
                 playerQueue.add(playerList.get(indexes[2 * playerSize - i - 1]));
             }
         }
-        match.setPlayerQueue(playerQueue);
+        return playerQueue;
     }
 
     /**
@@ -109,15 +111,13 @@ class RoundManager {
      */
     boolean passTurn(String username) {
         if(turnManager.passTurn(username)) {
-            if(match.getPlayerQueue().isEmpty()){
-                return true;
-            } else {
-                match.getPlayerQueue().poll();
+            match.getPlayerQueue().poll();
+            if(!match.getPlayerQueue().isEmpty()) {
                 turnManager.newTurn(match.getPlayerQueue().peek());
-                return false;
+            } else {
+                return true;
             }
-        } else {
-            return  false;
         }
+        return  false;
     }
 }

@@ -19,21 +19,19 @@ class TurnManager {
 
     /**
      * Creates a new turn and delegates it to the next player
-     * Resets the ArrayList 'memory' for the new player
-     * Sets the player state as 'YOUR_TURN'
-     * Sets up all possible actions to the current player
      * @param player to delegate
      */
     void newTurn(Player player) {
+        //Resets the ArrayList 'memory' for the new player
         memory = new ArrayList<>();
+        //Sets the player state as 'YOUR_TURN'
         player.setState(new PlayerState(EnumState.YOUR_TURN));
+        //Sets up all possible actions to the current player
         player.possibleActionsSetUp();
     }
 
     /**
      * Process a move of the player.
-     * Checks if there is any toolcard active.
-     * Checks possible actions.
      * @param move of the player
      * @return true if the state is 'YOUR_TURN'
      */
@@ -43,32 +41,41 @@ class TurnManager {
 
         boolean isToolcardActive = (currentPlayer.getActivatedToolcard() != null);
 
+        //Checks if there is a toolcard active and the current player has 'ACTIVATE_TOOLCARD' possible action
         if(isToolcardActive && currentPlayer.getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD)) {
             newState = toolcard.handleMove(move);
             if(newState.get() == EnumState.YOUR_TURN) {
                 toolcard = null;
                 currentPlayer.deactivateToolcard();
             }
+        //Checks if the current player's state is not 'YOUR_TURN' and the current player has 'PICK_DIE' possible action
         } else if(currentPlayer.getState().get() != EnumState.YOUR_TURN && currentPlayer.getPossibleActions().contains(PossibleAction.PICK_DIE)) {
             DieCoord coord = (DieCoord) move.getMove();
+            //If 'memory' is empty, add the first DieCoord
             if (memory.isEmpty()) {
                 memory.add(coord);
+                //Sets the new state to 'PICK' on current player's board and he must select only EMPTY cells NEAR dice
                 newState = new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
             } else {
                 memory.add(coord);
                 if (memory.size() != 2) {
                     throw new InvalidParameterException("playerMove must contain DieCoord[2]");
                 }
+                //The player decided the cell to put the die inside. Switch action will be performed
                 Action moveDice = new Switch(memory.get(0), memory.get(1));
                 PlacementError err = moveDice.check();
                 System.out.println(err.getErrorByte());
                 int diceOnBoard = currentPlayer.getBoard().countDice();
+                //Checks if the board is empty or not. The player's first die must be positioned on an EDGE.
                 if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
                     newState = new PlayerState(EnumState.REPEAT);
                     memory.remove(1);
                 } else {
+                    //Perform the action if all conditions are met
                     moveDice.perform();
+                    //Remove 'PICK_DIE' possible action from possibleActions of the current player, so he can't do this action anymore on the current turn
                     currentPlayer.possibleActionsRemove(PossibleAction.PICK_DIE);
+                    //Actions finished, the new state is 'YOUR_TURN'
                     newState = new PlayerState(EnumState.YOUR_TURN);
                 }
             }
@@ -80,7 +87,6 @@ class TurnManager {
 
     /**
      * Activate pick_die move
-     * Checks if it's possible to make a move.
      * @param username of the player
      * @return true if successfully activated
      */
@@ -90,7 +96,9 @@ class TurnManager {
         boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
         boolean isYourTurnState = currentPlayer.getState().get() == EnumState.YOUR_TURN;
 
+        //Checks if the player's name coincides with the current player of the queue, if he is in 'YOUR_TURN' state and if it contains 'PICK_DIE' possible action
         if(isPlayerEqual && isYourTurnState && currentPlayer.getPossibleActions().contains(PossibleAction.PICK_DIE)) {
+            //His state it's 'PICK' on DRAFTPOOL and he must select a FULL cell
             currentPlayer.setState(new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             return true;
         }
@@ -100,7 +108,6 @@ class TurnManager {
 
     /**
      * Pass the current player's turn
-     * Checks if it's possible to pass the turn
      * @param username of the player
      * @return true if successfully passed the turn
      */
@@ -109,8 +116,11 @@ class TurnManager {
 
         boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
 
+        //Checks if the player's name coincides with the current player of the queue and if it contains 'PASS_TURN' possible action
         if(isPlayerEqual && currentPlayer.getPossibleActions().contains(PossibleAction.PASS_TURN)) {
+            //Removes all possible actions (it will an empty enumset)
             currentPlayer.possibleActionsRemoveAll();
+            //His state it's 'IDLE' and the player will be dequeued
             currentPlayer.setState(new PlayerState(EnumState.IDLE));
             return true;
         }
@@ -120,7 +130,6 @@ class TurnManager {
 
     /**
      * Activate one of the 3 toolcards.
-     * Checks if it's possible to use the toolcard and if the player has enough tokens. Increase the cost of the toolcard if activated.
      * @param toolCardId index of toolcard selected
      * @return true if successfully activated
      */
@@ -134,12 +143,19 @@ class TurnManager {
         boolean isPossibleActionActivateToolcard = (currentPlayer.getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD));
         boolean isPlayerEnoughTokens = (currentPlayer.getToken() >= toolCardActivated.getCost());
 
+        //Checks if the player's name coincides with current player in queue, if 'ACTIVATE_TOOLCARD' is a possible action, if prechecks of toolcard are true and if the player has enough tokens
         if (isPlayerEqual && isPossibleActionActivateToolcard && Checks.get(toolCardActivated.getId()).apply(match, playerMove) && isPlayerEnoughTokens) {
+            //Creates a new toolcard controller with the toolcard activated
             this.toolcard = new ToolCardController(match, toolCardActivated);
+            //Sets the toolcard activated inside the player
             currentPlayer.setActivatedToolcard(toolCardActivated);
+            //The first operation of the toolcard is done
             newState = toolcard.handleMove(playerMove);
+            //Subtract player's tokens based on the toolcard cost
             currentPlayer.setToken(currentPlayer.getToken() - toolCardActivated.getCost());
+            //Sets the new state inside the player
             currentPlayer.setState(newState);
+            //Increase the cost of the toolcard (max: 2)
             toolCardActivated.increaseCost();
             return true;
         }

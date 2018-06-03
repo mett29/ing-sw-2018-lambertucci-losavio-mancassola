@@ -43,7 +43,12 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
      * @return the container's size
      */
     public int getCurrentSize() {
-        return container.size();
+        int size = 0;
+        for(Die die : this) {
+            if(die != null)
+                size++;
+        }
+        return size;
     }
 
     /**
@@ -53,8 +58,23 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
         return maxSize;
     }
 
+    /**
+     * @param index of the die in the container
+     * @return a specified die of the container
+     */
     public Die getDie(int index){
         return container.getOrDefault(index, null);
+    }
+
+    /**
+     * @return the last die in the container
+     */
+    public Die getLastDie() {
+        for(int i = this.getMaxSize() - 1; i >= 0; i--) {
+            if(this.getDie(i) != null)
+                return this.getDie(i);
+        }
+        return null;
     }
 
     public void setDie(int index, Die die){
