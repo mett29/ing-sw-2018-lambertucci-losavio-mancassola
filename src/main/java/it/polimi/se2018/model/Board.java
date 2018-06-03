@@ -75,7 +75,7 @@ public class Board implements Iterable<Cell>, Memento<Board> {
 
         // Check that all the adjacent dies don't have the same color or the same value of the placed die
         for (Die neighbour : adjacentDies) {
-            if(neighbour != null) {
+            if(neighbour != null && neighbour != die) {
                 if (neighbour.getColor() == die.getColor())
                     ret = PlacementError.union(ret, new PlacementError(Flags.COLOR));
                 if (neighbour.getValue() == die.getValue())

@@ -387,7 +387,7 @@ public class CLI implements ViewInterface {
             case UPDOWN:
                 move = onUpDownState(newState);
                 break;
-            case NEXT:
+            case YESNO:
                 break;
             case REPEAT:
                 onRepeatState(oldState);

@@ -5,7 +5,7 @@ package it.polimi.se2018.model;
  * @author ontech7
  */
 public enum EnumState {
-    IDLE, YOUR_TURN, PICK, VALUE, UPDOWN, NEXT, REPEAT;
+    IDLE, YOUR_TURN, PICK, VALUE, UPDOWN, YESNO, REPEAT;
 
     @Override
     public String toString() {
@@ -20,8 +20,8 @@ public enum EnumState {
                 return "Pick value";
             case UPDOWN:
                 return "Pick +/-";
-            case NEXT:
-                return "???";
+            case YESNO:
+                return "Yes/No";
             case REPEAT:
                 return "Repeat";
         }

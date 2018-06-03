@@ -49,8 +49,6 @@ class ToolCardController {
         static {
             Map<Integer, Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>>> tmpOps = new HashMap<>();
 
-
-
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue0 = new LinkedList<>();
 
             queue0.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
@@ -95,8 +93,9 @@ class ToolCardController {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action a = new Switch(tcc.memory.get(0), tcc.memory.get(1));
                 PlacementError err = a.check();
-                boolean isOkay = !err.hasErrorFilter(EnumSet.of(Flags.COLOR, Flags.EDGE));
+                boolean isOkay = err.hasNoErrorExceptEdgeFilter(EnumSet.of(Flags.COLOR));
                 if(!isOkay){
+                    tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
@@ -120,8 +119,9 @@ class ToolCardController {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action a = new Switch(tcc.memory.get(0), tcc.memory.get(1));
                 PlacementError err = a.check();
-                boolean isOkay = !err.hasErrorFilter(EnumSet.of(Flags.VALUE, Flags.EDGE));
+                boolean isOkay = err.hasNoErrorExceptEdgeFilter(EnumSet.of(Flags.VALUE));
                 if(!isOkay){
+                    tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
@@ -145,15 +145,15 @@ class ToolCardController {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action a = new Switch(tcc.memory.get(0), tcc.memory.get(1));
                 PlacementError err = a.check();
-                boolean isOkay = !err.hasError();
+                boolean isOkay = err.hasNoErrorExceptEdge();
                 if(!isOkay) {
+                    tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
-                    return new PlayerState(EnumState.NEXT);
+                    return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL));
                 }
             });
-            queue3.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue3.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
@@ -162,8 +162,9 @@ class ToolCardController {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action b = new Switch(tcc.memory.get(2), tcc.memory.get(3));
                 PlacementError err = b.check();
-                boolean isOkay = !err.hasError();
+                boolean isOkay = err.hasNoErrorExceptEdge();
                 if(!isOkay) {
+                    tcc.memory.remove(3);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     b.perform();
@@ -178,25 +179,17 @@ class ToolCardController {
 
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue4 = new LinkedList<>();
 
-            queue4.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
-                return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
-            });
+            queue4.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue4.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 return new PickState(EnumSet.of(Component.ROUNDTRACKER), EnumSet.of(CellState.FULL));
             });
             queue4.add((tcc, pm) -> {
+                tcc.memory.add((DieCoord) pm.getMove());
                 Action a = new Switch(tcc.memory.get(0), tcc.memory.get(1));
-                PlacementError err = a.check();
-                boolean isOkay = !err.hasError();
-                if(!isOkay) {
-                    return new PlayerState(EnumState.REPEAT);
-                } else {
-                    a.perform();
-                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
-                    return new PlayerState(EnumState.YOUR_TURN);
-                }
+                a.perform();
+                pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                return new PlayerState(EnumState.YOUR_TURN);
             });
 
             tmpOps.put(4, queue4);
@@ -205,18 +198,29 @@ class ToolCardController {
 
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue5 = new LinkedList<>();
 
+            queue5.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue5.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
-                return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
+                Action a = new Reroll(tcc.memory.get(0));
+                a.perform();
+                return new PlayerState(EnumState.YESNO);
             });
             queue5.add((tcc, pm) -> {
-                Action a = new Reroll(tcc.memory.get(0));
-                PlacementError err = a.check();
-                boolean isOkay = !err.hasError();
-                if(!isOkay) {
+                boolean choice = (boolean) pm.getMove();
+                if(choice)
+                    return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
+                return new PlayerState(EnumState.YOUR_TURN);
+            });
+            queue5.add((tcc, pm) -> {
+                tcc.memory.add((DieCoord) pm.getMove());
+                Action b = new Switch(tcc.memory.get(0), tcc.memory.get(1));
+                PlacementError err = b.check();
+                int diceOnBoard = pm.getActor().getBoard().countDice();
+                if((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
+                    tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
-                    a.perform();
+                    b.perform();
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -242,18 +246,28 @@ class ToolCardController {
 
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue7 = new LinkedList<>();
 
+            queue7.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue7.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
-                return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
+                return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
             });
             queue7.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action move = new Switch(tcc.memory.get(0), tcc.memory.get(1));
                 PlacementError err = move.check();
-                if (!err.hasNoErrorExceptEdge()) {
+                int diceOnBoard = pm.getActor().getBoard().countDice();
+                if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
+                    tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
+                    Queue<Player> newPlayerQueue = new LinkedList<>();
+                    newPlayerQueue.add(pm.getActor());
+                    for(Player p : tcc.match.getPlayerQueue()) {
+                        if(p != pm.getActor())
+                            newPlayerQueue.add(p);
+                    }
+                    tcc.match.setPlayerQueue(newPlayerQueue);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -265,16 +279,17 @@ class ToolCardController {
 
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue8 = new LinkedList<>();
 
+            queue8.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue8.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
-                return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
+                return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
             });
             queue8.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action move = new Switch(tcc.memory.get(0), tcc.memory.get(1));
                 PlacementError err = move.check();
-                boolean isOkay = !err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS));
-                if(!isOkay) {
+                if(!err.hasNoErrorExceptEdgeFilter(EnumSet.of(Flags.NEIGHBOURS))) {
+                    tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
@@ -289,21 +304,13 @@ class ToolCardController {
 
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue9 = new LinkedList<>();
 
+            queue9.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue9.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
-                return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
-            });
-            queue9.add((tcc, pm) -> {
                 Action a = new Flip(tcc.memory.get(0));
-                PlacementError err = a.check();
-                boolean isOkay = !err.hasError();
-                if(!isOkay) {
-                    return new PlayerState(EnumState.REPEAT);
-                } else {
-                    a.perform();
-                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
-                    return new PlayerState(EnumState.YOUR_TURN);
-                }
+                a.perform();
+                pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                return new PlayerState(EnumState.YOUR_TURN);
             });
 
             tmpOps.put(9, queue9);
@@ -312,38 +319,32 @@ class ToolCardController {
 
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue10 = new LinkedList<>();
 
+            queue10.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL),EnumSet.of(CellState.FULL)));
             queue10.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
-                return new PickState(EnumSet.of(Component.DRAFTPOOL),EnumSet.of(CellState.FULL));
-            });
-            queue10.add((tcc, pm) -> {
                 Action a = new MoveToDicebag(tcc.memory.get(0), tcc.match);
-                PlacementError err = a.check();
-                boolean isOkay = !err.hasError();
-                if(!isOkay) {
-                    return new PlayerState(EnumState.REPEAT);
-                } else {
-                    a.perform();
-                    tcc.memory.add(asDieCoord((Die)pm.getMove()));
-                    return new PickState(EnumSet.of(Component.DICEBAG), EnumSet.of(CellState.FULL));
-                }
+                a.perform();
+                Die extractedDie = tcc.match.extractDie();
+                tcc.memory.add(asDieCoord(extractedDie));
+                return new PlayerState(EnumState.VALUE);
             });
             queue10.add((tcc, pm) -> {
                 int value = (int) pm.getMove();
                 if(value > 0 && value < 7) {
-                    Action a = new SetValue(tcc.memory.get(0), value);
+                    Action a = new SetValue(tcc.memory.get(1), value);
                     a.perform();
-                    return new PlayerState(EnumState.UPDOWN);
+                    return new PickState(EnumSet.of(Component.BOARD),EnumSet.of(CellState.EMPTY, CellState.NEAR));
                 } else {
                     return new PlayerState(EnumState.REPEAT);
                 }
             });
             queue10.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
-                Action move = new Switch(tcc.memory.get(0), tcc.memory.get(1));
+                Action move = new Switch(tcc.memory.get(1), tcc.memory.get(2));
                 PlacementError err = move.check();
-                boolean isOkay = !err.hasError();
-                if(!isOkay) {
+                int diceOnBoard = pm.getActor().getBoard().countDice();
+                if((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
+                    tcc.memory.remove(2);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
@@ -358,9 +359,10 @@ class ToolCardController {
 
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue11 = new LinkedList<>();
 
+            queue11.add((tcc, pm) -> new PickState(EnumSet.of(Component.ROUNDTRACKER), EnumSet.of(CellState.FULL)));
             queue11.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
-                return new PickState(EnumSet.of(Component.ROUNDTRACKER), EnumSet.of(CellState.FULL));
+                return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL));
             });
             queue11.add((tcc, pm) -> {
                 DieCoord die = (DieCoord) pm.getMove();
@@ -368,20 +370,27 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     tcc.memory.add(die);
-                    return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL));
+                    return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
                 }
             });
             queue11.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action move = new Switch(tcc.memory.get(1), tcc.memory.get(2));
                 PlacementError err = move.check();
-                boolean isOkay = !err.hasError();
+                boolean isOkay = err.hasNoErrorExceptEdge();
                 if(!isOkay) {
+                    tcc.memory.remove(2);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
-                    return new PlayerState(EnumState.NEXT);
+                    return new PlayerState(EnumState.YESNO);
                 }
+            });
+            queue11.add((tcc, pm) -> {
+                boolean choice = (boolean) pm.getMove();
+                if(choice)
+                    return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL));
+                return new PlayerState(EnumState.YOUR_TURN);
             });
             queue11.add((tcc, pm) -> {
                 DieCoord die = (DieCoord) pm.getMove();
@@ -389,15 +398,16 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     tcc.memory.add(die);
-                    return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL));
+                    return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
                 }
             });
             queue11.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action move = new Switch(tcc.memory.get(3), tcc.memory.get(4));
                 PlacementError err = move.check();
-                boolean isOkay = !err.hasError();
+                boolean isOkay = err.hasNoErrorExceptEdge();
                 if(!isOkay) {
+                    tcc.memory.remove(4);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
