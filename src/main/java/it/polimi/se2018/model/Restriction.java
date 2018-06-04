@@ -1,11 +1,13 @@
 package it.polimi.se2018.model;
 
+import java.io.Serializable;
+
 /**
  * This class represents the Restriction of color and value present in the board
  * @version 1.1
  * @author mett29
  */
-public class Restriction {
+public class Restriction implements Serializable{
     private Color color;
     private int value;
     private RestrictionType type;
@@ -42,7 +44,7 @@ public class Restriction {
         }
     }
 
-    private enum RestrictionType {
+    private enum RestrictionType implements Serializable {
         COLOR, VALUE
     }
 

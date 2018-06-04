@@ -1,12 +1,14 @@
 package it.polimi.se2018.model;
 
 
+import java.io.Serializable;
+
 /**
  * This class represents the object Cell of the board
  * @author mett29
  * @version 1.0
  */
-public class Cell {
+public class Cell implements Serializable{
     private Restriction restriction;
     private Die die;
 

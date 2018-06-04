@@ -2,6 +2,7 @@ package it.polimi.se2018.view;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
+import it.polimi.se2018.network.message.PatternRequest;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -64,6 +65,11 @@ public class CLI implements ViewInterface {
 
     @Override
     public void onMatchStart(Match match) {
+        //TODO
+    }
+
+    @Override
+    public void onPatternRequest(PatternRequest message) {
         //TODO
     }
 

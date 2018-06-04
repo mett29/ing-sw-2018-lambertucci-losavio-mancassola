@@ -7,6 +7,7 @@ import it.polimi.se2018.network.server.ParsedBoard;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,9 +32,9 @@ public class JsonParser {
     private List<ParsedBoard> loadParsedBoards() throws IOException {
         Gson gson = new GsonBuilder().create();
         JsonReader jsonBoard = new JsonReader(new FileReader("src\\main\\res\\boards.json"));
-        List<ParsedBoard> parsedBoards = gson.fromJson(jsonBoard, ParsedBoard[].class);
+        ParsedBoard[] parsedBoards = gson.fromJson(jsonBoard, ParsedBoard[].class);
         jsonBoard.close();
-        return parsedBoards;
+        return Arrays.asList(parsedBoards);
     }
 
     /**

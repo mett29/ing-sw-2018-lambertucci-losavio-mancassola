@@ -22,6 +22,12 @@ public class Lobby implements Observer{
         this.usernames = usernames;
         newPlayerMap();
         this.server = server;
+
+        try {
+            startMatch();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -35,11 +41,9 @@ public class Lobby implements Observer{
             // Extract 4 boards and ask the player which one he wants to play with
             extractedPatterns = controller.extractPatterns();
             // Getting all the pattern's name that will be displayed to the player
-            List<String> patternNames = new ArrayList<>();
-            for (ParsedBoard pb : extractedPatterns) {
-                patternNames.add(pb.getName());
-            }
-             updateOne(player.getName(), new PatternRequest(player.getName(), patternNames));
+            List<Board> patterns = new ArrayList<>();
+            extractedPatterns.stream().forEach(parsedBoard -> patterns.add(patternToBoard(parsedBoard)));
+            updateOne(player.getName(), new PatternRequest(player.getName(), patterns));
         }
     }
 
@@ -117,6 +121,28 @@ public class Lobby implements Observer{
     }
 
     /**
+     * Convert a pattern (previously parsed from file) to a Board
+     * @param pattern ParsedBoard to convert
+     * @return Conversion result
+     */
+    private Board patternToBoard(ParsedBoard pattern){
+        // Getting all the color and value restrictions and create a matrix containing all of them
+        Restriction[][] restrictions = new Restriction[4][5];
+        for (ColorRestrictions cr : pattern.getColorRestrictions()) {
+            for (int[] coords : cr.getCoords()) {
+                restrictions[coords[0]][coords[1]] = new Restriction(Color.valueOf(cr.getColor().toUpperCase()));
+            }
+        }
+        for (ValueRestrictions vr : pattern.getValueRestrictions()) {
+            for (int[] coords : vr.getCoords()) {
+                restrictions[coords[0]][coords[1]] = new Restriction(vr.getValue());
+            }
+        }
+        // Create a board with the same characteristics as chosenPattern
+        return new Board(restrictions, pattern.getDifficulty());
+    }
+
+    /**
      * This method creates the equivalent Board object from the loaded pattern and it gives it to the player
      * @param username Username of the player who choose the pattern
      * @param chosenPatternName The name of the chosen pattern
@@ -131,20 +157,7 @@ public class Lobby implements Observer{
             }
         }
 
-        // Getting all the color and value restrictions and create a matrix containing all of them
-        Restriction[][] restrictions = new Restriction[4][5];
-        for (ColorRestrictions cr : chosenPattern.getColorRestrictions()) {
-            for (int[] coords : cr.getCoords()) {
-                restrictions[coords[0]][coords[1]] = new Restriction(Color.valueOf(cr.getColor().toUpperCase()));
-            }
-        }
-        for (ValueRestrictions vr : chosenPattern.getValueRestrictions()) {
-            for (int[] coords : vr.getCoords()) {
-                restrictions[coords[0]][coords[1]] = new Restriction(vr.getValue());
-            }
-        }
-        // Create a board with the same characteristics as chosenPattern
-        Board chosenBoard = new Board(restrictions, chosenPattern.getDifficulty());
+        Board chosenBoard = patternToBoard(chosenPattern);
 
         // Set the chosen board to the equivalent player
         playerMap.get(username).setBoard(chosenBoard);

@@ -2,11 +2,12 @@ package it.polimi.se2018.network.server;
 
 import it.polimi.se2018.model.Board;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 // These classes are needed by GSON for the loading process
-public class ParsedBoard {
+public class ParsedBoard implements Serializable{
     private List<Board> boards = new ArrayList<>();
     private String name;
     private int difficulty;
@@ -35,7 +36,7 @@ public class ParsedBoard {
     }
 }
 
-class ValueRestrictions {
+class ValueRestrictions implements Serializable{
     private Integer value;
     private int[][] coords;
 
@@ -48,7 +49,7 @@ class ValueRestrictions {
     }
 }
 
-class ColorRestrictions {
+class ColorRestrictions implements Serializable{
     private String color;
     private int[][] coords;
 

@@ -1,5 +1,6 @@
 package it.polimi.se2018.model;
 
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.Random;
 
@@ -7,7 +8,7 @@ import java.util.Random;
  * This class describes the object Die
  * @author ontech7
  */
-public class Die {
+public class Die implements Serializable{
     private Color color;
     private int value;
 

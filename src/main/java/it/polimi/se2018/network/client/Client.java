@@ -73,6 +73,7 @@ public class Client {
         try {
             connection.send(new MoveMessage(username, move));
         } catch (RemoteException e) {
+            e.printStackTrace();
             view.onConnectionError();
         }
     }
@@ -94,6 +95,10 @@ public class Client {
             case MATCH_START:
                 Match match = ((MatchStartMessage) message).payload;
                 view.onMatchStart(match);
+                break;
+
+            case PATTERN_REQUEST:
+                view.onPatternRequest((PatternRequest) message);
                 break;
 
             default:

@@ -1,6 +1,7 @@
 package it.polimi.se2018.view;
 
 import it.polimi.se2018.model.Match;
+import it.polimi.se2018.network.message.PatternRequest;
 
 public interface ViewInterface {
     void askLogin();
@@ -12,4 +13,6 @@ public interface ViewInterface {
     void waitFor();
 
     void onMatchStart(Match match);
+
+    void onPatternRequest(PatternRequest message);
 }

@@ -1,5 +1,6 @@
 package it.polimi.se2018.model;
 
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.*;
 
@@ -8,7 +9,7 @@ import java.util.*;
  * @author mett29, MicheleLambertucci
  * @version 1.1
  */
-public class Board implements Iterable<Cell>, Memento<Board> {
+public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
 
     private Cell[][] window;
     private static final int boardWidth = 5;

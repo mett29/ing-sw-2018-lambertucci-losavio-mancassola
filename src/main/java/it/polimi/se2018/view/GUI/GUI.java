@@ -2,6 +2,7 @@ package it.polimi.se2018.view.GUI;
 
 import it.polimi.se2018.model.Match;
 import it.polimi.se2018.network.client.Client;
+import it.polimi.se2018.network.message.PatternRequest;
 import it.polimi.se2018.view.ViewInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -81,6 +82,19 @@ public class GUI extends Application implements ViewInterface {
             controller.setClient(client);
             stage.getScene().setRoot(matchParent);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPatternRequest(PatternRequest message) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/ChoosePattern.fxml"));
+            loader.setController(client);
+            Parent matchParent = loader.load();
+            stage.getScene().setRoot(matchParent);
+        } catch(IOException e){
             e.printStackTrace();
         }
     }
