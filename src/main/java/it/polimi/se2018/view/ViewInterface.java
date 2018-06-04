@@ -9,7 +9,8 @@ public interface ViewInterface {
     void onToolCardActivationResponse(boolean isOk);
     void updateMatch(Match match);
     void onConnect();
-    void onConnectionError();
+    void onConnectionError(Exception e);
+
     void waitFor();
 
     void onMatchStart(Match match);

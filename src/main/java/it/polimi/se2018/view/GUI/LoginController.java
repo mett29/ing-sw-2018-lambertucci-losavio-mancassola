@@ -13,6 +13,8 @@ public class LoginController {
 
     @FXML
     public ChoiceBox connectionTypeBox;
+
+    @FXML
     public AnchorPane content;
 
     private Client client;
@@ -37,7 +39,7 @@ public class LoginController {
         try {
             client.connect();
         } catch (Exception e) {
-            client.onConnectionError();
+            client.onConnectionError(e);
         }
     }
 }

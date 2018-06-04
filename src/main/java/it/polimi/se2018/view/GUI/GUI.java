@@ -57,11 +57,13 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void onConnectionError() {
+    public void onConnectionError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore di login");
         alert.setHeaderText("Si è verificato un errore di login");
         alert.setContentText("Verifica che la tua connessione sia attiva. Se lo è, il nome utente che hai scelto non è disponibile: scegline un altro.");
+
+        e.printStackTrace();
 
         alert.showAndWait();
     }
@@ -90,11 +92,17 @@ public class GUI extends Application implements ViewInterface {
     public void onPatternRequest(PatternRequest message) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/ChoosePattern.fxml"));
-            loader.setController(client);
+            loader.setLocation(getClass().getResource("/PatternPicker.fxml"));
+            loader.setControllerFactory(c -> new PatternPickController(message.boards, client));
             Parent matchParent = loader.load();
+
+            System.out.println(message.boards);
+
+
+
             stage.getScene().setRoot(matchParent);
         } catch(IOException e){
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
     }

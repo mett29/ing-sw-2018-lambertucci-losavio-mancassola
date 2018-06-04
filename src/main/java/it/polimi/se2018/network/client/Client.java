@@ -56,7 +56,7 @@ public class Client {
                 client.connect();
                 view.waitFor();
             } catch (Exception e) {
-                view.onConnectionError();
+                view.onConnectionError(e);
             }
         }
     }
@@ -73,8 +73,7 @@ public class Client {
         try {
             connection.send(new MoveMessage(username, move));
         } catch (RemoteException e) {
-            e.printStackTrace();
-            view.onConnectionError();
+            view.onConnectionError(e);
         }
     }
 
@@ -116,12 +115,12 @@ public class Client {
         try {
             connection.send(new QueueRequest(username, playerNumber));
         } catch(Exception e){
-            onConnectionError();
+            onConnectionError(e);
         }
     }
 
-    public void onConnectionError(){
-        view.onConnectionError();
+    public void onConnectionError(Exception e){
+        view.onConnectionError(e);
     }
 
     public void setView(ViewInterface view) {
@@ -133,7 +132,7 @@ public class Client {
         try {
             connection.send(message);
         } catch (Exception e) {
-            view.onConnectionError();
+            view.onConnectionError(e);
         }
     }
 }

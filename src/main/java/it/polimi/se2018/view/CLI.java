@@ -735,7 +735,8 @@ public class CLI implements ViewInterface {
         onNewMatchState(oldMatch, match);
     }
 
-    public void onConnectionError() {
+    @Override
+    public void onConnectionError(Exception e) {
         System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
         System.out.println("    ┃         ERRORE DI CONNESSIONE       ┃");
         System.out.println("    ┠─────────────────────────────────────┨");
