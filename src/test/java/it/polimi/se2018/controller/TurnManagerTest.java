@@ -142,22 +142,22 @@ public class TurnManagerTest {
 
         //Attivo la seconda toolcard -> Vado in stato PICK
         assertTrue(turnManager.activateToolcard("Pino", 1));
-        System.out.println(playerQueue.peek().getState().get());
+        System.out.println(currentPlayer.getState().get());
 
         //Seleziono un dado dalla Board -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 0));
 
         assertFalse(turnManager.handleMove(pm2));
-        System.out.println(playerQueue.peek().getState().get());
+        System.out.println(currentPlayer.getState().get());
 
         //Seleziono una casella dalla Board -> TERMINATO -> Vado in stato YOUR_TURN
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 1));
 
         assertTrue(turnManager.handleMove(pm3));
 
-        System.out.println(playerQueue.peek().getState().get());
+        System.out.println(currentPlayer.getState().get());
 
-        System.out.println(playerQueue.peek().getBoard().getDie(1,1));
+        System.out.println(currentPlayer.getBoard().getDie(1,1));
     }
 
     @Test
@@ -170,7 +170,14 @@ public class TurnManagerTest {
         assertTrue(turnManager.passTurn("Pino"));
 
         assertFalse(turnManager.passTurn("Pino"));
-        System.out.println(currentPlayer.getState().get());
+        assertEquals(EnumState.IDLE, currentPlayer.getState().get());
+
+        currentPlayer.possibleActionsSetUp();
+        currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
+        assertTrue(turnManager.activateNormalMove("Pino"));
+
+        assertTrue(turnManager.passTurn("Pino"));
+        assertEquals(EnumState.IDLE, currentPlayer.getState().get());
     }
 
     @Test
@@ -185,7 +192,7 @@ public class TurnManagerTest {
 
         assertTrue(turnManager.activateToolcard("Pino", 0));
 
-        assertEquals(0, playerQueue.peek().getToken());
+        assertEquals(0, currentPlayer.getToken());
 
         assertFalse(turnManager.activateToolcard("Pino", 0));
     }
@@ -207,5 +214,71 @@ public class TurnManagerTest {
         assertFalse(turnManager.activateToolcard("Pino", 1));
 
         assertTrue(turnManager.activateToolcard("Pino", 2));
+    }
+
+    @Test
+    public void cancelOperationNormalMoveTest() throws Exception {
+        TurnManager turnManager = new TurnManager(match);
+        Player currentPlayer = playerQueue.peek();
+        currentPlayer.possibleActionsSetUp();
+        currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
+        currentPlayer.setToken(4);
+
+        currentPlayer.getBoard().setDie(0, 0, new Die(2, Color.RED));
+
+        DiceContainer draftpool = new DiceContainer(5);
+        draftpool.insert(new Die(3, Color.BLUE));
+        draftpool.insert(new Die(4, Color.PURPLE));
+
+        match.setDraftPool(draftpool);
+
+        assertTrue(turnManager.activateNormalMove("Pino"));
+
+        PlayerMove<DieCoord> pm1 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(draftpool, 0));
+        assertFalse(turnManager.handleMove(pm1));
+
+        Die pickedDie = draftpool.getDie(0);
+
+        PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 1));
+        assertTrue(turnManager.handleMove(pm2));
+
+        Map<Integer, Die> pickedDraftpool = draftpool.getDice();
+
+        //Controlla che il dado pickato è nella posizione (0,1) della board
+        assertEquals(pickedDie, currentPlayer.getBoard().getDie(0,1));
+
+        assertTrue(turnManager.cancelOperation("Pino"));
+
+        Map<Integer, Die> restoredDraftpool = draftpool.getDice();
+
+        //La board e la draftpool sono ritornate allo stato iniziale
+        assertNotEquals(pickedDraftpool, restoredDraftpool);
+        assertEquals(null, currentPlayer.getBoard().getDie(0,1));
+    }
+
+    @Test
+    public void cancelOperationToolcardTest() throws Exception {
+        TurnManager turnManager = new TurnManager(match);
+        Player currentPlayer = playerQueue.peek();
+        currentPlayer.possibleActionsSetUp();
+        currentPlayer.setToken(5);
+
+        currentPlayer.getBoard().setDie(0, 0, new Die(2, Color.RED));
+        currentPlayer.getBoard().setDie(0, 1, new Die(3, Color.RED));
+
+        //Attivo la seconda toolcard -> Vado in stato PICK
+        assertTrue(turnManager.activateToolcard("Pino", 1));
+        assertEquals(EnumState.PICK, currentPlayer.getState().get());
+
+        //Seleziono un dado dalla Board -> Vado in stato PICK
+        PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 0));
+
+        assertFalse(turnManager.handleMove(pm2));
+        assertEquals(EnumState.PICK, currentPlayer.getState().get());
+
+        assertTrue(turnManager.cancelOperation("Pino"));
+
+        //Il player ovviamente ha perso i tokens e ora ne ha 4
+        assertEquals(4, currentPlayer.getToken());
     }
 }

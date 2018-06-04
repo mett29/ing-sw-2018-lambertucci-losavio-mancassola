@@ -11,6 +11,10 @@ class TurnManager {
     private ToolCardController toolcard;
     private List<DieCoord> memory;
 
+    private Board savedBoard;
+    private DiceContainer savedDraftpool;
+    private DiceContainer savedRoundtracker;
+
     TurnManager(Match match) {
         this.match = match;
         this.toolcard = null;
@@ -28,6 +32,27 @@ class TurnManager {
         player.setState(new PlayerState(EnumState.YOUR_TURN));
         //Sets up all possible actions to the current player
         player.possibleActionsSetUp();
+    }
+
+    /**
+     * Cancel the current operation and return to the precedent state
+     * @param username of the current player
+     * @return true if board, draftpool and roundtracker are correctly restored, false otherwise
+     */
+    boolean cancelOperation(String username) {
+        Player currentPlayer = match.getPlayerQueue().peek();
+
+        boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
+
+        if(isPlayerEqual) {
+            currentPlayer.getBoard().restoreState(savedBoard);
+            match.getDraftPool().restoreState(savedDraftpool);
+            match.getRoundTracker().restoreState(savedRoundtracker);
+            //currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -64,7 +89,6 @@ class TurnManager {
                 //The player decided the cell to put the die inside. Switch action will be performed
                 Action moveDice = new Switch(memory.get(0), memory.get(1));
                 PlacementError err = moveDice.check();
-                System.out.println(err.getErrorByte());
                 int diceOnBoard = currentPlayer.getBoard().countDice();
                 //Checks if the board is empty or not. The player's first die must be positioned on an EDGE.
                 if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
@@ -98,30 +122,13 @@ class TurnManager {
 
         //Checks if the player's name coincides with the current player of the queue, if he is in 'YOUR_TURN' state and if it contains 'PICK_DIE' possible action
         if(isPlayerEqual && isYourTurnState && currentPlayer.getPossibleActions().contains(PossibleAction.PICK_DIE)) {
+
+            savedBoard = currentPlayer.getBoard().saveState();
+            savedDraftpool = match.getDraftPool().saveState();
+            savedRoundtracker = match.getRoundTracker().saveState();
+
             //His state it's 'PICK' on DRAFTPOOL and he must select a FULL cell
             currentPlayer.setState(new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Pass the current player's turn
-     * @param username of the player
-     * @return true if successfully passed the turn
-     */
-    boolean passTurn(String username) {
-        Player currentPlayer = match.getPlayerQueue().peek();
-
-        boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
-
-        //Checks if the player's name coincides with the current player of the queue and if it contains 'PASS_TURN' possible action
-        if(isPlayerEqual && currentPlayer.getPossibleActions().contains(PossibleAction.PASS_TURN)) {
-            //Removes all possible actions (it will an empty enumset)
-            currentPlayer.possibleActionsRemoveAll();
-            //His state it's 'IDLE' and the player will be dequeued
-            currentPlayer.setState(new PlayerState(EnumState.IDLE));
             return true;
         }
 
@@ -145,6 +152,11 @@ class TurnManager {
 
         //Checks if the player's name coincides with current player in queue, if 'ACTIVATE_TOOLCARD' is a possible action, if prechecks of toolcard are true and if the player has enough tokens
         if (isPlayerEqual && isPossibleActionActivateToolcard && Checks.get(toolCardActivated.getId()).apply(match, playerMove) && isPlayerEnoughTokens) {
+
+            savedBoard = currentPlayer.getBoard().saveState();
+            savedDraftpool = match.getDraftPool().saveState();
+            savedRoundtracker = match.getRoundTracker().saveState();
+
             //Creates a new toolcard controller with the toolcard activated
             this.toolcard = new ToolCardController(match, toolCardActivated);
             //Sets the toolcard activated inside the player
@@ -157,6 +169,31 @@ class TurnManager {
             currentPlayer.setState(newState);
             //Increase the cost of the toolcard (max: 2)
             toolCardActivated.increaseCost();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Pass the current player's turn. In case it's a forced pass, it cancels the current operation.
+     * @param username of the player
+     * @return true if successfully passed the turn
+     */
+    boolean passTurn(String username) {
+        Player currentPlayer = match.getPlayerQueue().peek();
+
+        boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
+
+        //Checks if the player's name coincides with the current player of the queue and if it contains 'PASS_TURN' possible action
+        if(isPlayerEqual && currentPlayer.getPossibleActions().contains(PossibleAction.PASS_TURN)) {
+            //Check if the current player's state is not 'YOUR_TURN'
+            if(currentPlayer.getState().get() != EnumState.YOUR_TURN)
+                cancelOperation(username);
+            //Removes all possible actions (it will an empty enumset)
+            currentPlayer.possibleActionsRemoveAll();
+            //His state it's 'IDLE' and the player will be dequeued
+            currentPlayer.setState(new PlayerState(EnumState.IDLE));
             return true;
         }
 

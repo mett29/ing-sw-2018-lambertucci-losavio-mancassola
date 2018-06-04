@@ -299,7 +299,7 @@ public class ToolCardControllerTest {
         Player currentPlayer = players.get(0);
         currentPlayer.possibleActionsSetUp();
 
-        currentPlayer.getBoard().setDie(0,1, new Die(2, Color.RED));
+        //currentPlayer.getBoard().setDie(0,1, new Die(2, Color.RED));
 
         DiceContainer draftpool = new DiceContainer(5);
         draftpool.insert(new Die(4, Color.BLUE));
