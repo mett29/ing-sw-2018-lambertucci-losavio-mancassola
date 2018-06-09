@@ -30,8 +30,10 @@ public class PatternPickController {
                 loader.setLocation(getClass().getResource("/BoardGUI.fxml"));
                 loader.setControllerFactory(c -> new BoardGUIController(board));
                 Parent node = loader.load();
+                final int tmpIterator = iterator;
                 node.setOnMouseClicked(event -> {
-                    //TODO: send PatternResponse to server
+                    boardGrid.setDisable(true);
+                    client.sendPatternResponse(tmpIterator);
                 });
                 boardGrid.add(node, iterator % 2, iterator / 2);
             } catch(IOException e){

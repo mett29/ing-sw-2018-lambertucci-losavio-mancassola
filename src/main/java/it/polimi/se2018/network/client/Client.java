@@ -46,18 +46,10 @@ public class Client {
             Application.launch(GUI.class, args);
         } else {
             Client client = new Client();
-            ViewInterface view = new CLI(client);
+            CLI view = new CLI(client);
             client.setView(view);
 
-            view.askLogin();
-            view.askTypeOfConnection();
-
-            try {
-                client.connect();
-                view.waitFor();
-            } catch (Exception e) {
-                view.onConnectionError(e);
-            }
+            view.launch();
         }
     }
 
@@ -109,11 +101,10 @@ public class Client {
     /**
      * Send a QueueRequest to the server.
      * Communicate to the server that this client wants to play
-     * @param playerNumber Type of queue (desired number of players in match)
      */
-    public void sendQueueRequest(int playerNumber) {
+    public void sendQueueRequest() {
         try {
-            connection.send(new QueueRequest(username, playerNumber));
+            connection.send(new QueueRequest(username));
         } catch(Exception e){
             onConnectionError(e);
         }
@@ -132,6 +123,15 @@ public class Client {
         try {
             connection.send(message);
         } catch (Exception e) {
+            view.onConnectionError(e);
+        }
+    }
+
+    public void sendPatternResponse(int index) {
+        Message message = new PatternResponse(username, index);
+        try {
+            connection.send(message);
+        } catch(Exception e){
             view.onConnectionError(e);
         }
     }

@@ -4,6 +4,9 @@ import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
 import it.polimi.se2018.network.message.PatternRequest;
 
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -28,7 +31,17 @@ public class CLI implements ViewInterface {
         this.client = client;
     }
 
-    public void askLogin(){
+    public void launch(){
+        askLogin();
+        askTypeOfConnection();
+        try {
+            client.connect();
+        } catch (Exception e) {
+            client.onConnectionError(e);
+        }
+    }
+
+    private void askLogin(){
         System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━┓");
         System.out.println("    ┃       = LOGIN =       ┃");
         System.out.println("    ┠───────────────────────┨");
@@ -46,7 +59,7 @@ public class CLI implements ViewInterface {
         client.setUsername(username);
     }
 
-    public void askTypeOfConnection(){
+    private void askTypeOfConnection(){
         List<String> connections = new ArrayList<>();
         connections.add("Socket");
         connections.add("RMI");
@@ -59,10 +72,6 @@ public class CLI implements ViewInterface {
         }
     }
 
-    public void waitFor(){
-        System.out.println("Please wait...");
-    }
-
     @Override
     public void onMatchStart(Match match) {
         //TODO
@@ -70,7 +79,20 @@ public class CLI implements ViewInterface {
 
     @Override
     public void onPatternRequest(PatternRequest message) {
-        //TODO
+        List<Integer> selections = new ArrayList<>();
+
+        int iteration = 0;
+        for(Board b : message.boards){
+            System.out.println(iteration);
+            printLines(toStrings(b));
+
+            selections.add(iteration);
+
+            iteration++;
+        }
+
+        int selection = makeSelection(selections);
+        client.sendPatternResponse(selection);
     }
 
     private void displayMatch(Match match){
@@ -693,10 +715,11 @@ public class CLI implements ViewInterface {
 
     /**
      * What to do when logged in successful?
+     * Print a "waiting" message
      */
     public void onConnect(){
         System.out.println("Login avvenuto con successo!");
-        System.out.println("Adesso c'è da aspettare però xd");
+        System.out.println("Aspetta che altri giocatori entrino nella lobby...");
     }
 
     public void setUsername(String username){

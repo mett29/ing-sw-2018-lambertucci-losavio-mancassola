@@ -1,9 +1,8 @@
 package it.polimi.se2018.network.server;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import it.polimi.se2018.controller.Configuration;
+
+import java.util.*;
 
 /**
  * Represents a queue of players waiting for a match.
@@ -14,42 +13,73 @@ public class PlayerQueue {
     private int numberOfPlayers;
     private Queue<String> queue;
     private Server server;
+    private Timer timer;
 
     /**
      * Constructor
      * @param numberOfPlayers Number of players for the matches that will be created by this queue
      * @param server Reference to the object. It will be used to call `newLobby`
      */
-    public PlayerQueue(int numberOfPlayers, Server server){
+    PlayerQueue(int numberOfPlayers, Server server){
         this.numberOfPlayers = numberOfPlayers;
         queue = new LinkedList<>();
         this.server = server;
+        timer = new Timer();
     }
 
     /**
      * Add a new player to the queue.
-     * If players are enough, a new Lobby will be automatically added to server's lobbies
+     * If players are enough, a new Lobby will be automatically added to server's lobbies.
+     * If queue is empty before adding (this is the first player to enter the lobby), start lobby timer
      * @param username Username of the player to be added
      */
-    public void add(String username){
-        queue.add(username);
-        checkAndCreate();
-    }
+    public synchronized void add(String username){
+        // Start timer if this is the first player
+        if(queue.isEmpty())
+            startTimer();
 
-    /**
-     * Check if players are enough to create a new lobby and creates it
-     */
-    private void checkAndCreate(){
-        while(canSpawnLobby()){
-            List<String> players = new ArrayList<>();
-            for (int i = 0; i < numberOfPlayers; i++) {
-                players.add(queue.poll());
+        queue.add(username);
+
+        // If the number of player wanted is reached, spawn a new lobby
+        // "reset" the timer to avoid any interference while handling future players
+        if(queueMaxSize()) {
+            timer.cancel();
+            try {
+                spawnLobby();
+            } catch(IllegalStateException e){
+                // probably do nothing (?)
+                //TODO: check if this random assumption is actually true
             }
-            server.newLobby(players);
         }
     }
 
-    private boolean canSpawnLobby(){
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(queue.size() > 1) {
+                    spawnLobby();
+                } else {
+                    try {
+                        // If there is only one player, restart the timer
+                        startTimer();
+                    } catch(Exception e){
+
+                    }
+                }
+            }
+        }, Configuration.getInstance().getQueueTimer());
+    }
+
+    private synchronized void spawnLobby(){
+        List<String> elected = new ArrayList<>();
+        while(!queue.isEmpty()){
+            elected.add(queue.poll());
+        }
+        server.newLobby(elected);
+    }
+
+    private boolean queueMaxSize(){
         return queue.size() >= numberOfPlayers;
     }
 }

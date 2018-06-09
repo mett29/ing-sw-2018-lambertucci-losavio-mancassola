@@ -1,5 +1,6 @@
 package it.polimi.se2018.network.server;
 
+import it.polimi.se2018.controller.Configuration;
 import it.polimi.se2018.network.client.QueueRequest;
 import it.polimi.se2018.network.message.LoginResponse;
 import it.polimi.se2018.network.message.Message;
@@ -12,12 +13,9 @@ import java.util.*;
 
 public class Server {
 
-    private static final int SOCKET_PORT = 1111;
-    private static final int RMI_PORT = 1099;
+    private static final int MAX_PLAYER_NUMBER = 2; //TODO: change to 4 before deployment
 
-    private PlayerQueue duoQueue;
-    private PlayerQueue trioQueue;
-    private PlayerQueue quadroQueue;
+    private PlayerQueue queue;
 
     private Map<String, Client> usernames;
     private Map<String, Lobby> lobbies;
@@ -26,9 +24,7 @@ public class Server {
     private RMIServer rmiServer;
 
     private Server() throws RemoteException {
-        this.duoQueue = new PlayerQueue(2, this);
-        this.trioQueue = new PlayerQueue(3, this);
-        this.quadroQueue = new PlayerQueue(4, this);
+        this.queue = new PlayerQueue(MAX_PLAYER_NUMBER, this);
 
         this.usernames = new HashMap<>();
         this.lobbies = new HashMap<>();
@@ -40,7 +36,7 @@ public class Server {
     public static void main(String[] args) {
         try {
             Server server = new Server();
-            server.startServer(SOCKET_PORT, RMI_PORT);
+            server.startServer(Configuration.getInstance().getSocketPort(), Configuration.getInstance().getRmiPort());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,21 +114,11 @@ public class Server {
         }
     }
 
+    /**
+     * Add new player to the queue.
+     * @param message Message received from player who whats to connect
+     */
     private void handleQueueRequest(QueueRequest message){
-        int playerNumber = message.playerNumber;
-        switch(playerNumber) {
-            case 2:
-                duoQueue.add(message.username);
-                break;
-            case 3:
-                trioQueue.add(message.username);
-                break;
-            case 4:
-                quadroQueue.add(message.username);
-                break;
-            default:
-                System.err.println("Unhandled message received from: " + message.username);
-
-        }
+        queue.add(message.username);
     }
 }

@@ -4,6 +4,7 @@ import it.polimi.se2018.controller.Controller;
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.message.MatchStartMessage;
 import it.polimi.se2018.network.message.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,7 +16,7 @@ public class Lobby implements Observer{
     private Controller controller;
     private List<ParsedBoard> extractedPatterns;
     // 'playerWithBoard' contains all the lobby's player with their equivalent board
-    private Map<String, String> playerWithBoard;
+    private Map<String, Integer> playerWithBoard;
 
     Lobby(List<String> usernames, Server server){
         System.out.println("New lobby created");
@@ -42,7 +43,9 @@ public class Lobby implements Observer{
             extractedPatterns = controller.extractPatterns();
             // Getting all the pattern's name that will be displayed to the player
             List<Board> patterns = new ArrayList<>();
-            extractedPatterns.stream().forEach(parsedBoard -> patterns.add(patternToBoard(parsedBoard)));
+
+            // For each extracted pattern, add corresponding board to `patterns`, which will be sent to the client
+            extractedPatterns.forEach(parsedBoard -> patterns.add(patternToBoard(parsedBoard)));
             updateOne(player.getName(), new PatternRequest(player.getName(), patterns));
         }
     }
@@ -104,9 +107,9 @@ public class Lobby implements Observer{
                 break;
             case PATTERN_RESPONSE:
                 String username = message.username;
-                String chosenPatternName = ((PatternResponse) message).patternName;
-                handlePatternChoice(username, chosenPatternName);
-                playerWithBoard.put(username, chosenPatternName);
+                int chosenPattern = ((PatternResponse) message).index;
+                handlePatternChoice(username, chosenPattern);
+                playerWithBoard.put(username, chosenPattern);
                 if (playerWithBoard.size() == this.getPlayers().size()) {
                     // The match can be started
                     // Set match to new match created by controller
@@ -145,18 +148,17 @@ public class Lobby implements Observer{
     /**
      * This method creates the equivalent Board object from the loaded pattern and it gives it to the player
      * @param username Username of the player who choose the pattern
-     * @param chosenPatternName The name of the chosen pattern
+     * @param chosenIndex The index of the chosen pattern in the PatternRequest received by the client
      */
-    private void handlePatternChoice(String username, String chosenPatternName) {
+    private void handlePatternChoice(String username, int chosenIndex) {
 
         // Getting the ParsedBoard object (the chosen pattern) from its name
         ParsedBoard chosenPattern = new ParsedBoard();
-        for (ParsedBoard extractedPattern : extractedPatterns) {
-            if (extractedPattern.getName().equals(chosenPatternName)) {
-                chosenPattern = extractedPattern;
-            }
-        }
 
+        //TODO: Pls god fix this
+        for (ParsedBoard extractedPattern : extractedPatterns) {
+            throw new NotImplementedException();
+        }
         Board chosenBoard = patternToBoard(chosenPattern);
 
         // Set the chosen board to the equivalent player

@@ -19,15 +19,6 @@ public class GUI extends Application implements ViewInterface {
 
     private Stage stage;
 
-    @Override
-    public void askLogin() {
-
-    }
-
-    @Override
-    public void askTypeOfConnection() {
-
-    }
 
     @Override
     public void onToolCardActivationResponse(boolean isOk) {
@@ -66,11 +57,6 @@ public class GUI extends Application implements ViewInterface {
         e.printStackTrace();
 
         alert.showAndWait();
-    }
-
-    @Override
-    public void waitFor() {
-
     }
 
     @Override

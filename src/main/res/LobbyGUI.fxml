@@ -14,7 +14,6 @@
       <Separator layoutY="54.0" prefHeight="3.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="54.0" />
       <ProgressBar fx:id="lobbyProgress" layoutX="479.0" layoutY="20.0" prefHeight="18.0" prefWidth="107.0" progress="0.0" />
       <Button fx:id="playButton" layoutX="277.0" layoutY="17.0" mnemonicParsing="false" onAction="#onPlayClick" text="Gioca" />
-      <ChoiceBox fx:id="playerNumber" layoutX="14.0" layoutY="17.0" prefHeight="25.0" prefWidth="93.0" />
       <Label fx:id="waitingMessage" layoutX="361.0" layoutY="21.0" text="Waiting for players...">
          <padding>
             <Insets right="10.0" />

@@ -16,8 +16,7 @@ public class LobbyController {
     private ProgressBar lobbyProgress;
     @FXML
     private Button playButton;
-    @FXML
-    private ChoiceBox<Integer> playerNumber;
+
     @FXML
     private Label waitingMessage;
 
@@ -26,8 +25,7 @@ public class LobbyController {
     }
 
     public void onPlayClick(ActionEvent actionEvent) {
-        int numberOfPlayers = playerNumber.getSelectionModel().getSelectedItem();
-        client.sendQueueRequest(numberOfPlayers);
+        client.sendQueueRequest();
 
         waitingMessage.setVisible(true);
         lobbyProgress.setVisible(true);
@@ -36,21 +34,6 @@ public class LobbyController {
 
     @FXML
     public void initialize(){
-        StringConverter<Integer> converter = new StringConverter<Integer>() {
-            @Override
-            public String toString(Integer object) {
-                return object + " giocatori";
-            }
-
-            @Override
-            public Integer fromString(String string) {
-                return Character.getNumericValue(string.charAt(0));
-            }
-        };
-        playerNumber.setConverter(converter);
-        playerNumber.getItems().addAll(2, 3, 4);
-        playerNumber.getSelectionModel().selectFirst();
-
         waitingMessage.setVisible(false);
         lobbyProgress.setVisible(false);
     }
