@@ -15,13 +15,18 @@ public class Lobby implements Observer{
     private Server server;
     private Controller controller;
     private List<ParsedBoard> extractedPatterns;
-    // 'playerWithBoard' contains all the lobby's player with their equivalent board
+
+    // This Map contains the name of the player and the set of the boards between which he will choose
+    private Map<String, List<ParsedBoard>> playerPatternsMap;
+
+    // This Map contains all the lobby's player with their equivalent board's index
     private Map<String, Integer> playerWithBoard;
 
     Lobby(List<String> usernames, Server server){
         System.out.println("New lobby created");
         this.usernames = usernames;
         newPlayerMap();
+        newPlayerWithBoard();
         this.server = server;
 
         try {
@@ -41,6 +46,7 @@ public class Lobby implements Observer{
         for (Player player : this.getPlayers()) {
             // Extract 4 boards and ask the player which one he wants to play with
             extractedPatterns = controller.extractPatterns();
+            newPlayerPatternsMap(extractedPatterns);
             // Getting all the pattern's name that will be displayed to the player
             List<Board> patterns = new ArrayList<>();
 
@@ -58,6 +64,28 @@ public class Lobby implements Observer{
         playerMap = new HashMap<>();
         for(String username : usernames){
             playerMap.put(username, new Player(username));
+        }
+    }
+
+    /**
+     * Initialize playerWithBoard
+     * Put username and the board's index
+     */
+    private void newPlayerWithBoard() {
+        playerWithBoard = new HashMap<>();
+        for (String username : usernames) {
+            playerWithBoard.put(username, -1);
+        }
+    }
+
+    /**
+     * Initialize playerPatternMap
+     * Create a ParsedBoard object for every username in 'usernames'
+     */
+    private void newPlayerPatternsMap(List<ParsedBoard> parsedBoards) {
+        playerPatternsMap = new HashMap<>();
+        for (String username : usernames) {
+            playerPatternsMap.put(username, new ArrayList<>(parsedBoards));
         }
     }
 
@@ -108,8 +136,8 @@ public class Lobby implements Observer{
             case PATTERN_RESPONSE:
                 String username = message.username;
                 int chosenPattern = ((PatternResponse) message).index;
-                handlePatternChoice(username, chosenPattern);
                 playerWithBoard.put(username, chosenPattern);
+                handlePatternChoice(username, chosenPattern);
                 if (playerWithBoard.size() == this.getPlayers().size()) {
                     // The match can be started
                     // Set match to new match created by controller
@@ -152,13 +180,10 @@ public class Lobby implements Observer{
      */
     private void handlePatternChoice(String username, int chosenIndex) {
 
-        // Getting the ParsedBoard object (the chosen pattern) from its name
-        ParsedBoard chosenPattern = new ParsedBoard();
+        // Getting the ParsedBoard object according to the index
+        ParsedBoard chosenPattern = playerPatternsMap.get(username).get(chosenIndex);
+        System.out.println(chosenPattern.getName());
 
-        //TODO: Pls god fix this
-        for (ParsedBoard extractedPattern : extractedPatterns) {
-            throw new NotImplementedException();
-        }
         Board chosenBoard = patternToBoard(chosenPattern);
 
         // Set the chosen board to the equivalent player

@@ -79,7 +79,7 @@ class GameManager {
             parsedBoardExtractor.insert(pb);
         }
         List<ParsedBoard> parsedBoardExtracted = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             parsedBoardExtracted.add(parsedBoardExtractor.extract());
         }
         return parsedBoardExtracted;
