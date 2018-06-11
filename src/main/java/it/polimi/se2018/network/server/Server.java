@@ -23,7 +23,7 @@ public class Server {
     private SocketServer socketServer;
     private RMIServer rmiServer;
 
-    private Server() throws RemoteException {
+    private Server() {
         this.queue = new PlayerQueue(MAX_PLAYER_NUMBER, this);
 
         this.usernames = new HashMap<>();
@@ -49,7 +49,7 @@ public class Server {
      * @throws MalformedURLException
      * @throws RemoteException
      */
-    private void startServer(int socketPort, int rmiPort) throws MalformedURLException, RemoteException {
+    private void startServer(int socketPort, int rmiPort) throws RemoteException {
         socketServer.startServer(socketPort);
         socketServer.start();
         rmiServer.startServer(rmiPort);

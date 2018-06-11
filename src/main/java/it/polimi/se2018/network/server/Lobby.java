@@ -42,11 +42,13 @@ public class Lobby implements Observer{
      */
     private void startMatch() throws IOException {
         controller = new Controller(this);
+        playerPatternsMap = new HashMap<>();
 
         for (Player player : this.getPlayers()) {
             // Extract 4 boards and ask the player which one he wants to play with
             extractedPatterns = controller.extractPatterns();
-            newPlayerPatternsMap(extractedPatterns);
+            // This line associates each username to the related 4 extracted patterns
+            playerPatternsMap.put(player.getName(), extractedPatterns);
             // Getting all the pattern's name that will be displayed to the player
             List<Board> patterns = new ArrayList<>();
 
@@ -75,17 +77,6 @@ public class Lobby implements Observer{
         playerWithBoard = new HashMap<>();
         for (String username : usernames) {
             playerWithBoard.put(username, -1);
-        }
-    }
-
-    /**
-     * Initialize playerPatternMap
-     * Create a ParsedBoard object for every username in 'usernames'
-     */
-    private void newPlayerPatternsMap(List<ParsedBoard> parsedBoards) {
-        playerPatternsMap = new HashMap<>();
-        for (String username : usernames) {
-            playerPatternsMap.put(username, new ArrayList<>(parsedBoards));
         }
     }
 

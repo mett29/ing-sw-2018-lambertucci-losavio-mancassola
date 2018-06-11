@@ -24,7 +24,6 @@ public class PlayerQueue {
         this.numberOfPlayers = numberOfPlayers;
         queue = new LinkedList<>();
         this.server = server;
-        timer = new Timer();
     }
 
     /**
@@ -35,8 +34,10 @@ public class PlayerQueue {
      */
     public synchronized void add(String username){
         // Start timer if this is the first player
-        if(queue.isEmpty())
+        if(queue.isEmpty()) {
+            timer = new Timer();
             startTimer();
+        }
 
         queue.add(username);
 

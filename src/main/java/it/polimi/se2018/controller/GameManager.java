@@ -15,6 +15,12 @@ class GameManager {
     private List<ParsedBoard> parsedBoards;
     private JsonParser jsonParser = new JsonParser();
 
+    /**
+     * Constructor
+     * Create and initialize the Match
+     * @param lobby
+     * @throws IOException
+     */
     GameManager(Lobby lobby) throws IOException {
         this.match = new Match(lobby.getPlayers(), extractToolCards(), extractPublicObjCards(), lobby);
         extractPrivateObjCard();
