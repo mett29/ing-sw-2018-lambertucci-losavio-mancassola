@@ -1,12 +1,13 @@
 package it.polimi.se2018.model;
 
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 
 /**
  * This class represents the player's score in the game
  * @author ontech7
  */
-public class Score {
+public class Score implements Serializable{
     private int privateObjCards;
     private int publicObjCards;
     private int tokens;

@@ -71,13 +71,10 @@ public class Lobby implements Observer{
 
     /**
      * Initialize playerWithBoard
-     * Put username and the board's index
+     * It will contain username and the board's index
      */
     private void newPlayerWithBoard() {
         playerWithBoard = new HashMap<>();
-        for (String username : usernames) {
-            playerWithBoard.put(username, -1);
-        }
     }
 
     /**
@@ -117,6 +114,12 @@ public class Lobby implements Observer{
             case TOOLCARD_REQUEST:
                 int toolCardIndex = ((ToolCardRequest) message).index;
                 controller.activateToolcard(message.username, toolCardIndex);
+                break;
+            case NORMAL_MOVE:
+                controller.activateNormalMove(message.username);
+                break;
+            case PASS:
+                controller.passTurn(message.username);
                 break;
             case PLAYER_MOVE:
                 // Convert Message to PlayerMove and send to controller

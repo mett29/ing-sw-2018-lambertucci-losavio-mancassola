@@ -1,5 +1,6 @@
 package it.polimi.se2018.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Map;
  * This class describes a generic object which contains dice
  * @author ontech7
  */
-public class DiceContainer implements Iterable<Die>, Memento<DiceContainer> {
+public class DiceContainer implements Iterable<Die>, Memento<DiceContainer>, Serializable{
     private Map<Integer, Die> container;
     private int maxSize;
 

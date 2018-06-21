@@ -2,6 +2,7 @@ package it.polimi.se2018.model;
 
 import it.polimi.se2018.utils.Extractor;
 
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.*;
 
@@ -9,7 +10,7 @@ import java.util.*;
  * This class represents the Match object, which contains all the components necessary for defining the game's state
  * @author MicheleLambertucci
  */
-public class Match extends Observable{
+public class Match extends Observable implements Serializable {
     private List<Player> players;
     private Queue<Player> playerQueue;
     private Map<Player, Score> scores;
@@ -18,6 +19,13 @@ public class Match extends Observable{
     private final ToolCard[] toolCards;
     private final PublicObjCard[] publicObjCards;
     private Extractor<Die> diceBag;
+
+    @Override
+    public void notifyObservers(){
+        // I'm sorry
+        setChanged();
+        super.notifyObservers();
+    }
 
     //constructor for `Match` class
     public Match(List<Player> players, ToolCard[] toolCards, PublicObjCard[] publicObjCards, Observer observer){

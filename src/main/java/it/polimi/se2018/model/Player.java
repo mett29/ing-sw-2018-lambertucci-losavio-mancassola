@@ -1,5 +1,6 @@
 package it.polimi.se2018.model;
 
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -9,7 +10,7 @@ import java.util.Iterator;
  * @version 1.1
  * @author mett29
  */
-public class Player {
+public class Player implements Serializable {
     private Board board;
     private int token;
     private String name;

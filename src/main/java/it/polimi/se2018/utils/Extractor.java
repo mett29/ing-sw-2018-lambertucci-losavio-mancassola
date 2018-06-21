@@ -1,5 +1,6 @@
 package it.polimi.se2018.utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -8,7 +9,7 @@ import java.util.Random;
  * @author ontech7
  * @param <T>, generic object that needs to be extracted
  */
-public class Extractor<T> {
+public class Extractor<T extends Serializable> implements Serializable{
     private ArrayList<T> container;
 
     public Extractor(){

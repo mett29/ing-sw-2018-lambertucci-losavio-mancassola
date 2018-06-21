@@ -21,6 +21,7 @@ public class Controller {
      */
     public /*boolean*/ void handleMove(PlayerMove move) {
         /*return*/ gameManager.handleMove(move);
+        getMatch().notifyObservers();
     }
 
     /**
@@ -32,7 +33,9 @@ public class Controller {
      * @return true if successfully activated
      */
     public boolean activateToolcard(String username, int toolCardId) {
-        return gameManager.activateToolcard(username, toolCardId);
+        boolean ret =  gameManager.activateToolcard(username, toolCardId);
+        getMatch().notifyObservers();
+        return ret;
     }
 
     /**
@@ -42,7 +45,9 @@ public class Controller {
      * @return true if successfully activated
      */
     public boolean activateNormalMove(String username) {
-        return gameManager.activateNormalMove(username);
+        boolean ret = gameManager.activateNormalMove(username);
+        getMatch().notifyObservers();
+        return ret;
     }
 
     /**
@@ -55,6 +60,7 @@ public class Controller {
         boolean matchEnded = gameManager.passTurn(username);
         if(matchEnded)
             gameManager.calculateScore();
+        getMatch().notifyObservers();
     }
 
     /**

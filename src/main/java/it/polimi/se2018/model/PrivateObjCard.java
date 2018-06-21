@@ -51,6 +51,8 @@ public class PrivateObjCard implements ObjCard {
     }
 
     private static class CardInfos {
+        private CardInfos(){}
+
         static final Map<Color, String> colorNames;
 
         static {

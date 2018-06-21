@@ -4,12 +4,14 @@ import it.polimi.se2018.model.Match;
 import it.polimi.se2018.model.Player;
 import it.polimi.se2018.model.PlayerMove;
 
+import java.io.Serializable;
+
 /**
  * Represent PlayerMove in client.
  * Since client can't reference any object in Model (i.e. the board), there is the need to have some kind of object representing a move in the client.
  * This object can be sent over the network and can be translated to PlayerMove in server via `toPlayerMove()`.
  */
-public abstract class ClientMove {
+public abstract class ClientMove implements Serializable {
     public final ContentType contentType;
     protected ClientMove(ContentType contentType){
         this.contentType = contentType;

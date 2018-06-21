@@ -25,7 +25,6 @@ class GameManager {
         this.match = new Match(lobby.getPlayers(), extractToolCards(), extractPublicObjCards(), lobby);
         extractPrivateObjCard();
         this.parsedBoards = jsonParser.getParsedBoards();
-        match.notifyObservers();
         this.roundManager = new RoundManager(match);
     }
 

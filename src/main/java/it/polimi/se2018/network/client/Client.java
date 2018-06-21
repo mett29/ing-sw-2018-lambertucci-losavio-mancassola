@@ -127,11 +127,29 @@ public class Client {
         }
     }
 
+    public void activateNormalMove(){
+        Message message = new NormalMoveRequest(username);
+        try {
+            connection.send(message);
+        } catch (RemoteException e) {
+            view.onConnectionError(e);
+        }
+    }
+
     public void sendPatternResponse(int index) {
         Message message = new PatternResponse(username, index);
         try {
             connection.send(message);
         } catch(Exception e){
+            view.onConnectionError(e);
+        }
+    }
+
+    public void pass() {
+        Message message = new PassRequest(username);
+        try {
+            connection.send(message);
+        } catch (RemoteException e) {
             view.onConnectionError(e);
         }
     }

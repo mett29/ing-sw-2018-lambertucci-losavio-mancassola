@@ -4,6 +4,7 @@ import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
 import it.polimi.se2018.network.message.PatternRequest;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -71,7 +72,11 @@ public class CLI implements ViewInterface {
 
     @Override
     public void onMatchStart(Match match) {
+        this.match = match;
         displayMatch(match);
+        if(getMyself(match).getState().get() == EnumState.YOUR_TURN){
+            onYourTurnState();
+        }
     }
 
     @Override
@@ -241,14 +246,14 @@ public class CLI implements ViewInterface {
 
         switch(selection){
             case 0:
-                client.sendMove(new PickDieMove());
+                client.activateNormalMove();
                 break;
             case 1:
                 int index = askToolCardActivation();
                 client.activateToolCard(index);
                 break;
             case 2:
-                client.sendMove(new PassMove());
+                client.pass();
                 break;
             default:
                 throw new UnsupportedOperationException();
@@ -473,13 +478,12 @@ public class CLI implements ViewInterface {
     public void onConnect(){
         System.out.println("Login avvenuto con successo.");
         System.out.println("Premi ENTER per entrare in coda");
-        Scanner sc = new Scanner(System.in);
-        sc.next();
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         client.sendQueueRequest();
-    }
-
-    public void setUsername(String username){
-        this.client.setUsername(username);
     }
 
     public void onNewMatchState(Match oldMatch, Match newMatch) {
@@ -523,6 +527,7 @@ public class CLI implements ViewInterface {
         System.out.println("    ┃  connessione.  L'applicazione  si   ┃");
         System.out.println("    ┃  spegnerà.                          ┃");
         System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+        e.printStackTrace();
     }
 
     private static class Stringifier{
