@@ -39,7 +39,7 @@ public class Client {
         rmi = false;
     }
 
-    private static boolean useFX = true;
+    private static boolean useFX = false;
 
     public static void main(String[] args) {
         if(useFX) {

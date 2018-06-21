@@ -50,8 +50,8 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void onConnectionError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Errore di login");
-        alert.setHeaderText("Si è verificato un errore di login");
+        alert.setTitle("Errore di connessione");
+        alert.setHeaderText("Si è verificato un errore di connessione");
         alert.setContentText("Verifica che la tua connessione sia attiva. Se lo è, il nome utente che hai scelto non è disponibile: scegline un altro.");
 
         e.printStackTrace();

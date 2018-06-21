@@ -42,7 +42,7 @@ public class Configuration {
                 address = "localhost";
                 socketPort = 1111;
                 rmiPort = 1099;
-                queueTimer = 30000;
+                queueTimer = 30;
             }
         } catch (Exception e) {
             e.printStackTrace();

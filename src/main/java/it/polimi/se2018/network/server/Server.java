@@ -103,6 +103,7 @@ public class Server {
      * @param message Message received
      */
     public void onReceive(Message message){
+        System.out.println(message);
         if(lobbies.containsKey(message.username)){
             lobbies.get(message.username).onReceive(message);
         } else if(usernames.containsKey(message.username) && message.content == Message.Content.QUEUE) {

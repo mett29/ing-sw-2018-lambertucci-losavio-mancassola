@@ -41,6 +41,8 @@ public class PlayerQueue {
 
         queue.add(username);
 
+        System.out.println("Queue: " + queue);
+
         // If the number of player wanted is reached, spawn a new lobby
         // "reset" the timer to avoid any interference while handling future players
         if(queueMaxSize()) {
@@ -73,6 +75,7 @@ public class PlayerQueue {
     }
 
     private synchronized void spawnLobby(){
+        System.out.println("Lobby spawned");
         List<String> elected = new ArrayList<>();
         while(!queue.isEmpty()){
             elected.add(queue.poll());
