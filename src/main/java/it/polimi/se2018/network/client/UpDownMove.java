@@ -13,7 +13,6 @@ public class UpDownMove extends ClientMove {
 
     @Override
     public PlayerMove toPlayerMove(Player player, Match match) {
-        //TODO
-        return null;
+        return new PlayerMove<>(player, isAdd);
     }
 }

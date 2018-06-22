@@ -19,8 +19,7 @@ public class DiceContainerCoordMove extends ClientMove{
         } else {
             diceContainer = match.getRoundTracker();
         }
-        //return new PlayerMove<>(player, new DiceContainerCoord(diceContainer, index));
-        return null;
+        return new PlayerMove<>(player, new DiceContainerCoord(diceContainer, index));
     }
 
     public enum DiceContainerName {

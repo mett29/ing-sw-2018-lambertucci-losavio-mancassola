@@ -53,6 +53,7 @@ public class VirtualClient extends Thread implements SocketClient {
     @Override
     public void notify(Message message) {
         try {
+            oos.reset();
             oos.writeObject(message);
         } catch (IOException e) {
             e.printStackTrace();

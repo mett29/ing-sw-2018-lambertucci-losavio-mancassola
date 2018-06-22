@@ -290,7 +290,15 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
      * @param y second coordinate
      * @return true or false
      */
-    public static boolean checkIndex(int x, int y){
+    static boolean checkIndex(int x, int y){
         return !(x < 0 || y < 0 || x > 4 || y > 3);
+    }
+
+    public boolean isEmpty() {
+        for(Cell c : this){
+            if(!c.isEmpty())
+                return false;
+        }
+        return true;
     }
 }

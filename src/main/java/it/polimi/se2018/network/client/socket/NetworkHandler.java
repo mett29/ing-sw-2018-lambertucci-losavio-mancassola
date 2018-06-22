@@ -52,6 +52,7 @@ public class NetworkHandler extends Thread implements ServerInterface {
      */
     public synchronized void send(Message message) {
         try {
+            oos.reset();
             oos.writeObject(message);
             oos.flush();
         } catch (IOException e) {

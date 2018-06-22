@@ -363,15 +363,18 @@ public class CLI implements ViewInterface {
         buffer.append(Stringifier.toString(cellStates));
         buffer.append(" (type the corresponding character)");
         System.out.println(buffer.toString());
-        printLines(Stringifier.toStrings(board, true, cellStates));
+        printLines(Stringifier.boardToStrings(board, true, cellStates));
         Scanner sc = new Scanner(System.in);
         int selection = -1;
         Pattern ptn = Pattern.compile("[A-T]?", Pattern.CASE_INSENSITIVE);
         while(selection == -1){
             if(sc.hasNext(ptn)) {
-                String found = sc.next("[A-T]?");
-                selection = selectionMap.indexOf(found.charAt(0));
-                if(!Stringifier.acceptedCell(board, selection % 5, selection / 5, cellStates)){
+                String found = sc.next(ptn);
+                selection = selectionMap.indexOf(found.toUpperCase().charAt(0));
+                if(!(Stringifier.acceptedCell(board, selection % 5, selection / 5, cellStates) ||
+                        (board.isEmpty() &&
+                                (selection % 5 == 0 || selection % 5 == board.getRow(0).length-1
+                                        || selection / 5 == 0 || selection / 5 == board.getRows().size()-1)))){
                     buffer = new StringBuilder();
                     buffer.append("The cell you selected is not acceptable. S");
                     buffer.append(Stringifier.toString(cellStates));
@@ -608,14 +611,13 @@ public class CLI implements ViewInterface {
 
             buffer = new StringBuilder();
             buffer.append("║");
-            Map<Integer, Die> dieMap = container.getDice();
             for(int i = 0; i < maxSize; i++) {
-                if(! dieMap.containsKey(i)){
+                Die d = container.getDie(i);
+                if(d == null){
                     buffer.append("    ");
                 } else {
-                    Die die = dieMap.get(i);
                     buffer.append(" ");
-                    buffer.append(toString(die));
+                    buffer.append(dieToString(d));
                     buffer.append(" ");
                 }
                 if(i != maxSize - 1) {
@@ -637,10 +639,10 @@ public class CLI implements ViewInterface {
         }
 
         private static String[] toStrings(Board board){
-            return toStrings(board, false, null);
+            return boardToStrings(board, false, null);
         }
 
-        private static String toString(Cell cell, boolean printNumbers, int x, int y, boolean accepted){
+        private static String cellToString(Cell cell, boolean printNumbers, int x, int y, boolean accepted){
 
             StringBuilder buffer = new StringBuilder();
             if(cell.getRestriction() != null) {
@@ -658,14 +660,22 @@ public class CLI implements ViewInterface {
                 buffer.append(" ");
             }
             if(cell.getDie() != null){
-                buffer.append(toString(cell.getDie()));
+                buffer.append(dieToString(cell.getDie()));
             } else {
                 buffer.append("  ");
             }
             return buffer.toString();
         }
 
-        private static String[] toStrings(Board board, boolean printNumbers, EnumSet<CellState> cellStates){
+        /**
+         * Creates a String[] array which represents a given board that can be printed on console.
+         * @param board Board to be printed
+         * @param printSelectors If true, each cell will be printed with the corresponding selection letter
+         * @param cellStates If `printSelectors` is true, this parameter can be used to print the cell selector only if `acceptedCell(cellStates)` is true. Set to null for no filtering. \
+         *                   Performs the handling of the "first move situation" automatically (no filter on borders when `board.isEmpty()`).
+         * @return "Stringified" version of the board.
+         */
+        private static String[] boardToStrings(Board board, boolean printSelectors, EnumSet<CellState> cellStates){
             List<String> boardString = new ArrayList<>();
             boardString.add("┌────┬────┬────┬────┬────┐");
             for (int j = 0; j < board.getRows().size(); j++) {
@@ -673,7 +683,11 @@ public class CLI implements ViewInterface {
                 StringBuilder buffer = new StringBuilder();
                 for(int i = 0; i < row.length; i++){
                     buffer.append("│");
-                    buffer.append(toString(row[i], printNumbers, i, j, acceptedCell(board, i, j, cellStates)));
+                    if(board.isEmpty()){
+                        buffer.append(cellToString(row[i], printSelectors, i, j, i == 0 || i == row.length-1 || j == 0 || j == board.getRows().size()-1));
+                    } else {
+                        buffer.append(cellToString(row[i], printSelectors, i, j, acceptedCell(board, i, j, cellStates)));
+                    }
                 }
                 buffer.append("│");
                 boardString.add(buffer.toString());
@@ -739,7 +753,7 @@ public class CLI implements ViewInterface {
             return ret.toArray(new String[0]);
         }
 
-        private static String toString(Die die){
+        private static String dieToString(Die die){
             StringBuilder buffer = new StringBuilder();
             int value = die.getValue();
             buffer.append(value);
