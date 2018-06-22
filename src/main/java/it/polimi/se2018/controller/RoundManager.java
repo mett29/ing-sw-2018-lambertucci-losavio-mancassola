@@ -32,6 +32,8 @@ class RoundManager {
 
         //Extracts new DraftPool
         match.setDraftPool(newDraftpool());
+
+        turnManager.newTurn(match.getPlayerQueue().peek());
     }
 
     /**
