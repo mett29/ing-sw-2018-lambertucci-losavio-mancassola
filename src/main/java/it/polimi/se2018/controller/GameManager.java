@@ -156,7 +156,7 @@ class GameManager {
             return true;
         } else {
             if(roundFinished) roundManager.newRound();
-            match.notifyObservers();
+            //match.notifyObservers();
             return false;
         }
     }
