@@ -56,6 +56,7 @@ public class Client {
     public void connect() throws RemoteException, NotBoundException, MalformedURLException {
         if(rmi){
             connection = new RMIConnection(this, username);
+            connection.registerClient(username);
         } else {
             connection = new SocketConnection(this, username);
         }

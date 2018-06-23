@@ -7,6 +7,8 @@ import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.ClientInterface;
 import it.polimi.se2018.network.server.rmi.RMIServer;
 import it.polimi.se2018.network.server.socket.SocketServer;
+
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -55,12 +57,12 @@ public class Server {
         rmiServer.startServer(rmiPort);
     }
 
-    void newLobby(List<String> players){
+    void newLobby(List<String> players) throws IOException {
         Lobby lobby = new Lobby(players, this);
         for (String username : players) {
             lobbies.put(username, lobby);
         }
-
+        lobby.startMatch();
     }
 
     public void addClient(String username, ClientInterface clientInterface) {
@@ -102,7 +104,7 @@ public class Server {
      * Function called when a client sends a message.
      * @param message Message received
      */
-    public void onReceive(Message message){
+    public void onReceive(Message message) throws IOException {
         System.out.println(message);
         if(lobbies.containsKey(message.username)){
             lobbies.get(message.username).onReceive(message);
@@ -119,7 +121,7 @@ public class Server {
      * Add new player to the queue.
      * @param message Message received from player who whats to connect
      */
-    private void handleQueueRequest(QueueRequest message){
+    private void handleQueueRequest(QueueRequest message) throws IOException {
         queue.add(message.username);
     }
 }

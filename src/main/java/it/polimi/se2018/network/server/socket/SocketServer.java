@@ -52,7 +52,7 @@ public class SocketServer extends Thread {
      * This function is triggered when a message is received from a client (VirtualClient)
      * @param message Received message
      */
-    void onReceive(Message message) {
+    void onReceive(Message message) throws IOException {
         server.onReceive(message);
     }
 }

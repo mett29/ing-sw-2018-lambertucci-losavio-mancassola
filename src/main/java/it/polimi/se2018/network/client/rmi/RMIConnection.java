@@ -14,12 +14,19 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class RMIConnection implements IConnection {
     private ServerInterface server;
+    private ClientInterface remoteClientRef;
     public RMIConnection(Client c, String username) throws RemoteException, NotBoundException, MalformedURLException {
         server = (ServerInterface)Naming.lookup("Server");
         ClientImplementation client = new ClientImplementation(c);
-        ClientInterface remoteClientRef = (ClientInterface) UnicastRemoteObject.exportObject(client, 0);
+        remoteClientRef = (ClientInterface) UnicastRemoteObject.exportObject(client, 0);
+    }
 
-        server.register(username, remoteClientRef);
+    public void registerClient(String username) {
+        try {
+            server.register(username, remoteClientRef);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

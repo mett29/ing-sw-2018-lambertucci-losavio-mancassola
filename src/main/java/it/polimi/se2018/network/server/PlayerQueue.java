@@ -2,6 +2,7 @@ package it.polimi.se2018.network.server;
 
 import it.polimi.se2018.controller.Configuration;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -32,14 +33,19 @@ public class PlayerQueue {
      * If queue is empty before adding (this is the first player to enter the lobby), start lobby timer
      * @param username Username of the player to be added
      */
-    public synchronized void add(String username){
+    public synchronized void add(String username) throws IOException {
         // Start timer if this is the first player
         if(queue.isEmpty()) {
             timer = new Timer();
             startTimer();
         }
 
-        queue.add(username);
+        // Check if the username already exists
+        if (!queue.contains(username))
+            queue.add(username);
+        else
+            // TODO: handle this client side
+            System.out.println("Username already exists");
 
         System.out.println("Queue: " + queue);
 
@@ -61,7 +67,11 @@ public class PlayerQueue {
             @Override
             public void run() {
                 if(queue.size() > 1) {
-                    spawnLobby();
+                    try {
+                        spawnLobby();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     try {
                         // If there is only one player, restart the timer
@@ -74,7 +84,7 @@ public class PlayerQueue {
         }, Configuration.getInstance().getQueueTimer());
     }
 
-    private synchronized void spawnLobby(){
+    private void spawnLobby() throws IOException {
         System.out.println("Lobby spawned");
         List<String> elected = new ArrayList<>();
         while(!queue.isEmpty()){

@@ -23,12 +23,17 @@ public class SocketConnection implements IConnection, SocketClient {
     }
 
     @Override
-    public void send(Message message) throws RemoteException {
+    public void send(Message message) {
         server.send(message);
     }
 
     @Override
-    public void notify(Message message) throws RemoteException {
+    public void notify(Message message) {
         client.notify(message);
+    }
+
+    @Override
+    public void registerClient(String username) {
+        // nothing to do in socket
     }
 }

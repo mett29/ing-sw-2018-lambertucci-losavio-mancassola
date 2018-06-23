@@ -2,6 +2,7 @@ package it.polimi.se2018.view;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
+import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.message.PatternRequest;
 
 import java.io.IOException;
@@ -479,8 +480,8 @@ public class CLI implements ViewInterface {
      * Print a "waiting" message
      */
     public void onConnect(){
-        System.out.println("Login avvenuto con successo.");
-        System.out.println("Premi ENTER per entrare in coda");
+        System.out.println("Login successful.");
+        System.out.println("Press ENTER to enter the queue.");
         try {
             System.in.read();
         } catch (IOException e) {

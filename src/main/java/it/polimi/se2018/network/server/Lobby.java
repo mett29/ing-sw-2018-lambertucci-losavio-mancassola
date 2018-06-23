@@ -28,19 +28,13 @@ public class Lobby implements Observer{
         newPlayerMap();
         newPlayerWithBoard();
         this.server = server;
-
-        try {
-            startMatch();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
      * Start match
      * This function creates a new controller, a new match and starts the controller.
      */
-    private void startMatch() throws IOException {
+    protected void startMatch() throws IOException {
         controller = new Controller(this);
         playerPatternsMap = new HashMap<>();
 
