@@ -136,23 +136,23 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
 
         int leftX = (x - 1 + boardWidth) % boardWidth;
         int rightX = (x + 1) % boardWidth;
-        int aboveY = (y - 1 + boardHeight) % boardHeight;
-        int belowY = (y + 1) % boardHeight;
+        int belowY = (y - 1 + boardHeight) % boardHeight;
+        int aboveY = (y + 1) % boardHeight;
 
-        if(!getCell(leftX, y).isEmpty()) {
+        if(x != 0 && !getCell(leftX, y).isEmpty()) {
             adjacentDies.add(getDie(leftX, y));
         }
 
-        if(!getCell(x, belowY).isEmpty()) {
-            adjacentDies.add(getDie(x, belowY));
+        if(y != 3 && !getCell(x, aboveY).isEmpty()) {
+            adjacentDies.add(getDie(x, aboveY));
         }
 
-        if(!getCell(rightX, y).isEmpty()) {
+        if(x != 4 && !getCell(rightX, y).isEmpty()) {
             adjacentDies.add(getDie(rightX, y));
         }
 
-        if(!getCell(x, aboveY).isEmpty()) {
-            adjacentDies.add(getDie(x, aboveY));
+        if(y != 0 && !getCell(x, belowY).isEmpty()) {
+            adjacentDies.add(getDie(x, belowY));
         }
 
         return adjacentDies;
