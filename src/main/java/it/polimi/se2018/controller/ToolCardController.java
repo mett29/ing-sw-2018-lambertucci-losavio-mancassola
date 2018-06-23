@@ -236,7 +236,8 @@ class ToolCardController {
 
             queue6.add((tcc, pm) -> {
                 for(Die die : tcc.match.getDraftPool()){
-                    die.randomize();
+                    if(die != null)
+                        die.randomize();
                 }
                 pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                 return new PlayerState(EnumState.YOUR_TURN);

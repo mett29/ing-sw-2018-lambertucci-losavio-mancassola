@@ -212,7 +212,7 @@ class TurnManager {
          * @return true if picked, false if not
          */
         private static boolean checkDiePicked(PlayerMove state) {
-            return state.getActor().getPossibleActions().contains(PossibleAction.PICK_DIE);
+            return !state.getActor().getPossibleActions().contains(PossibleAction.PICK_DIE);
         }
 
         /**
@@ -319,7 +319,7 @@ class TurnManager {
 
             //-----------------------------------------------------------
 
-            BiFunction<Match, PlayerMove, Boolean> tc11 = (match, playerMove) -> checkDiceOnBoard(playerMove, 2);
+            BiFunction<Match, PlayerMove, Boolean> tc11 = (match, playerMove) -> checkDiceOnBoard(playerMove, 2) && checkDiceOnRoundtracker(match, 1);
 
             tmpChecks.put(11, tc11);
 
