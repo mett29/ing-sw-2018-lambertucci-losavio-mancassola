@@ -4,7 +4,6 @@ import it.polimi.se2018.controller.Controller;
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.message.MatchStartMessage;
 import it.polimi.se2018.network.message.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.util.*;
@@ -132,6 +131,10 @@ public class Lobby implements Observer{
                     match = controller.getMatch();
                     updateAll(new MatchStartMessage(match));
                 }
+                break;
+            case UNDO_REQUEST:
+                boolean response = controller.undo(message.username);
+                updateOne(message.username, new UndoResponse(true));
                 break;
             default:
                 // This should'n happen

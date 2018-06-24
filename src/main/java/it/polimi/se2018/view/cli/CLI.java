@@ -1,8 +1,10 @@
-package it.polimi.se2018.view;
+package it.polimi.se2018.view.cli;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
 import it.polimi.se2018.network.message.PatternRequest;
+import it.polimi.se2018.network.message.UndoResponse;
+import it.polimi.se2018.view.ViewInterface;
 
 import java.io.IOException;
 import java.util.*;
@@ -97,6 +99,14 @@ public class CLI implements ViewInterface {
         client.sendPatternResponse(selection);
     }
 
+    @Override
+    public void onUndoResponse(UndoResponse message) {
+        if(message.ok)
+            System.out.println("La tua mossa è stata annullata");
+        else
+            System.out.println("Non puoi annullare la mossa in questo momento");
+    }
+
     private void displayMatch(Match match){
         System.out.println("+ ROUND TRACKER +                                      + DRAFT POOL +");
         printLines(Stringifier.display2(Stringifier.diceContainerToStrings(match.getRoundTracker(), false, null), Stringifier.diceContainerToStrings(match.getDraftPool(), false, null)));
@@ -122,14 +132,14 @@ public class CLI implements ViewInterface {
     private void displayPlayers(Player[] players){
         int rows = players.length / 2;
         for (int i = 0; i < rows; i++) {
-            printLines(Stringifier.display2(toStrings(players[i]), toStrings(players[i+1])));
+            printLines(Stringifier.display2(playerToStrings(players[i]), playerToStrings(players[i+1])));
         }
         if(players.length % 2 == 1){
-            printLines(toStrings(players[players.length - 1]));
+            printLines(playerToStrings(players[players.length - 1]));
         }
     }
 
-    private String[] toStrings(Player player){
+    private String[] playerToStrings(Player player){
         String[] boardString = Stringifier.toStrings(player.getBoard());
 
         int tokens = player.getToken();
@@ -308,18 +318,12 @@ public class CLI implements ViewInterface {
 
     private ClientMove onPickState(PlayerState newState){
         PickState pState= (PickState) newState;
-        printPick(pState);
-        System.out.println("From which container do you want to pick a cell?");
-
-        List<Component> actives = new ArrayList<>();
-        actives.addAll(pState.getActiveContainers());
 
         ClientMove move = null;
 
-        int selection = makeSelection(actives);
-        switch(actives.get(selection)){
+        switch(pState.getActiveContainers().toArray(new Component[1])[0]){
             case BOARD:
-                move = pickBoard(getMyself(match).getBoard(), pState.getCellStates());
+                move = pickBoard(match.getPlayerByName(client.getUsername()).getBoard(), pState.getCellStates());
                 break;
             case DRAFTPOOL:
                 move = pickDiceContainer(match.getDraftPool(), pState.getCellStates(), true);
@@ -329,6 +333,10 @@ public class CLI implements ViewInterface {
                 break;
             default:
                  // do nothing
+        }
+
+        if(move == null){
+            client.sendUndoRequest();
         }
 
         return move;
@@ -341,6 +349,9 @@ public class CLI implements ViewInterface {
         Pattern ptn = Pattern.compile("[A-T]?", Pattern.CASE_INSENSITIVE);
         int selection = -1;
         while(selection == -1){
+            if(sc.hasNext("undo")){
+                return null;
+            }
             if(sc.hasNext(ptn)){
                 String found = sc.next(ptn);
                 selection = selectionMap.indexOf(found.toUpperCase().charAt(0));
@@ -367,6 +378,9 @@ public class CLI implements ViewInterface {
         int selection = -1;
         Pattern ptn = Pattern.compile("[A-T]?", Pattern.CASE_INSENSITIVE);
         while(selection == -1){
+            if(sc.hasNext("undo")){
+                return null;
+            }
             if(sc.hasNext(ptn)) {
                 String found = sc.next(ptn);
                 selection = selectionMap.indexOf(found.toUpperCase().charAt(0));
@@ -432,7 +446,7 @@ public class CLI implements ViewInterface {
         EnumSet<CellState> states = pState.getCellStates();
         String[] columnBoard = null;
         if(containers.contains(Component.BOARD)){
-            columnBoard = toStrings(getMyself(match));
+            columnBoard = playerToStrings(getMyself(match));
         }
 
         String[] roundTracker = null;
@@ -738,12 +752,11 @@ public class CLI implements ViewInterface {
 
             if(cellStates.contains(CellState.FULL) && diceContainer.getDie(index) == null){
                 return false;
-            }
-            if(cellStates.contains(CellState.EMPTY) && diceContainer.getDie(index) != null){
+            } else if(cellStates.contains(CellState.EMPTY) && diceContainer.getDie(index) != null){
                 return false;
+            } else {
+                return true;
             }
-
-            return true;
         }
 
         private static boolean acceptedCell(Board board, int x, int y, EnumSet<CellState> cellStates) {

@@ -3,6 +3,7 @@ package it.polimi.se2018.view.GUI;
 import it.polimi.se2018.model.Match;
 import it.polimi.se2018.network.client.Client;
 import it.polimi.se2018.network.message.PatternRequest;
+import it.polimi.se2018.network.message.UndoResponse;
 import it.polimi.se2018.view.ViewInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -91,6 +92,11 @@ public class GUI extends Application implements ViewInterface {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onUndoResponse(UndoResponse message) {
+        //TODO
     }
 
     @Override

@@ -14,7 +14,7 @@ public class ClientImplementation implements ClientInterface {
 
     @Override
     public void notify(Message message) throws RemoteException {
-        client.notify(message);
+        (new Thread(() -> client.notify(message))).start();
     }
 
 }

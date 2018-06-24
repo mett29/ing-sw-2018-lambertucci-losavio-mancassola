@@ -4,7 +4,7 @@ import it.polimi.se2018.model.Match;
 import it.polimi.se2018.network.message.*;
 import it.polimi.se2018.network.client.rmi.RMIConnection;
 import it.polimi.se2018.network.client.socket.SocketConnection;
-import it.polimi.se2018.view.CLI;
+import it.polimi.se2018.view.cli.CLI;
 import it.polimi.se2018.view.GUI.GUI;
 import it.polimi.se2018.view.ViewInterface;
 import javafx.application.Application;
@@ -93,6 +93,10 @@ public class Client {
                 view.onPatternRequest((PatternRequest) message);
                 break;
 
+            case UNDO_RESPONSE:
+                view.onUndoResponse((UndoResponse) message);
+                break;
+
             default:
                 // Strange message received. This shouldn't happen
                 System.out.println("Strange and stranger things might happen while programming");
@@ -150,6 +154,14 @@ public class Client {
         Message message = new PassRequest(username);
         try {
             connection.send(message);
+        } catch (RemoteException e) {
+            view.onConnectionError(e);
+        }
+    }
+
+    public void sendUndoRequest() {
+        try {
+            connection.send(new UndoRequest(username));
         } catch (RemoteException e) {
             view.onConnectionError(e);
         }
