@@ -12,11 +12,13 @@ class ToolCardController {
     private int id;
     private Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> operations;
     private List<DieCoord> memory;
+    private List<Die> pickedDice;
 
     ToolCardController(Match match, ToolCard toolCard) {
         this.match = match;
         this.id = toolCard.getId();
         this.memory = new ArrayList<>();
+        this.pickedDice = new ArrayList<>();
         this.operations = Operations.get(this.id);
     }
 
@@ -140,7 +142,9 @@ class ToolCardController {
 
             queue3.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue3.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
+                DieCoord die = (DieCoord) pm.getMove();
+                tcc.memory.add(die);
+                tcc.pickedDice.add(die.get());
                 return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
             });
             queue3.add((tcc, pm) -> {
@@ -157,7 +161,10 @@ class ToolCardController {
                 }
             });
             queue3.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
+                DieCoord die = (DieCoord) pm.getMove();
+                if(die.get() == tcc.pickedDice.get(0))
+                    return new PlayerState(EnumState.REPEAT);
+                tcc.memory.add(die);
                 return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
             });
             queue3.add((tcc, pm) -> {
@@ -373,6 +380,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     tcc.memory.add(die);
+                    tcc.pickedDice.add(die.get());
                     return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
                 }
             });
@@ -397,7 +405,7 @@ class ToolCardController {
             });
             queue11.add((tcc, pm) -> {
                 DieCoord die = (DieCoord) pm.getMove();
-                if(die.get().getColor() != tcc.memory.get(0).get().getColor()) {
+                if(die.get().getColor() != tcc.memory.get(0).get().getColor() || die.get() == tcc.pickedDice.get(0)) {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     tcc.memory.add(die);

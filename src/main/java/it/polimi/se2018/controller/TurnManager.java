@@ -48,7 +48,23 @@ class TurnManager {
             currentPlayer.getBoard().restoreState(savedBoard);
             match.getDraftPool().restoreState(savedDraftpool);
             match.getRoundTracker().restoreState(savedRoundtracker);
-            //currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Undo the current operation
+     * @param username of the current player
+     * @return true if the state is not YOUR_TURN, false otherwise
+     */
+    boolean undo(String username) {
+        Player currentPlayer = match.getPlayerQueue().peek();
+
+        if(currentPlayer.getState().get() != EnumState.YOUR_TURN) {
+            cancelOperation(username);
+            currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
             return true;
         }
 
@@ -295,7 +311,7 @@ class TurnManager {
 
             //-----------------------------------------------------------
 
-            BiFunction<Match, PlayerMove, Boolean> tc7 = (match, playerMove) -> checkTurn(match);
+            BiFunction<Match, PlayerMove, Boolean> tc7 = (match, playerMove) -> checkTurn(match) && checkDiePicked(playerMove);
 
             tmpChecks.put(7, tc7);
 

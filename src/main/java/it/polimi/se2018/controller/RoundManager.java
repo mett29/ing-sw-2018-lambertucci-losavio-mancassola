@@ -122,4 +122,13 @@ class RoundManager {
         }
         return  false;
     }
+
+    /**
+     * Undo the current operation
+     * @param username of the current player
+     * @return true if the state is not YOUR_TURN, false otherwise
+     */
+    boolean undo(String username) {
+        return turnManager.undo(username);
+    }
 }

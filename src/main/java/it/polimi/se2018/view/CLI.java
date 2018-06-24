@@ -148,7 +148,7 @@ public class CLI implements ViewInterface {
                 "",
                 "Tokens:",
                 " " + tokenString,
-                ""
+                player.getName().equals(client.getUsername()) ? player.getPrivateObjCard().getColor().toString() : ""
         };
 
 
@@ -204,6 +204,7 @@ public class CLI implements ViewInterface {
                 move = onUpDownState(newState);
                 break;
             case YESNO:
+                move = onYesNoState(newState);
                 break;
             case REPEAT:
                 onRepeatState(oldState);
@@ -277,6 +278,13 @@ public class CLI implements ViewInterface {
         List<String> selections = Arrays.stream(new String[]{"+1", "-1"}).collect(Collectors.toList());
         int selection = makeSelection(selections);
         return new UpDownMove(selection == 0);
+    }
+
+    private ClientMove onYesNoState(PlayerState newState) {
+        System.out.println("Do you want to continue?");
+        List<String> selections = Arrays.stream(new String[]{"Yes", "No"}).collect(Collectors.toList());
+        int selection = makeSelection(selections);
+        return new YesNoMove(selection == 0);
     }
 
     private ClientMove onValueState(PlayerState newState) {

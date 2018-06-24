@@ -18,7 +18,7 @@ public abstract class ClientMove implements Serializable {
     }
 
     public enum ContentType {
-        BOARD_COORD, DICE_CONTAINER_COORD, VALUE, UPDOWN, PICK_DIE, PASS
+        BOARD_COORD, DICE_CONTAINER_COORD, VALUE, UPDOWN, YESNO, PICK_DIE, PASS
     }
 
     /**

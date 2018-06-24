@@ -19,8 +19,8 @@ public class Controller {
      * Handle player's move.
      * @param move of the player
      */
-    public /*boolean*/ void handleMove(PlayerMove move) {
-        /*return*/ gameManager.handleMove(move);
+    public void handleMove(PlayerMove move) {
+        gameManager.handleMove(move);
         getMatch().notifyObservers();
     }
 
@@ -54,13 +54,23 @@ public class Controller {
      * Pass the current player's turn
      * Checks if it's possible to pass the turn
      * @param username of the player
-     * @return true if successfully passed the turn
      */
     public void passTurn(String username) {
         boolean matchEnded = gameManager.passTurn(username);
         if(matchEnded)
             gameManager.calculateScore();
         getMatch().notifyObservers();
+    }
+
+    /**
+     * Undo the current operation
+     * @param username of the current player
+     * @return true if the state is not YOUR_TURN, false otherwise
+     */
+    public boolean undo(String username) {
+        boolean ret = gameManager.undo(username);
+        getMatch().notifyObservers();
+        return ret;
     }
 
     /**
