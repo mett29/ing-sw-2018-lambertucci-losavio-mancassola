@@ -57,8 +57,10 @@ public class Controller {
      */
     public void passTurn(String username) {
         boolean matchEnded = gameManager.passTurn(username);
-        if(matchEnded)
+        if(matchEnded) {
             gameManager.calculateScore();
+            gameManager.declareWinner();
+        }
         getMatch().notifyObservers();
     }
 

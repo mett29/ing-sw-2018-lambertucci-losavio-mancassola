@@ -6,10 +6,9 @@ import it.polimi.se2018.network.server.ParsedBoard;
 import it.polimi.se2018.utils.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-class GameManager {
+class GameManager implements Comparator<Score>{
     private Match match;
     private RoundManager roundManager;
     private List<ParsedBoard> parsedBoards;
@@ -110,6 +109,27 @@ class GameManager {
         }
     }
 
+    void declareWinner() {
+        List<Player> players = new ArrayList<>();
+        LinkedList<Player> q = compareQueue();
+
+        players.addAll(match.getPlayers());
+
+        while(players.size() > 1) {
+            int finalCompare = compare(match.getScore(players.get(0)), match.getScore(players.get(1)));
+
+            if(finalCompare == 0)
+                finalCompare = q.indexOf(match.getPlayers().get(0)) - q.indexOf(match.getPlayers().get(1));
+
+            if(finalCompare < 0)
+                players.remove(match.getPlayers().get(0));
+            else
+                players.remove(match.getPlayers().get(1));
+        }
+
+        players.get(0).setWinner(true);
+    }
+
     /**
      * Handle the player's move.
      * @param move of the player
@@ -173,5 +193,52 @@ class GameManager {
      */
     Match getMatch() {
         return match;
+    }
+
+    /**
+     * Creates a new round passing the first turn to the player next to him (clockwise procedure).
+     */
+    private LinkedList<Player> compareQueue(){
+        LinkedList<Player> playerQueue = new LinkedList<>();
+
+        List<Player> playerList = match.getPlayers();
+        int turnNumber = match.getRoundTracker().getCurrentSize();
+        int playerSize = playerList.size();
+        Queue<Integer> playerIndexes = new LinkedList<>();
+
+        for(int i = 0; i < playerSize; i++){
+            playerIndexes.add((i + turnNumber) % playerSize);
+        }
+
+        Integer[] indexes = playerIndexes.toArray(new Integer[playerSize]);
+
+        for(int i = 0; i < 2 * playerIndexes.size(); i++){
+            if(i < playerIndexes.size()){
+                playerQueue.add(playerList.get(indexes[i]));
+            } else {
+                playerQueue.add(playerList.get(indexes[2 * playerSize - i - 1]));
+            }
+        }
+        return playerQueue;
+    }
+
+    @Override
+    public int compare(Score o1, Score o2) {
+        int overallCompare = o1.getOverallScore() - o2.getOverallScore();
+
+        if(overallCompare != 0)
+            return overallCompare;
+
+        int privateObjectiveCompare = o1.getValues()[0] - o2.getValues()[0];
+
+        if(privateObjectiveCompare != 0)
+            return privateObjectiveCompare;
+
+        int tokenCompare = o1.getValues()[2] - o2.getValues()[2];
+
+        if(tokenCompare != 0)
+            return tokenCompare;
+
+        return 0;
     }
 }

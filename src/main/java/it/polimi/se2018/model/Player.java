@@ -18,6 +18,7 @@ public class Player implements Serializable {
     private ToolCard activatedToolcard;
     private PlayerState state;
     private EnumSet<PossibleAction> possibleActions;
+    private boolean winner;
 
     // Player constructor
     public Player(String name) {
@@ -25,6 +26,7 @@ public class Player implements Serializable {
             throw new NullPointerException("`name` must be not null");
         this.name = name;
         this.state = new PlayerState(EnumState.IDLE);
+        this.winner = false;
     }
 
     /**
@@ -148,5 +150,21 @@ public class Player implements Serializable {
      */
     public EnumSet<PossibleAction> getPossibleActions() {
         return possibleActions;
+    }
+
+    /**
+     * Set a player if it's the winner of the match
+     * @param winner of the match
+     */
+    public void setWinner(boolean winner) {
+        this.winner = winner;
+    }
+
+    /**
+     * Check if the player is the winner
+     * @return true if he is the winner, false otherwise
+     */
+    public boolean isWinner() {
+        return winner;
     }
 }

@@ -858,7 +858,7 @@ public class CLI implements ViewInterface {
             ret.add(scoreLine("Private Card", points[0], "   "));
             ret.add(scoreLine("Public Cards", points[1], "   "));
             ret.add(scoreLine("Tokens", points[2], "   "));
-            ret.add(scoreLine("Non-empty cells", points[3], "   "));
+            ret.add(scoreLine("Empty cells", points[3], "   "));
             ret.add(scoreLine("", -1, ""));
             ret.add(scoreLine("Total Score", score.getOverallScore(), "   "));
             ret.add(scoreLine("", -1, ""));
