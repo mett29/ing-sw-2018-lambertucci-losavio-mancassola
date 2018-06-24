@@ -162,9 +162,18 @@ class GameManager {
     }
 
     /**
+     * Undo the current operation
+     * @param username of the current player
+     * @return true if the state is not YOUR_TURN, false otherwise
+     */
+    boolean undo(String username) {
+        return roundManager.undo(username);
+    }
+
+    /**
      * @return the current match
      */
-    public Match getMatch() {
+    Match getMatch() {
         return match;
     }
 }
