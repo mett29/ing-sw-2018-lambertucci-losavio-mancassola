@@ -2,7 +2,6 @@ package it.polimi.se2018.view;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
-import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.message.PatternRequest;
 
 import java.io.IOException;
@@ -100,7 +99,7 @@ public class CLI implements ViewInterface {
 
     private void displayMatch(Match match){
         System.out.println("+ ROUND TRACKER +                                      + DRAFT POOL +");
-        printLines(Stringifier.display2(Stringifier.toStrings(match.getRoundTracker()), Stringifier.toStrings(match.getDraftPool())));
+        printLines(Stringifier.display2(Stringifier.diceContainerToStrings(match.getRoundTracker(), false, null), Stringifier.diceContainerToStrings(match.getDraftPool(), false, null)));
         displayPlayers(match.getPlayers().toArray(new Player[0]));
         System.out.println("+ TOOLCARDS +");
         displayCards(match.getToolCards());
@@ -328,34 +327,25 @@ public class CLI implements ViewInterface {
     }
 
     private ClientMove pickDiceContainer(DiceContainer diceContainer, EnumSet<CellState> cellStates, boolean isDraftPool) {
-        printLines(Stringifier.toStrings(diceContainer));
-        System.out.println(Stringifier.toString(diceContainer, cellStates));
+        printLines(Stringifier.diceContainerToStrings(diceContainer, true, cellStates));
+        System.out.println(Stringifier.pickContainerMessage(cellStates));
         Scanner sc = new Scanner(System.in);
+        Pattern ptn = Pattern.compile("[A-T]?", Pattern.CASE_INSENSITIVE);
         int selection = -1;
         while(selection == -1){
-            if(sc.hasNextInt()){
-                selection = sc.nextInt();
-                if(selection < 0 || selection >= diceContainer.getMaxSize() || !acceptedCell(diceContainer, selection, cellStates)){
-                    System.out.println("Unacceptable selection. " + Stringifier.toString(diceContainer, cellStates));
+            if(sc.hasNext(ptn)){
+                String found = sc.next(ptn);
+                selection = selectionMap.indexOf(found.toUpperCase().charAt(0));
+                if(selection < 0 || selection >= diceContainer.getMaxSize() || !Stringifier.acceptedCell(diceContainer, selection, cellStates)){
+                    System.out.println("Unacceptable selection. " + Stringifier.pickContainerMessage(cellStates));
                     selection = -1;
                 }
             }  else {
                 sc.next();
-                System.out.println("Unacceptable selection. " + Stringifier.toString(diceContainer, cellStates));
+                System.out.println("Unacceptable selection. " + Stringifier.pickContainerMessage(cellStates));
             }
         }
         return new DiceContainerCoordMove(selection, isDraftPool ? DiceContainerCoordMove.DiceContainerName.DRAFT_POOL : DiceContainerCoordMove.DiceContainerName.ROUND_TRACKER);
-    }
-
-    private boolean acceptedCell(DiceContainer diceContainer, int index, EnumSet<CellState> cellStates) {
-        if(cellStates != null){
-            if(cellStates.contains(CellState.EMPTY))
-                return diceContainer.isEmpty(index);
-            if (cellStates.contains(CellState.FULL)) {
-                return !diceContainer.isEmpty(index);
-            }
-        }
-        return true;
     }
 
     private ClientMove pickBoard(Board board, EnumSet<CellState> cellStates) {
@@ -440,13 +430,13 @@ public class CLI implements ViewInterface {
         String[] roundTracker = null;
         if(containers.contains(Component.ROUNDTRACKER)){
             String title = "+ ROUND TRACKER +";
-            roundTracker = Stream.concat(Arrays.stream(new String[]{title}), Arrays.stream(Stringifier.toStrings(match.getRoundTracker()))).toArray(String[]::new);
+            roundTracker = Stream.concat(Arrays.stream(new String[]{title}), Arrays.stream(Stringifier.diceContainerToStrings(match.getRoundTracker(), false, null))).toArray(String[]::new);
         }
 
         String[] draftPool = null;
         if(containers.contains(Component.DRAFTPOOL)){
             String title = "+ DRAFT POOL +";
-            draftPool = Stream.concat(Arrays.stream(new String[]{title}), Arrays.stream(Stringifier.toStrings(match.getDraftPool()))).toArray(String[]::new);
+            draftPool = Stream.concat(Arrays.stream(new String[]{title}), Arrays.stream(Stringifier.diceContainerToStrings(match.getDraftPool(), false, null))).toArray(String[]::new);
         }
 
         String[] col2 = null;
@@ -491,14 +481,24 @@ public class CLI implements ViewInterface {
     }
 
     public void onNewMatchState(Match oldMatch, Match newMatch) {
-        displayMatch(newMatch);
-        Player me = null;
-        for (Player p : newMatch.getPlayers()) {
-            if (p.getName().equals(client.getUsername()))
-                me = p;
+        if(newMatch.isFinished()){
+            displayScores(newMatch);
+        } else {
+            displayMatch(newMatch);
+            Player me = null;
+            for (Player p : newMatch.getPlayers()) {
+                if (p.getName().equals(client.getUsername()))
+                    me = p;
+            }
+            if (me != null) {
+                setState(me.getState());
+            }
         }
-        if (me != null) {
-            setState(me.getState());
+    }
+
+    private void displayScores(Match newMatch) {
+        for(Player p : newMatch.getPlayers()) {
+            printLines(Stringifier.scoreToStrings(p, newMatch.getScore(p)));
         }
     }
 
@@ -598,16 +598,41 @@ public class CLI implements ViewInterface {
             return ret.toArray(new String[0]);
         }
 
-        private static String[] toStrings(DiceContainer container){
+        private static String[] diceContainerToStrings(DiceContainer container, boolean printSelectors, EnumSet<CellState> cellStates){
             List<String> ret = new ArrayList<>();
 
             int maxSize = container.getMaxSize();
             StringBuilder buffer = new StringBuilder();
             buffer.append("╔");
-            for (int i = 0; i < maxSize - 1; i++) {
-                buffer.append("════╤");
+            if(printSelectors){
+                // print selection character for each row accepted by cellState
+                for(int i = 0; i < maxSize - 1; i++){
+                    if(acceptedCell(container, i, cellStates)) {
+                        buffer.append("══");
+                        buffer.append(selectionMap.charAt(i));
+                        buffer.append("═╤");
+                    } else {
+                        buffer.append("════╤");
+                    }
+                }
+
+                // print last cell
+                if(acceptedCell(container, maxSize - 1, cellStates)) {
+                    buffer.append("══");
+                    buffer.append(selectionMap.charAt(maxSize - 1));
+                    buffer.append("═╗");
+                } else {
+                    buffer.append("════╗");
+                }
+
+            } else {
+                for (int i = 0; i < maxSize - 1; i++) {
+                    buffer.append("════╤");
+                }
+                // print last cell
+                buffer.append("════╗");
             }
-            buffer.append("════╗");
+
             ret.add(buffer.toString());
 
             buffer = new StringBuilder();
@@ -644,7 +669,6 @@ public class CLI implements ViewInterface {
         }
 
         private static String cellToString(Cell cell, boolean printNumbers, int x, int y, boolean accepted){
-
             StringBuilder buffer = new StringBuilder();
             if(cell.getRestriction() != null) {
                 buffer.append(cell.getRestriction().toString());
@@ -700,6 +724,20 @@ public class CLI implements ViewInterface {
             return boardString.toArray(new String[8]);
         }
 
+        private static boolean acceptedCell(DiceContainer diceContainer, int index, EnumSet<CellState> cellStates){
+            if(cellStates == null)
+                return true;
+
+            if(cellStates.contains(CellState.FULL) && diceContainer.getDie(index) == null){
+                return false;
+            }
+            if(cellStates.contains(CellState.EMPTY) && diceContainer.getDie(index) != null){
+                return false;
+            }
+
+            return true;
+        }
+
         private static boolean acceptedCell(Board board, int x, int y, EnumSet<CellState> cellStates) {
             if(cellStates == null){
                 return true;
@@ -729,10 +767,11 @@ public class CLI implements ViewInterface {
         private static String[] display2(String[] a, String[] b){
             List<String> ret = new ArrayList<>();
 
-            int padding = 0;
+            int paddingA = 0;
             if(a.length < b.length){
-                padding = a[0].length();
+                paddingA = a[0].length();
             }
+            int paddingB = b[0].length();
 
             int height = max(a.length, b.length);
 
@@ -740,14 +779,19 @@ public class CLI implements ViewInterface {
                 StringBuilder buffer = new StringBuilder();
                 if(i < a.length){
                     buffer.append(a[i]);
+
                 } else {
-                    for (int j = 0; j < padding; j++) {
+                    for (int j = 0; j < paddingA; j++) {
                         buffer.append(" ");
                     }
                 }
                 buffer.append("    ");
                 if(i < b.length){
                     buffer.append(b[i]);
+                } else {
+                    for (int j = 0; j < paddingB; j++) {
+                        buffer.append(" ");
+                    }
                 }
                 ret.add(buffer.toString());
             }
@@ -762,7 +806,7 @@ public class CLI implements ViewInterface {
             return buffer.toString();
         }
 
-        private static String toString(DiceContainer diceContainer, EnumSet<CellState> cellStates){
+        private static String pickContainerMessage(EnumSet<CellState> cellStates){
             StringBuilder buffer = new StringBuilder();
             buffer.append("Select a");
             if(cellStates.contains(CellState.EMPTY)) {
@@ -789,6 +833,61 @@ public class CLI implements ViewInterface {
                 buffer.append(" that is not near a die");
             }
             buffer.append(":");
+            return buffer.toString();
+        }
+
+        private static String[] scoreToStrings(Player player, Score score) {
+            List<String> ret = new ArrayList<>();
+            StringBuilder buffer = new StringBuilder();
+            int[] points = score.getValues();
+            buffer.append("┏");
+            for(int i = 0; i < PLAYER_WIDTH; i++)
+                buffer.append("━");
+            buffer.append("┓");
+            ret.add(buffer.toString());
+
+            ret.add(scoreLine(player.getName(), -1, " "));
+            ret.add(scoreLine("Private Card", points[0], "   "));
+            ret.add(scoreLine("Public Cards", points[1], "   "));
+            ret.add(scoreLine("Tokens", points[2], "   "));
+            ret.add(scoreLine("Non-empty cells", points[3], "   "));
+            ret.add(scoreLine("", -1, ""));
+            ret.add(scoreLine("Total Score", score.getOverallScore(), "   "));
+            ret.add(scoreLine("", -1, ""));
+
+            buffer = new StringBuilder();
+            buffer.append("┗");
+            for(int i = 0; i < PLAYER_WIDTH; i++)
+                buffer.append("━");
+            buffer.append("┛");
+            ret.add(buffer.toString());
+
+            return ret.toArray(new String[0]);
+        }
+
+        /**
+         * Create a line (String) for score displaying.
+         * @param name Name of the parameter
+         * @param value Points of the related parameter. Values below zero will not be printed.
+         * @param leftPadding String of spaces that will be inserted at the end of the line, right after `┃`.
+         * @return String defined with parameters, with total length == `PLAYER_WIDTH` and `┃` characters at the start and at the end of the line.
+         */
+        private static String scoreLine(String name, int value, String leftPadding){
+            StringBuilder buffer = new StringBuilder();
+            buffer.append("┃");
+            buffer.append(leftPadding);
+            buffer.append(name);
+            for(int i = buffer.length() - 1; i < 22; i++) {
+                buffer.append(" ");
+            }
+            if(value >= 0) {
+                buffer.append(value);
+            }
+            for(int i = buffer.length() - 1; i < PLAYER_WIDTH; i++){
+                buffer.append(" ");
+            }
+            buffer.append("┃");
+
             return buffer.toString();
         }
     }

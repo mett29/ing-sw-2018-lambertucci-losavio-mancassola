@@ -174,4 +174,8 @@ public class Match extends Observable implements Serializable {
         }
         return ret;
     }
+
+    public boolean isFinished(){
+        return !scores.isEmpty();
+    }
 }
