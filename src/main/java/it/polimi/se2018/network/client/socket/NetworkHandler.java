@@ -6,6 +6,7 @@ import it.polimi.se2018.network.server.socket.ServerInterface;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class NetworkHandler extends Thread implements ServerInterface {
 
@@ -16,6 +17,8 @@ public class NetworkHandler extends Thread implements ServerInterface {
 
     private ClientInterface client;
 
+    private boolean connectionEstabilished;
+
     NetworkHandler(String host, int port, ClientInterface client) {
         try {
             this.socketClient = new Socket(host, port);
@@ -23,15 +26,17 @@ public class NetworkHandler extends Thread implements ServerInterface {
             this.oos.flush();
             this.ois = new ObjectInputStream(new BufferedInputStream(socketClient.getInputStream()));
             this.client = client;
+            this.connectionEstabilished = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            this.connectionEstabilished = false;
         }
     }
 
     @Override
     public void run() {
         boolean loop = true;
-        while (loop && !this.socketClient.isClosed()) {
+        while (connectionEstabilished && loop && !this.socketClient.isClosed()) {
             try {
                 Message message = (Message) ois.readObject();
                 if (message == null) {
@@ -41,7 +46,8 @@ public class NetworkHandler extends Thread implements ServerInterface {
                     client.notify(message);
                 }
             } catch (IOException|ClassNotFoundException e) {
-                e.printStackTrace();
+                loop = false;
+                System.out.println("Client can't communicate with the server anymore. Connection closed.");
             }
         }
     }
@@ -56,7 +62,7 @@ public class NetworkHandler extends Thread implements ServerInterface {
             oos.writeObject(message);
             oos.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Can't send this message right now.");
         }
     }
 }

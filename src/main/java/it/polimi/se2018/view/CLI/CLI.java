@@ -1,4 +1,4 @@
-package it.polimi.se2018.view.cli;
+package it.polimi.se2018.view.CLI;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
@@ -83,14 +83,14 @@ public class CLI implements ViewInterface {
 
     @Override
     public void onPatternRequest(PatternRequest message) {
-        List<Integer> selections = new ArrayList<>();
+        List<String> selections = new ArrayList<>();
 
         int iteration = 0;
         for(Board b : message.boards){
-            System.out.println(iteration);
+            System.out.println("[ -- " + message.boardNames.get(iteration) + " | Diff.: " + b.getBoardDifficulty() + " -- ]");
             printLines(Stringifier.toStrings(b));
 
-            selections.add(iteration);
+            selections.add(message.boardNames.get(iteration));
 
             iteration++;
         }
@@ -553,7 +553,7 @@ public class CLI implements ViewInterface {
         System.out.println("    ┃  connessione.  L'applicazione  si   ┃");
         System.out.println("    ┃  spegnerà.                          ┃");
         System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
-        e.printStackTrace();
+        //e.printStackTrace();
     }
 
     private static class Stringifier{
@@ -861,20 +861,22 @@ public class CLI implements ViewInterface {
             List<String> ret = new ArrayList<>();
             StringBuilder buffer = new StringBuilder();
             int[] points = score.getValues();
+            boolean winner = player.isWinner();
             buffer.append("┏");
             for(int i = 0; i < PLAYER_WIDTH; i++)
                 buffer.append("━");
             buffer.append("┓");
             ret.add(buffer.toString());
 
-            ret.add(scoreLine(player.getName(), -1, " "));
-            ret.add(scoreLine("Private Card", points[0], "   "));
-            ret.add(scoreLine("Public Cards", points[1], "   "));
-            ret.add(scoreLine("Tokens", points[2], "   "));
-            ret.add(scoreLine("Empty cells", points[3], "   "));
-            ret.add(scoreLine("", -1, ""));
-            ret.add(scoreLine("Total Score", score.getOverallScore(), "   "));
-            ret.add(scoreLine("", -1, ""));
+            ret.add(scoreLine(player.getName(), -1, " ", false));
+            ret.add(scoreLine("Private Card", points[0], "   ", true));
+            ret.add(scoreLine("Public Cards", points[1], "   ", true));
+            ret.add(scoreLine("Tokens", points[2], "   ", true));
+            ret.add(scoreLine("Empty cells", points[3], "   ", true));
+            ret.add(scoreLine("", -1, "", false));
+            ret.add(scoreLine("Total Score", score.getOverallScore(), "   ", true));
+            ret.add(scoreLine("", -1, "", false));
+            ret.add(scoreLine(winner ? "(WINNER)" : "", -1, "                  ", false));
 
             buffer = new StringBuilder();
             buffer.append("┗");
@@ -893,7 +895,7 @@ public class CLI implements ViewInterface {
          * @param leftPadding String of spaces that will be inserted at the end of the line, right after `┃`.
          * @return String defined with parameters, with total length == `PLAYER_WIDTH` and `┃` characters at the start and at the end of the line.
          */
-        private static String scoreLine(String name, int value, String leftPadding){
+        private static String scoreLine(String name, int value, String leftPadding, boolean showValue){
             StringBuilder buffer = new StringBuilder();
             buffer.append("┃");
             buffer.append(leftPadding);
@@ -901,7 +903,7 @@ public class CLI implements ViewInterface {
             for(int i = buffer.length() - 1; i < 22; i++) {
                 buffer.append(" ");
             }
-            if(value >= 0) {
+            if(showValue) {
                 buffer.append(value);
             }
             for(int i = buffer.length() - 1; i < PLAYER_WIDTH; i++){

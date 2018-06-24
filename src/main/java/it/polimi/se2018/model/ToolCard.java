@@ -60,9 +60,8 @@ public class ToolCard implements Card{
     /**
      * Increase the cost of the toolcard (max: 2)
      */
-    public void increaseCost() {
-        if(cost != 2)
-            cost++;
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 
     /**

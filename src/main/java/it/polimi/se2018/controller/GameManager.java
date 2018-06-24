@@ -2,28 +2,22 @@ package it.polimi.se2018.controller;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.server.Lobby;
-import it.polimi.se2018.network.server.ParsedBoard;
 import it.polimi.se2018.utils.*;
 
-import java.io.IOException;
 import java.util.*;
 
 class GameManager implements Comparator<Score>{
     private Match match;
     private RoundManager roundManager;
-    private List<ParsedBoard> parsedBoards;
-    private JsonParser jsonParser = new JsonParser();
 
     /**
      * Constructor
      * Create and initialize the Match
      * @param lobby
-     * @throws IOException
      */
-    GameManager(Lobby lobby) throws IOException {
+    GameManager(Lobby lobby) {
         this.match = new Match(lobby.getPlayers(), extractToolCards(), extractPublicObjCards(), lobby);
         extractPrivateObjCard();
-        this.parsedBoards = jsonParser.getParsedBoards();
         this.roundManager = new RoundManager(match);
     }
 
@@ -75,21 +69,6 @@ class GameManager implements Comparator<Score>{
     }
 
     /**
-     * @return 4 parsed boards between which the player will choose
-     */
-    protected List<ParsedBoard> extractPatterns() {
-        Extractor<ParsedBoard> parsedBoardExtractor = new Extractor<>();
-        for (ParsedBoard pb : this.parsedBoards) {
-            parsedBoardExtractor.insert(pb);
-        }
-        List<ParsedBoard> parsedBoardExtracted = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            parsedBoardExtracted.add(parsedBoardExtractor.extract());
-        }
-        return parsedBoardExtracted;
-    }
-
-    /**
      * Calculates the final score of every player based on PrivateObjectiveCards, PublicObjectiveCards, tokens and empty cells.
      */
     void calculateScore() {
@@ -109,6 +88,9 @@ class GameManager implements Comparator<Score>{
         }
     }
 
+    /**
+     * Declares the winner of the match. The player will have the flag 'winner' setted to true.
+     */
     void declareWinner() {
         List<Player> players = new ArrayList<>();
         LinkedList<Player> q = compareQueue();

@@ -4,7 +4,7 @@ import it.polimi.se2018.model.Match;
 import it.polimi.se2018.network.message.*;
 import it.polimi.se2018.network.client.rmi.RMIConnection;
 import it.polimi.se2018.network.client.socket.SocketConnection;
-import it.polimi.se2018.view.cli.CLI;
+import it.polimi.se2018.view.CLI.CLI;
 import it.polimi.se2018.view.GUI.GUI;
 import it.polimi.se2018.view.ViewInterface;
 import javafx.application.Application;

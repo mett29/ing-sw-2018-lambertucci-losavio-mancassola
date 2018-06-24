@@ -4,6 +4,8 @@ import it.polimi.se2018.controller.Controller;
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.message.MatchStartMessage;
 import it.polimi.se2018.network.message.*;
+import it.polimi.se2018.utils.Extractor;
+import it.polimi.se2018.utils.JsonParser;
 
 import java.io.IOException;
 import java.util.*;
@@ -13,7 +15,8 @@ public class Lobby implements Observer{
     private Map<String, Player> playerMap;
     private Server server;
     private Controller controller;
-    private List<ParsedBoard> extractedPatterns;
+    private List<ParsedBoard> parsedBoards;
+    private JsonParser jsonParser = new JsonParser();
 
     // This Map contains the name of the player and the set of the boards between which he will choose
     private Map<String, List<ParsedBoard>> playerPatternsMap;
@@ -21,12 +24,13 @@ public class Lobby implements Observer{
     // This Map contains all the lobby's player with their equivalent board's index
     private Map<String, Integer> playerWithBoard;
 
-    Lobby(List<String> usernames, Server server){
+    Lobby(List<String> usernames, Server server) throws IOException{
         System.out.println("New lobby created");
         this.usernames = usernames;
         newPlayerMap();
         newPlayerWithBoard();
         this.server = server;
+        this.parsedBoards = jsonParser.getParsedBoards();
     }
 
     /**
@@ -37,17 +41,27 @@ public class Lobby implements Observer{
         controller = new Controller(this);
         playerPatternsMap = new HashMap<>();
 
+        Extractor<ParsedBoard> parsedBoardExtractor = new Extractor<>();
+        for (ParsedBoard pb : this.parsedBoards) {
+            parsedBoardExtractor.insert(pb);
+        }
+
         for (Player player : this.getPlayers()) {
             // Extract 4 boards and ask the player which one he wants to play with
-            extractedPatterns = controller.extractPatterns();
+            List<ParsedBoard> extractedPatterns = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                extractedPatterns.add(parsedBoardExtractor.extract());
+            }
             // This line associates each username to the related 4 extracted patterns
             playerPatternsMap.put(player.getName(), extractedPatterns);
             // Getting all the pattern's name that will be displayed to the player
             List<Board> patterns = new ArrayList<>();
+            List<String> patternNames = new ArrayList<>();
 
             // For each extracted pattern, add corresponding board to `patterns`, which will be sent to the client
             extractedPatterns.forEach(parsedBoard -> patterns.add(patternToBoard(parsedBoard)));
-            updateOne(player.getName(), new PatternRequest(player.getName(), patterns));
+            extractedPatterns.forEach(parsedBoard -> patternNames.add(parsedBoard.getName()));
+            updateOne(player.getName(), new PatternRequest(player.getName(), patterns, patternNames));
         }
     }
 

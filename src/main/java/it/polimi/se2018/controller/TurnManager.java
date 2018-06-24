@@ -14,6 +14,7 @@ class TurnManager {
     private Board savedBoard;
     private DiceContainer savedDraftpool;
     private DiceContainer savedRoundtracker;
+    private int oldCost;
 
     TurnManager(Match match) {
         this.match = match;
@@ -48,6 +49,12 @@ class TurnManager {
             currentPlayer.getBoard().restoreState(savedBoard);
             match.getDraftPool().restoreState(savedDraftpool);
             match.getRoundTracker().restoreState(savedRoundtracker);
+            if(toolcard != null) {
+                currentPlayer.setToken(currentPlayer.getToken() + oldCost);
+                currentPlayer.getActivatedToolcard().setCost(oldCost);
+                currentPlayer.deactivateToolcard();
+                toolcard = null;
+            }
             return true;
         }
 
@@ -62,7 +69,9 @@ class TurnManager {
     boolean undo(String username) {
         Player currentPlayer = match.getPlayerQueue().peek();
 
-        if(currentPlayer.getState().get() != EnumState.YOUR_TURN) {
+        boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
+
+        if(isPlayerEqual && currentPlayer.getState().get() != EnumState.YOUR_TURN) {
             cancelOperation(username);
             currentPlayer.setState(new PlayerState(EnumState.YOUR_TURN));
             return true;
@@ -172,6 +181,7 @@ class TurnManager {
             savedBoard = currentPlayer.getBoard().saveState();
             savedDraftpool = match.getDraftPool().saveState();
             savedRoundtracker = match.getRoundTracker().saveState();
+            oldCost = toolCardActivated.getCost();
 
             //Creates a new toolcard controller with the toolcard activated
             this.toolcard = new ToolCardController(match, toolCardActivated);
@@ -183,8 +193,8 @@ class TurnManager {
             currentPlayer.setToken(currentPlayer.getToken() - toolCardActivated.getCost());
             //Sets the new state inside the player
             currentPlayer.setState(newState);
-            //Increase the cost of the toolcard (max: 2)
-            toolCardActivated.increaseCost();
+            //Increase the cost of the toolcard
+            toolCardActivated.setCost(2);
             return true;
         }
 

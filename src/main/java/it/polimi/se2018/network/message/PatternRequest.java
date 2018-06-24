@@ -11,9 +11,11 @@ import java.util.List;
 public class PatternRequest extends Message {
 
     public final List<Board> boards;
+    public final List<String> boardNames;
 
-    public PatternRequest(String username, List<Board> boards) {
+    public PatternRequest(String username, List<Board> boards, List<String> boardNames) {
         super(username, Content.PATTERN_REQUEST);
         this.boards = boards;
+        this.boardNames = boardNames;
     }
 }
