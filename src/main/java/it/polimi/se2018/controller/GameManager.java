@@ -107,8 +107,6 @@ class GameManager {
             empty = 20 - player.getBoard().countDice();
 
             match.setScore(player, new Score(privCards, publCards, tok, empty));
-
-            match.notifyObservers();
         }
     }
 
