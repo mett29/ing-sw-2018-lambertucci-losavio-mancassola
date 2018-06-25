@@ -84,7 +84,7 @@ public class Client {
     public void notify(Message message){
         switch(message.content){
             case LOGIN:
-                view.onConnect();
+                view.onConnect(((LoginResponse) message).response == Message.Type.OK);
                 break;
 
             case RECONNECT:

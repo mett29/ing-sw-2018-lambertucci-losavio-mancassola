@@ -33,7 +33,8 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void onConnect() {
+    public void onConnect(boolean isOk) {
+        // TODO: handle isOk true or false (username already exists)
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/LobbyGUI.fxml"));

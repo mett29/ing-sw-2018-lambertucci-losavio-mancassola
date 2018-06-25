@@ -95,7 +95,6 @@ public class Server {
                 onDisconnect(username);
             }
         }
-
         System.out.println(usernames);
     }
 

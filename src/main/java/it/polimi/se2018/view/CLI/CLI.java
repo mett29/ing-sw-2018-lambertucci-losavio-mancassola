@@ -334,7 +334,7 @@ public class CLI implements ViewInterface {
                 move = pickDiceContainer(match.getRoundTracker(), pState.getCellStates(), false);
                 break;
             default:
-                 // do nothing
+                // do nothing
         }
 
         if(move == null){
@@ -500,18 +500,22 @@ public class CLI implements ViewInterface {
     /**
      * What to do when logged in successful?
      * Print a "waiting" message
+     * @param isOk
      */
-    public void onConnect(){
-        System.out.println("Login successful.");
-        System.out.println("Press ENTER to enter the queue.");
-
-        try {
-            System.in.read();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void onConnect(boolean isOk){
+        if (isOk) {
+            System.out.println("Login successful.");
+            System.out.println("Press ENTER to enter the queue.");
+            try {
+                System.in.read();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            client.sendQueueRequest();
+        } else {
+            System.out.println("Username already exists.");
+            launch();
         }
-
-        client.sendQueueRequest();
     }
 
     public void onNewMatchState(Match oldMatch, Match newMatch) {

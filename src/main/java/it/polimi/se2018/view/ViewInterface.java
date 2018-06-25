@@ -7,7 +7,7 @@ import it.polimi.se2018.network.message.UndoResponse;
 public interface ViewInterface {
     void onToolCardActivationResponse(boolean isOk);
     void updateMatch(Match match);
-    void onConnect();
+    void onConnect(boolean isOk);
     void onReconnect(Match match);
     void onConnectionError(Exception e);
     void onMatchStart(Match match);

@@ -1,6 +1,7 @@
 package it.polimi.se2018.network.server;
 
 import it.polimi.se2018.controller.Configuration;
+import it.polimi.se2018.network.message.LoginResponse;
 
 import java.io.IOException;
 import java.util.*;
@@ -40,12 +41,10 @@ public class PlayerQueue {
             startTimer();
         }
 
-        // Check if the username already exists
+        // If this username is already present, don't add it to the queue
         if (!queue.contains(username))
             queue.add(username);
-        else
-            // TODO: handle this client side
-            System.out.println("Username already exists");
+
 
         System.out.println("Queue: " + queue);
 
