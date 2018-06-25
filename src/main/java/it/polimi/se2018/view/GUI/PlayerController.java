@@ -66,4 +66,8 @@ public class PlayerController {
     void activate(EnumSet<CellState> cellStates) {
         boardController.activate(cellStates);
     }
+
+    void disableAll(){
+        boardController.disableAll();
+    }
 }

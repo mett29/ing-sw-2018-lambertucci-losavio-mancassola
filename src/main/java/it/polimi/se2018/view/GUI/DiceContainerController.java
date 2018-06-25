@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
@@ -73,12 +72,13 @@ public class DiceContainerController {
     public void update(DiceContainer diceContainer){
         for(int i = 0; i < diceContainer.getMaxSize(); i++){
             cellControllers.get(i).update(diceContainer.getCell(i));
-            disableAll();
         }
+
+        this.diceContainer = diceContainer;
     }
 
     void activate(EnumSet<CellState> cellStates) {
-        final DiceContainerController toDisable = this;
+        DiceContainerController toDisable = this;
         for (int i = 0; i < diceContainer.getMaxSize(); i++) {
             final int index = i;
 
@@ -93,9 +93,9 @@ public class DiceContainerController {
         }
     }
 
-    private void disableAll() {
+    public void disableAll() {
         for (int i = 0; i < diceContainer.getMaxSize(); i++) {
-            //cellControllers.get(i).disable();
+            cellControllers.get(i).disable();
         }
     }
 }

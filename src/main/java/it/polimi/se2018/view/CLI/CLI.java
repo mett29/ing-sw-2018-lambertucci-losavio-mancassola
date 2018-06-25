@@ -743,7 +743,7 @@ public class CLI implements ViewInterface {
             return boardString.toArray(new String[8]);
         }
 
-        public static boolean acceptedCell(DiceContainer diceContainer, int index, EnumSet<CellState> cellStates){
+        public static boolean acceptedCell(DiceContainer diceContainer, int index, Set<CellState> cellStates){
             if(cellStates == null)
                 return true;
 
@@ -751,17 +751,16 @@ public class CLI implements ViewInterface {
                 return false;
             } else if(cellStates.contains(CellState.EMPTY) && diceContainer.getDie(index) != null){
                 return false;
-            } else {
-                return true;
             }
+            return true;
         }
 
-        public static boolean acceptedCell(Board board, int x, int y, EnumSet<CellState> cellStates) {
+        public static boolean acceptedCell(Board board, int x, int y, Set<CellState> cellStates) {
             if(cellStates == null){
                 return true;
             }
             if(board.isEmpty()){
-                return x == 0 || x == 4 || y == 0 || y == 4;
+                return x == 0 || x == 4 || y == 0 || y == 3;
             }
 
             if (cellStates.contains(CellState.EMPTY)) {

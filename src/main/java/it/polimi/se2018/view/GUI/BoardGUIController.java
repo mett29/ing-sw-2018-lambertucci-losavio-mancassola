@@ -59,6 +59,8 @@ public class BoardGUIController {
                 controllerMatrix[y][x].update(board.getCell(x, y));
             }
         }
+
+        this.board = board;
     }
 
     void activate(EnumSet<CellState> cellStates) {
@@ -79,10 +81,10 @@ public class BoardGUIController {
         }
     }
 
-    private void disableAll() {
+    public void disableAll() {
         for(int y = 0; y < 4; y++) {
             for (int x = 0; x < 5; x++) {
-                //controllerMatrix[y][x].disable();
+                controllerMatrix[y][x].disable();
             }
         }
     }

@@ -33,6 +33,8 @@ public class MatchController {
     private Button passBtn;
     @FXML
     private Button normalMoveBtn;
+    @FXML
+    private Button undoBtn;
 
     private Client client;
 
@@ -105,7 +107,9 @@ public class MatchController {
         switchStates(match);
 
 
-        this.match = match;
+        if(match.getPlayerByName(client.getUsername()).getState().get() != EnumState.REPEAT){
+            this.match = match;
+        }
     }
 
     private void onRepeatState(Match oldMatch) {
@@ -191,6 +195,8 @@ public class MatchController {
         if(state.getActiveContainers().contains(Component.BOARD)){
             playerControllers.get(client.getUsername()).activate(state.getCellStates());
         }
+
+        undoBtn.setDisable(false);
     }
 
     private void onYourTurn(Match newMatch) {
@@ -260,5 +266,13 @@ public class MatchController {
         }
 
         passBtn.setDisable(true);
+        undoBtn.setDisable(true);
+        undoBtn.setOnMouseClicked(e -> {
+            client.sendUndoRequest();
+            draftPoolController.disableAll();
+            roundTrackerController.disableAll();
+            playerControllers.get(client.getUsername()).disableAll();
+            undoBtn.setDisable(true);
+        });
     }
 }

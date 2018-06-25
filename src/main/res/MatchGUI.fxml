@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.MatchController">
+<AnchorPane prefHeight="720.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.MatchController">
    <children>
       <BorderPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -31,21 +31,26 @@
          <bottom>
             <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <AnchorPane fx:id="draftpoolContainer" prefHeight="50.0" prefWidth="469.0" />
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <AnchorPane fx:id="draftpoolContainer" prefHeight="100.0" prefWidth="1124.0" />
+                  <HBox prefHeight="100.0" prefWidth="555.0">
                      <children>
                         <Button fx:id="normalMoveBtn" mnemonicParsing="false" text="NormalMove">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
                         </Button>
                         <Button fx:id="passBtn" alignment="CENTER" mnemonicParsing="false" text="Passa">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="undoBtn" mnemonicParsing="false" text="Annulla">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
                         </Button>
                      </children>
-                  </VBox>
+                  </HBox>
                </children>
             </HBox>
          </bottom>

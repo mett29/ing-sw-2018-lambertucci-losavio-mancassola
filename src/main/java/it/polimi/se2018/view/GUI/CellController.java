@@ -131,18 +131,7 @@ public class CellController {
     }
 
     private void setDieText(String text){
-        try {
-            (new Task<Void>() {
-                @Override protected Void call() throws Exception {
-                    Platform.runLater(() -> {
-                        die.setText(text);
-                    });
-                    return null;
-                }
-            }).call();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Platform.runLater(() -> die.setText(text));
     }
 
     void update(Cell cell) {
@@ -159,7 +148,6 @@ public class CellController {
     }
 
     void disable(){
-        die.setDisable(true);
-        die.setOnMouseClicked(e -> {});
+        anchorPane.setDisable(true);
     }
 }
