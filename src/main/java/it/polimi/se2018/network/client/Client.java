@@ -59,6 +59,17 @@ public class Client {
             connection.registerClient(username);
         } else {
             connection = new SocketConnection(this, username);
+            connection.send(new LoginRequest(username));
+        }
+    }
+
+    public void reconnect() throws RemoteException, NotBoundException, MalformedURLException {
+        if(rmi){
+            connection = new RMIConnection(this, username);
+            connection.registerClient(username);
+        } else {
+            connection = new SocketConnection(this, username);
+            connection.send(new ReconnectRequest(username));
         }
     }
 
@@ -74,6 +85,10 @@ public class Client {
         switch(message.content){
             case LOGIN:
                 view.onConnect();
+                break;
+
+            case RECONNECT:
+                view.onReconnect(((ReconnectResponse) message).payload);
                 break;
 
             case TOOLCARD_RESPONSE:

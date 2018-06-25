@@ -3,6 +3,7 @@ package it.polimi.se2018.network.server.socket;
 import it.polimi.se2018.network.message.LoginRequest;
 import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.socket.SocketClient;
+import it.polimi.se2018.network.message.ReconnectRequest;
 
 import java.io.*;
 import java.net.Socket;
@@ -40,6 +41,10 @@ public class VirtualClient extends Thread implements SocketClient {
                     if(message.content == Message.Content.LOGIN && ((LoginRequest) message).type == Message.Type.REQUEST){
                         this.username = message.username;
                         server.register(message.username, this);
+                    } else if(message.content == Message.Content.RECONNECT && ((ReconnectRequest) message).type == Message.Type.REQUEST) {
+                        this.username = message.username;
+                        server.register(message.username, this);
+                        server.onReceive(message);
                     } else {
                         server.onReceive(message);
                     }
@@ -55,6 +60,7 @@ public class VirtualClient extends Thread implements SocketClient {
         try {
             oos.reset();
             oos.writeObject(message);
+            oos.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

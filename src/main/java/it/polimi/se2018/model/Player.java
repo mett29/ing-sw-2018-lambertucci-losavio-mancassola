@@ -19,6 +19,7 @@ public class Player implements Serializable {
     private PlayerState state;
     private EnumSet<PossibleAction> possibleActions;
     private boolean winner;
+    private boolean disconnected;
 
     // Player constructor
     public Player(String name) {
@@ -27,6 +28,7 @@ public class Player implements Serializable {
         this.name = name;
         this.state = new PlayerState(EnumState.IDLE);
         this.winner = false;
+        this.disconnected = false;
     }
 
     /**
@@ -166,5 +168,21 @@ public class Player implements Serializable {
      */
     public boolean isWinner() {
         return winner;
+    }
+
+    /**
+     * Set a player if it's disconnected
+     * @param disconnected object to set
+     */
+    public void setDisconnected(boolean disconnected) {
+        this.disconnected = disconnected;
+    }
+
+    /**
+     * Check if the player is disconnected
+     * @return true if disconnect, false otherwise
+     */
+    public boolean isDisconnected() {
+        return disconnected;
     }
 }

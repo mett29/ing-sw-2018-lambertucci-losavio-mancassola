@@ -62,6 +62,10 @@ public class PlayerQueue {
         }
     }
 
+    synchronized void remove(String username) {
+        queue.remove(username);
+    }
+
     private void startTimer(){
         timer.schedule(new TimerTask() {
             @Override

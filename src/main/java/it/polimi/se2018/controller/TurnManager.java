@@ -210,9 +210,10 @@ class TurnManager {
         Player currentPlayer = match.getPlayerQueue().peek();
 
         boolean isPlayerEqual = match.getPlayerByName(username).equals(currentPlayer);
+        boolean isIdle = currentPlayer.getState().get() == EnumState.IDLE;
 
         //Checks if the player's name coincides with the current player of the queue and if it contains 'PASS_TURN' possible action
-        if(isPlayerEqual && currentPlayer.getPossibleActions().contains(PossibleAction.PASS_TURN)) {
+        if(isPlayerEqual && !isIdle && currentPlayer.getPossibleActions().contains(PossibleAction.PASS_TURN)) {
             //Check if the current player's state is not 'YOUR_TURN'
             if(currentPlayer.getState().get() != EnumState.YOUR_TURN)
                 cancelOperation(username);

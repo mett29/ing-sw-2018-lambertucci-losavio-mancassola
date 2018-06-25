@@ -63,6 +63,19 @@ public class Lobby implements Observer{
             extractedPatterns.forEach(parsedBoard -> patternNames.add(parsedBoard.getName()));
             updateOne(player.getName(), new PatternRequest(player.getName(), patterns, patternNames));
         }
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean loop = true;
+                while(loop) {
+                    if (getMatch().getPlayerQueue().peek().isDisconnected()) {
+                            onReceive(new PassRequest(getMatch().getPlayerQueue().peek().getName()));
+                        }
+                    }
+                }
+        });
+        thread.start();
     }
 
     /**
@@ -99,7 +112,8 @@ public class Lobby implements Observer{
      */
     public void updateAll(Message message){
         for(String username : usernames){
-            server.send(username, message);
+            if(!getMatch().getPlayerByName(username).isDisconnected())
+                server.send(username, message);
         }
     }
 
@@ -150,10 +164,17 @@ public class Lobby implements Observer{
                 boolean response = controller.undo(message.username);
                 updateOne(message.username, new UndoResponse(true));
                 break;
+            case RECONNECT:
+                updateOne(message.username, new MatchStartMessage(controller.getMatch()));
+                break;
             default:
                 // This should'n happen
                 System.out.println("Received strange message");
         }
+    }
+
+    public Match getMatch() {
+        return controller.getMatch();
     }
 
     /**

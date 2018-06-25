@@ -37,6 +37,8 @@ public class Client {
         return state;
     }
 
+    public void setClientInterface(ClientInterface clientInterface) { this.clientInterface = clientInterface; }
+
     enum State {
         CONNECTED, DISCONNECTED
     }

@@ -1,10 +1,12 @@
 package it.polimi.se2018.controller;
 
 import it.polimi.se2018.model.Match;
+import it.polimi.se2018.model.Player;
 import it.polimi.se2018.model.PlayerMove;
 import it.polimi.se2018.network.server.Lobby;
 
 import java.io.IOException;
+import java.util.Queue;
 
 public class Controller {
     private GameManager gameManager;
@@ -55,6 +57,7 @@ public class Controller {
      */
     public void passTurn(String username) {
         boolean matchEnded = gameManager.passTurn(username);
+
         if(matchEnded) {
             gameManager.calculateScore();
             gameManager.declareWinner();

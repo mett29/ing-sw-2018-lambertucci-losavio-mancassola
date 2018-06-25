@@ -1,10 +1,12 @@
 package it.polimi.se2018.network.server;
 
 import it.polimi.se2018.controller.Configuration;
+import it.polimi.se2018.model.Player;
 import it.polimi.se2018.network.client.QueueRequest;
 import it.polimi.se2018.network.message.LoginResponse;
 import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.ClientInterface;
+import it.polimi.se2018.network.message.ReconnectResponse;
 import it.polimi.se2018.network.server.rmi.RMIServer;
 import it.polimi.se2018.network.server.socket.SocketServer;
 
@@ -15,7 +17,7 @@ import java.util.*;
 
 public class Server {
 
-    private static final int MAX_PLAYER_NUMBER = 2; //TODO: change to 4 before deployment
+    private static final int MAX_PLAYER_NUMBER = 3; //TODO: change to 4 before deployment
 
     private PlayerQueue queue;
 
@@ -48,7 +50,6 @@ public class Server {
      * Start both RMI and Socket server
      * @param socketPort Port of the socket server
      * @param rmiPort Port of the RMI server
-     * @throws MalformedURLException
      * @throws RemoteException
      */
     private void startServer(int socketPort, int rmiPort) throws RemoteException {
@@ -67,36 +68,56 @@ public class Server {
 
     public void addClient(String username, ClientInterface clientInterface) {
         // Login of the player
-        try {
-            Client client = new Client(username, clientInterface);
-            if(usernames.containsKey(username)) throw new InvalidUsernameException();
-            usernames.put(username, client);
-            clientInterface.notify(new LoginResponse(true));
-        } catch (InvalidUsernameException e) {
+        if(lobbies.containsKey(username) && usernames.get(username).getState() == Client.State.DISCONNECTED) {
+            Client client = usernames.get(username);
+            client.setClientInterface(clientInterface);
+            client.setState(Client.State.CONNECTED);
+            Player player = lobbies.get(username).getMatch().getPlayerByName(username);
             try {
-                clientInterface.notify(new LoginResponse(false));
-            } catch (RemoteException e1) {
-                //Client disconnected before registering
+                player.setDisconnected(false);
+                clientInterface.notify(new ReconnectResponse(true, lobbies.get(username).getMatch()));
+            } catch (NullPointerException|RemoteException e) {
+                e.printStackTrace();
             }
-        } catch (RemoteException e) {
-            //Client disconnected while server was notifying ok
-            onDisconnect(username);
+        } else if (!lobbies.containsKey(username)){
+            try {
+                Client client = new Client(username, clientInterface);
+                if (usernames.containsKey(username)) throw new InvalidUsernameException();
+                usernames.put(username, client);
+                clientInterface.notify(new LoginResponse(true));
+            } catch (InvalidUsernameException e) {
+                try {
+                    clientInterface.notify(new LoginResponse(false));
+                } catch (RemoteException e1) {
+                    //Client disconnected before registering
+                }
+            } catch (RemoteException e) {
+                //Client disconnected while server was notifying ok
+                onDisconnect(username);
+            }
         }
 
         System.out.println(usernames);
     }
 
     public void onDisconnect(String username){
-        //TODO: If player is not in match, remove from queue and map. Otherwise set it to DISCONNECTED.
-        if(usernames.containsKey(username)){
+        if(!lobbies.containsKey(username)) {
+            queue.remove(username);
+            usernames.remove(username);
+        } else if(usernames.containsKey(username)){
             usernames.get(username).setState(Client.State.DISCONNECTED);
+            Player player = lobbies.get(username).getMatch().getPlayerByName(username);
+            try {
+                player.setDisconnected(true);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void send(String username, Message message){
-        if(usernames.containsKey(username)){
+        if(usernames.containsKey(username) && usernames.get(username).getState() == Client.State.CONNECTED)
             usernames.get(username).notify(message);
-        }
     }
 
     /**

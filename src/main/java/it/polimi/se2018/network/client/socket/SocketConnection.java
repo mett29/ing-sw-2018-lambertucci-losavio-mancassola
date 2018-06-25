@@ -18,7 +18,6 @@ public class SocketConnection implements IConnection, SocketClient {
         this.client = client;
         NetworkHandler netHand = new NetworkHandler(HOST, PORT, this);
         netHand.start();
-        netHand.send(new LoginRequest(username));
         this.server = netHand;
     }
 

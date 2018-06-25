@@ -27,15 +27,16 @@ public class CLI implements ViewInterface {
     private static final String selectionMap = "ABCDEFGHIJKLMNOPQRST";
     private static final int CARD_WIDTH = 26;
 
-    public CLI(Client client){
-        this.client = client;
-    }
+    public CLI(Client client){ this.client = client; }
 
     public void launch(){
         askLogin();
         askTypeOfConnection();
         try {
-            client.connect();
+            if(match != null)
+                client.connect();
+            else
+                client.reconnect();
         } catch (Exception e) {
             client.onConnectionError(e);
         }
@@ -150,10 +151,12 @@ public class CLI implements ViewInterface {
         }
         String tokenString = buffer.toString();
 
+        String playerDisconnected = player.isDisconnected() ? " (DISCONN.)" : "";
+
         String[] firstCol = new String[]{
                 "Player:",
                 "" + player.getName(),
-                player.getName().equals(client.getUsername()) ? "  (YOU)" : "",
+                player.getName().equals(client.getUsername()) ? "  (YOU)" : "" + playerDisconnected,
                 player.getState().get().toString(),
                 "",
                 "Tokens:",
@@ -227,7 +230,6 @@ public class CLI implements ViewInterface {
             client.sendMove(move);
         }
     }
-
 
     private void onYourTurnState() {
         System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
@@ -487,6 +489,17 @@ public class CLI implements ViewInterface {
                 .findFirst().orElse(null);
     }
 
+    public void onReconnect(Match match) {
+        System.out.println("Login successful.");
+        System.out.println("Press ENTER to re-enter the match.");
+
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * What to do when logged in successful?
      * Print a "waiting" message
@@ -494,11 +507,13 @@ public class CLI implements ViewInterface {
     public void onConnect(){
         System.out.println("Login successful.");
         System.out.println("Press ENTER to enter the queue.");
+
         try {
             System.in.read();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         client.sendQueueRequest();
     }
 

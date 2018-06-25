@@ -43,7 +43,11 @@ public class NetworkHandler extends Thread implements ServerInterface {
                     loop = false;
                     //this.stopConnection();
                 } else {
-                    client.notify(message);
+                    try {
+                        client.notify(message);
+                    } catch (NullPointerException e) {
+                        //do nothing
+                    }
                 }
             } catch (IOException|ClassNotFoundException e) {
                 loop = false;
