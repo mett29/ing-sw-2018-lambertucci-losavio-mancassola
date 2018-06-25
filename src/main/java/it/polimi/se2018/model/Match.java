@@ -175,7 +175,18 @@ public class Match extends Observable implements Serializable {
         return ret;
     }
 
+    private int playersDisconnected() {
+        int connectedPlayers = 0;
+
+        for (Player p : this.getPlayers()){
+            if (!p.isDisconnected())
+                connectedPlayers++;
+        }
+
+        return connectedPlayers;
+    }
+
     public boolean isFinished(){
-        return !scores.isEmpty();
+        return playersDisconnected() == 1 || !scores.isEmpty();
     }
 }

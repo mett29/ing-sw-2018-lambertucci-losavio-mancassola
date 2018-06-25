@@ -1,12 +1,11 @@
 package it.polimi.se2018.network.server;
 
 import it.polimi.se2018.controller.Configuration;
+import it.polimi.se2018.model.EnumState;
 import it.polimi.se2018.model.Player;
 import it.polimi.se2018.network.client.QueueRequest;
-import it.polimi.se2018.network.message.LoginResponse;
-import it.polimi.se2018.network.message.Message;
+import it.polimi.se2018.network.message.*;
 import it.polimi.se2018.network.client.ClientInterface;
-import it.polimi.se2018.network.message.ReconnectResponse;
 import it.polimi.se2018.network.server.rmi.RMIServer;
 import it.polimi.se2018.network.server.socket.SocketServer;
 
@@ -17,7 +16,7 @@ import java.util.*;
 
 public class Server {
 
-    private static final int MAX_PLAYER_NUMBER = 3; //TODO: change to 4 before deployment
+    private static final int MAX_PLAYER_NUMBER = 2; //TODO: change to 4 before deployment
 
     private PlayerQueue queue;
 
@@ -109,6 +108,15 @@ public class Server {
             Player player = lobbies.get(username).getMatch().getPlayerByName(username);
             try {
                 player.setDisconnected(true);
+                if(player.getState().get() == EnumState.YOUR_TURN) {
+                    try {
+                        onReceive(new PassRequest(player.getName()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(lobbies.containsKey(username))
+                    while(lobbies.get(username).getMatch().getPlayerQueue().remove(player));
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -144,5 +152,12 @@ public class Server {
      */
     private void handleQueueRequest(QueueRequest message) throws IOException {
         queue.add(message.username);
+    }
+
+    void deleteLobbyByPlayerNames(List<Player> players) {
+        players.forEach(player -> {
+            lobbies.remove(player.getName());
+            usernames.remove(player.getName());
+        });
     }
 }

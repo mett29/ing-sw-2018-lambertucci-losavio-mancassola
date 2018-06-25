@@ -217,7 +217,7 @@ class ToolCardController {
             queue5.add((tcc, pm) -> {
                 boolean choice = (boolean) pm.getMove();
                 if(choice)
-                    return new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL));
+                    return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
                 return new PlayerState(EnumState.YOUR_TURN);
             });
             queue5.add((tcc, pm) -> {

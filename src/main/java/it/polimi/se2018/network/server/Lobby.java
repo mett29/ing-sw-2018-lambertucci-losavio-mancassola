@@ -63,19 +63,6 @@ public class Lobby implements Observer{
             extractedPatterns.forEach(parsedBoard -> patternNames.add(parsedBoard.getName()));
             updateOne(player.getName(), new PatternRequest(player.getName(), patterns, patternNames));
         }
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean loop = true;
-                while(loop) {
-                    if (getMatch().getPlayerQueue().peek().isDisconnected()) {
-                            onReceive(new PassRequest(getMatch().getPlayerQueue().peek().getName()));
-                        }
-                    }
-                }
-        });
-        thread.start();
     }
 
     /**
@@ -219,5 +206,7 @@ public class Lobby implements Observer{
     @Override
     public void update(Observable match, Object o) {
         updateAll(new MatchStateMessage((Match) match));
+        if(((Match) match).isFinished())
+            server.deleteLobbyByPlayerNames(((Match) match).getPlayers());
     }
 }

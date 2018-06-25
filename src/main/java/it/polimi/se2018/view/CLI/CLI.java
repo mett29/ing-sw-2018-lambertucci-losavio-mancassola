@@ -133,7 +133,7 @@ public class CLI implements ViewInterface {
     private void displayPlayers(Player[] players){
         int rows = players.length / 2;
         for (int i = 0; i < rows; i++) {
-            printLines(Stringifier.display2(playerToStrings(players[i]), playerToStrings(players[i+1])));
+            printLines(Stringifier.display2(playerToStrings(players[i*2]), playerToStrings(players[i*2+1])));
         }
         if(players.length % 2 == 1){
             printLines(playerToStrings(players[players.length - 1]));

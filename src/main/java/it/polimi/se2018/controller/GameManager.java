@@ -152,14 +152,7 @@ class GameManager implements Comparator<Score>{
     boolean passTurn(String username) {
         boolean roundFinished = roundManager.passTurn(username);
 
-        int connectedPlayers = 0;
-
-        for (Player p : getMatch().getPlayers()){
-            if (!p.isDisconnected())
-                connectedPlayers++;
-        }
-
-        if(connectedPlayers == 1 || match.getRoundTracker().getCurrentSize() == 10){
+        if(match.isFinished() || match.getRoundTracker().getCurrentSize() == 10){
             return true;
         } else {
             if(roundFinished) roundManager.newRound();

@@ -5,6 +5,7 @@ import it.polimi.se2018.model.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 class RoundManager {
     private Match match;
@@ -54,6 +55,9 @@ class RoundManager {
         Queue<Player> playerQueue = new LinkedList<>();
 
         List<Player> playerList = match.getPlayers();
+        playerList = playerList.stream()
+                .filter(player -> !player.isDisconnected())
+                .collect(Collectors.toList());
         int turnNumber = match.getRoundTracker().getCurrentSize();
         int playerSize = playerList.size();
         Queue<Integer> playerIndexes = new LinkedList<>();
