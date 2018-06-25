@@ -2,75 +2,88 @@ package it.polimi.se2018.view.GUI;
 
 import it.polimi.se2018.model.Board;
 import it.polimi.se2018.model.Cell;
+import it.polimi.se2018.model.CellState;
 import it.polimi.se2018.model.Restriction;
+import it.polimi.se2018.network.client.BoardCoordMove;
+import it.polimi.se2018.network.client.Client;
+import it.polimi.se2018.view.CLI.CLI;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
+import java.io.IOException;
+import java.util.EnumSet;
+
 public class BoardGUIController {
+    private final Client client;
     @FXML
     private GridPane gridPane;
 
+    private CellController[][] controllerMatrix;
+
     private Board board;
-    public BoardGUIController(Board board){
+    public BoardGUIController(Board board, Client client){
         this.board = board;
+        this.client = client;
+        controllerMatrix = new CellController[4][5];
     }
 
     @FXML
     public void initialize(){
         for(int y = 0; y < 4; y++){
             for(int x = 0; x < 5; x ++){
-                AnchorPane cell = new AnchorPane();
-                cell.setStyle("-fx-background-size: cover, auto; -fx-background-repeat: no-repeat; -fx-background-position: center");
+                final Cell cell = board.getCell(x, y);
+                final int x_coord = x;
+                final int y_coord = y;
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/CellGUI.fxml"));
+                loader.setControllerFactory(c -> new CellController(cell, false, x_coord, y_coord));
 
-                Cell currentCell = board.getCell(x, 3 - y);
-                if(currentCell.getRestriction() != null){
-                    setCellStyle(cell, currentCell.getRestriction());
+                try {
+                    gridPane.add(loader.load(), x, y);
+                    controllerMatrix[y][x] = loader.getController();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-                gridPane.add(cell, x, y);
             }
         }
     }
 
-    private void setCellStyle(AnchorPane cell, Restriction restriction){
-        String sRestriction = restriction.toString();
-        switch(sRestriction){
-            case "r":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/red.png')");
-                break;
-            case "b":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/blue.png')");
-                break;
-            case "y":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/yellow.png')");
-                break;
-            case "p":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/purple.png')");
-                break;
-            case "g":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/green.png')");
-                break;
-            case "1":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/1.png')");
-                break;
-            case "2":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/2.png')");
-                break;
-            case "3":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/3.png')");
-                break;
-            case "4":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/4.png')");
-                break;
-            case "5":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/5.png')");
-                break;
-            case "6":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/6.png')");
-                break;
-            default:
-                // do nothing
+
+
+    void update(Board board) {
+        for(int y = 0; y < 4; y++) {
+            for (int x = 0; x < 5; x++) {
+                controllerMatrix[y][x].update(board.getCell(x, y));
+            }
+        }
+    }
+
+    void activate(EnumSet<CellState> cellStates) {
+        final BoardGUIController toDisable = this;
+        for(int y = 0; y < 4; y++) {
+            for (int x = 0; x < 5; x++) {
+                if(CLI.Stringifier.acceptedCell(board, x, y, cellStates)) {
+                    final int x_fin = x;
+                    final int y_fin = y;
+                    controllerMatrix[y][x].activate(e -> {
+                        toDisable.disableAll();
+                        client.sendMove(new BoardCoordMove(x_fin, y_fin));
+                    });
+                } else {
+                    controllerMatrix[y][x].disable();
+                }
+            }
+        }
+    }
+
+    private void disableAll() {
+        for(int y = 0; y < 4; y++) {
+            for (int x = 0; x < 5; x++) {
+                //controllerMatrix[y][x].disable();
+            }
         }
     }
 }

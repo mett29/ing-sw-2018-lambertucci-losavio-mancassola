@@ -20,6 +20,7 @@ public class GUI extends Application implements ViewInterface {
 
     private Stage stage;
 
+    private MatchController matchController;
 
     @Override
     public void onToolCardActivationResponse(boolean isOk) {
@@ -28,7 +29,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void updateMatch(Match match) {
-
+        matchController.update(match);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class GUI extends Application implements ViewInterface {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore di connessione");
         alert.setHeaderText("Si è verificato un errore di connessione");
-        alert.setContentText("Verifica che la tua connessione sia attiva. Se lo è, il nome utente che hai scelto non è disponibile: scegline un altro.");
+        alert.setContentText("Verifica che la tua connessione sia attiva. Se lo è, forse il nome utente che hai scelto non è disponibile: scegline un altro.");
 
         e.printStackTrace();
 
@@ -65,11 +66,13 @@ public class GUI extends Application implements ViewInterface {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/MatchGUI.fxml"));
+            loader.setControllerFactory(c -> new MatchController(match, client));
+
             Parent matchParent = loader.load();
-            loader.setController(new MatchController(match));
-            MatchController controller = loader.getController();
-            controller.setClient(client);
+            matchController = loader.getController();
             stage.getScene().setRoot(matchParent);
+
+            updateMatch(match);
         } catch (IOException e) {
             e.printStackTrace();
         }

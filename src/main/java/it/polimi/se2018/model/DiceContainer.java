@@ -116,4 +116,10 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer>, Ser
         this.container = savedState.container;
         this.maxSize = savedState.maxSize;
     }
+
+    public Cell getCell(int index) {
+        Cell ret = new Cell(null);
+        ret.setDie(container.get(index));
+        return ret;
+    }
 }

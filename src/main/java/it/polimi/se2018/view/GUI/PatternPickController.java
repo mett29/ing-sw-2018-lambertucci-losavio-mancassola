@@ -28,7 +28,7 @@ public class PatternPickController {
             try {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("/BoardGUI.fxml"));
-                loader.setControllerFactory(c -> new BoardGUIController(board));
+                loader.setControllerFactory(c -> new BoardGUIController(board, client));
                 Parent node = loader.load();
                 final int tmpIterator = iterator;
                 node.setOnMouseClicked(event -> {
