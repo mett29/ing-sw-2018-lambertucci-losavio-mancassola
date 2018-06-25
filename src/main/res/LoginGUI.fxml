@@ -10,18 +10,18 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="content" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.LoginController">
+<AnchorPane fx:id="content" prefHeight="700.0" prefWidth="1125.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.LoginController">
    <children>
-      <HBox prefHeight="200.0" prefWidth="600.0">
+      <HBox prefHeight="200.0" prefWidth="1100.0">
          <children>
             <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
             <Label contentDisplay="CENTER" text="Sagrada Online" textAlignment="CENTER" />
             <Region layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <VBox prefHeight="400.0" prefWidth="600.0">
+      <VBox prefHeight="720.0" prefWidth="1100.0">
          <children>
-            <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <Region prefHeight="175.0" prefWidth="650.0" VBox.vgrow="ALWAYS" />
             <HBox alignment="CENTER">
                <children>
                   <TextField fx:id="username" prefHeight="25.0" prefWidth="144.0" promptText="username">

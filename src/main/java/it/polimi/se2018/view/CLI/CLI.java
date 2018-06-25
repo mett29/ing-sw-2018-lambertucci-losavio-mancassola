@@ -386,10 +386,7 @@ public class CLI implements ViewInterface {
             if(sc.hasNext(ptn)) {
                 String found = sc.next(ptn);
                 selection = selectionMap.indexOf(found.toUpperCase().charAt(0));
-                if(!(Stringifier.acceptedCell(board, selection % 5, selection / 5, cellStates) ||
-                        (board.isEmpty() &&
-                                (selection % 5 == 0 || selection % 5 == board.getRow(0).length-1
-                                        || selection / 5 == 0 || selection / 5 == board.getRows().size()-1)))){
+                if(!(Stringifier.acceptedCell(board, selection % 5, selection / 5, cellStates))){
                     buffer = new StringBuilder();
                     buffer.append("The cell you selected is not acceptable. S");
                     buffer.append(Stringifier.toString(cellStates));
@@ -571,7 +568,7 @@ public class CLI implements ViewInterface {
         //e.printStackTrace();
     }
 
-    private static class Stringifier{
+    public static class Stringifier{
         private Stringifier(){}
 
         private static String[] toStrings(Card card){
@@ -761,7 +758,7 @@ public class CLI implements ViewInterface {
             return boardString.toArray(new String[8]);
         }
 
-        private static boolean acceptedCell(DiceContainer diceContainer, int index, EnumSet<CellState> cellStates){
+        public static boolean acceptedCell(DiceContainer diceContainer, int index, Set<CellState> cellStates){
             if(cellStates == null)
                 return true;
 
@@ -769,15 +766,18 @@ public class CLI implements ViewInterface {
                 return false;
             } else if(cellStates.contains(CellState.EMPTY) && diceContainer.getDie(index) != null){
                 return false;
-            } else {
-                return true;
             }
+            return true;
         }
 
-        private static boolean acceptedCell(Board board, int x, int y, EnumSet<CellState> cellStates) {
+        public static boolean acceptedCell(Board board, int x, int y, Set<CellState> cellStates) {
             if(cellStates == null){
                 return true;
             }
+            if(board.isEmpty()){
+                return x == 0 || x == 4 || y == 0 || y == 3;
+            }
+
             if (cellStates.contains(CellState.EMPTY)) {
                 if(!board.getCell(x, y).isEmpty())
                     return false;
