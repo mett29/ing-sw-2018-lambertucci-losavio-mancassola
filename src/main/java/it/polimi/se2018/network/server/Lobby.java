@@ -17,6 +17,8 @@ public class Lobby implements Observer{
     private Controller controller;
     private List<ParsedBoard> parsedBoards;
     private JsonParser jsonParser = new JsonParser();
+    private Timer timer;
+    private int maxTime;
 
     // This Map contains the name of the player and the set of the boards between which he will choose
     private Map<String, List<ParsedBoard>> playerPatternsMap;
@@ -128,6 +130,8 @@ public class Lobby implements Observer{
                 break;
             case PASS:
                 controller.passTurn(message.username);
+                // Uncomment this line to restart timer
+                //startTimer(controller);
                 break;
             case PLAYER_MOVE:
                 // Convert Message to PlayerMove and send to controller
@@ -145,6 +149,8 @@ public class Lobby implements Observer{
                     // Set match to new match created by controller
                     match = controller.getMatch();
                     updateAll(new MatchStartMessage(match));
+                    // Handle timer
+                    startTimer(controller);
                 }
                 break;
             case UNDO_REQUEST:
@@ -210,5 +216,27 @@ public class Lobby implements Observer{
         updateAll(new MatchStateMessage((Match) match));
         if(((Match) match).isFinished())
             server.deleteLobbyByPlayerNames(((Match) match).getPlayers());
+    }
+
+    /**
+     * Timer to handle players' moves
+     */
+    private void startTimer(Controller controller) {
+        timer = new Timer();
+        maxTime = 20;
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                setInterval(controller);
+            }
+        }, 0, 1000);
+    }
+
+    private void setInterval(Controller controller) {
+        //System.out.println(maxTime);
+        if (maxTime == 0) {
+            timer.cancel();
+            onReceive(new PassRequest(controller.getMatch().getPlayerQueue().peek().getName()));
+        }
+        --maxTime;
     }
 }
