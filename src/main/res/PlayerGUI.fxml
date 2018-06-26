@@ -6,17 +6,16 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.PlayerController">
-   <children>
-      <BorderPane fx:id="borderPane" layoutX="200.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <left>
-            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Label fx:id="playerName" text="Label" />
-                  <ProgressBar fx:id="tokens" prefWidth="200.0" progress="0.0" />
-               </children>
-            </VBox>
-         </left>
-      </BorderPane>
-   </children>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.se2018.view.GUI.PlayerController">
+   <BorderPane fx:id="borderPane" layoutX="200.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0"
+               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+               AnchorPane.topAnchor="0.0">
+      <left>
+         <VBox fx:id="playerInfoContainer" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <Label fx:id="playerName" text="Label"/>
+            <ProgressBar fx:id="tokens" prefWidth="200.0" progress="0.0"/>
+         </VBox>
+      </left>
+   </BorderPane>
 </AnchorPane>

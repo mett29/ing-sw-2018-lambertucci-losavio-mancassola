@@ -158,10 +158,10 @@ public class CLI implements ViewInterface {
                 "" + player.getName(),
                 player.getName().equals(client.getUsername()) ? "  (YOU)" : "" + playerDisconnected,
                 player.getState().get().toString(),
-                "",
+                "Mano: " + player.getPickedDie().toString(),
                 "Tokens:",
                 " " + tokenString,
-                player.getName().equals(client.getUsername()) ? player.getPrivateObjCard().getColor().toString() : ""
+                "Private: " + (player.getName().equals(client.getUsername()) ? player.getPrivateObjCard().getColor().toString() : "")
         };
 
 

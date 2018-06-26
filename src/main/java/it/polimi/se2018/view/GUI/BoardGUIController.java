@@ -39,7 +39,7 @@ public class BoardGUIController {
                 final int y_coord = y;
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("/CellGUI.fxml"));
-                loader.setControllerFactory(c -> new CellController(cell, false, x_coord, y_coord));
+                loader.setControllerFactory(c -> new CellController(cell, false, new int[]{x_coord, y_coord}));
 
                 try {
                     gridPane.add(loader.load(), x, y);

@@ -1,8 +1,6 @@
 package it.polimi.se2018.view.GUI;
 
-import it.polimi.se2018.model.Board;
-import it.polimi.se2018.model.CellState;
-import it.polimi.se2018.model.Player;
+import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.Client;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -17,8 +16,12 @@ import java.util.EnumSet;
 public class PlayerController {
     private final boolean isMe;
     private final Client client;
+
+
+
     private Player player;
     private BoardGUIController boardController;
+    private CellController pickedController;
 
     public PlayerController(Player player, boolean isMe, Client client){
         this.player = player;
@@ -33,8 +36,11 @@ public class PlayerController {
 
         Board board = player.getBoard();
         boardController.update(board);
+        updatePicked(player.getPickedDie());
     }
 
+    @FXML
+    private VBox playerInfoContainer;
     @FXML
     private Label playerName;
     @FXML
@@ -61,6 +67,34 @@ public class PlayerController {
 
         // deactivate pane if it isn't "mine"
         borderPane.setDisable(!isMe);
+
+
+        loader = new FXMLLoader(getClass().getResource("/CellGUI.fxml"));
+        loader.setControllerFactory(e -> new CellController(new Cell(null), false));
+        try {
+            playerInfoContainer.getChildren().add(loader.load());
+            pickedController = loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(isMe){
+            Color privateColor = player.getPrivateObjCard().getColor();
+            loader = new FXMLLoader(getClass().getResource("/CellGUI.fxml"));
+            loader.setControllerFactory(c -> new CellController(new Cell(new Restriction(privateColor)), false));
+            try {
+                playerInfoContainer.getChildren().add(loader.load());
+            } catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void updatePicked(Die die) {
+        Cell pp = new Cell(null);
+        pp.setDie(die);
+
+        pickedController.update(pp);
     }
 
     void activate(EnumSet<CellState> cellStates) {

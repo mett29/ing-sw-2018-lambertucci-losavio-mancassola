@@ -46,7 +46,7 @@ public class DiceContainerController {
 
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/CellGUI.fxml"));
-            loader.setControllerFactory(c -> new CellController(cell, false, name, index));
+            loader.setControllerFactory(c -> new CellController(cell, false, name, new int[]{index}));
 
             try {
                 gridPane.addColumn(i, ((Node) loader.load()));

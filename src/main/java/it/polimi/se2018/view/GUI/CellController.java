@@ -28,7 +28,7 @@ public class CellController {
     private ClientMove move;
 
 
-    CellController(Cell cell, boolean active, Integer... coordinates){
+    CellController(Cell cell, boolean active, int[] coordinates){
         this(cell, active);
 
         if(coordinates.length != 2){
@@ -41,7 +41,7 @@ public class CellController {
         }
     }
 
-    private CellController(Cell cell, boolean active) {
+    CellController(Cell cell, boolean active) {
         this.cell = cell;
         this.active = active;
         this.onClick = null;
@@ -53,7 +53,7 @@ public class CellController {
         }
     }
 
-    CellController(Cell cell, boolean active, DiceContainerCoordMove.DiceContainerName name, Integer... coordinates){
+    CellController(Cell cell, boolean active, DiceContainerCoordMove.DiceContainerName name, int[] coordinates){
         this(cell, active);
 
         if(coordinates.length != 1){

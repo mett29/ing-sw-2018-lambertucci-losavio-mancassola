@@ -5,12 +5,14 @@ import it.polimi.se2018.network.client.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,6 +35,8 @@ public class MatchController {
     private Button normalMoveBtn;
     @FXML
     private Button undoBtn;
+    @FXML
+    private VBox publicObjContainer;
 
     private Client client;
 
@@ -96,21 +100,37 @@ public class MatchController {
         setDisableComponents(true, true, true, true);
     }
 
-    public void update(Match match){
-        for(Player player : match.getPlayers()) {
-            playerControllers.get(player.getName()).update(player);
-        }
+    void update(Match match){
+        if(match.isFinished()){
+            Platform.runLater(() -> {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/ScoreGUI.fxml"));
+                    loader.setControllerFactory(c -> new ScoreController(match));
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(loader.load());
+                    stage.setTitle("Risultati");
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
+            for (Player player : match.getPlayers()) {
+                playerControllers.get(player.getName()).update(player);
+            }
 
-        draftPoolController.update(match.getDraftPool());
-        roundTrackerController.update(match.getRoundTracker());
+            draftPoolController.update(match.getDraftPool());
+            roundTrackerController.update(match.getRoundTracker());
 
-        setDisableComponents(true, true, true, true);
+            setDisableComponents(true, true, true, true);
 
-        switchStates(match);
+            switchStates(match);
 
 
-        if(match.getPlayerByName(client.getUsername()).getState().get() != EnumState.REPEAT){
-            this.match = match;
+            if (match.getPlayerByName(client.getUsername()).getState().get() != EnumState.REPEAT) {
+                this.match = match;
+            }
         }
     }
 
@@ -139,9 +159,7 @@ public class MatchController {
             dialog.setContentText("Scelta:");
 
             Optional<String> result = dialog.showAndWait();
-            result.ifPresent(value -> {
-                client.sendMove(new YesNoMove(choices.indexOf(value) == 0));
-            });
+            result.ifPresent(value -> client.sendMove(new YesNoMove(choices.indexOf(value) == 0)));
         });
 
     }
@@ -158,9 +176,7 @@ public class MatchController {
             dialog.setContentText("Scelta:");
 
             Optional<String> result = dialog.showAndWait();
-            result.ifPresent(value -> {
-                client.sendMove(new UpDownMove(choices.indexOf(value) == 0));
-            });
+            result.ifPresent(value -> client.sendMove(new UpDownMove(choices.indexOf(value) == 0)));
         });
 
     }
@@ -181,9 +197,7 @@ public class MatchController {
             dialog.setContentText("Valore:");
 
             Optional<String> result = dialog.showAndWait();
-            result.ifPresent(value -> {
-                client.sendMove(new ValueMove(choices.indexOf(value) + 1));
-            });
+            result.ifPresent(value -> client.sendMove(new ValueMove(choices.indexOf(value) + 1)));
         });
 
     }
@@ -204,16 +218,12 @@ public class MatchController {
         EnumSet<PossibleAction> actions = newMatch.getPlayerByName(client.getUsername()).getPossibleActions();
         setDisableComponents(!actions.contains(PossibleAction.PICK_DIE), !actions.contains(PossibleAction.PASS_TURN), !actions.contains(PossibleAction.ACTIVATE_TOOLCARD), true);
 
-        normalMoveBtn.setOnMouseClicked(e -> {
-            client.activateNormalMove();
-        });
+        normalMoveBtn.setOnMouseClicked(e -> client.activateNormalMove());
 
-        passBtn.setOnMouseClicked(e -> {
-            client.pass();
-        });
+        passBtn.setOnMouseClicked(e -> client.pass());
     }
 
-    public synchronized void setDisableComponents(Boolean normalMove, Boolean passButton, Boolean toolCardContainer, Boolean undoButton){
+    private synchronized void setDisableComponents(Boolean normalMove, Boolean passButton, Boolean toolCardContainer, Boolean undoButton){
         if(normalMove != null)
             normalMoveBtn.setDisable(normalMove);
         if(passButton != null)
@@ -262,6 +272,7 @@ public class MatchController {
             e.printStackTrace();
         }
 
+        // load toolcards
         for(int i = 0; i < 3; i++){
             final int toolcardIndex = i;
             loader = new FXMLLoader();
@@ -274,6 +285,18 @@ public class MatchController {
                 e.printStackTrace();
             }
 
+        }
+
+        // load public objective cards
+        for(int i = 0; i < 3; i++){
+            final int pubIndex = i;
+            loader = new FXMLLoader(getClass().getResource("/CardGUI.fxml"));
+            loader.setControllerFactory(c -> new CardController(match.getPublicObjCards()[pubIndex]));
+            try {
+                publicObjContainer.getChildren().add(loader.load());
+            } catch(IOException e){
+                e.printStackTrace();
+            }
         }
 
         disableNormTcPassUndo();

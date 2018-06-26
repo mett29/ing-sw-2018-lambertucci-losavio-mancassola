@@ -4,15 +4,17 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="197.0" prefWidth="202.0" xmlns="http://javafx.com/javafx/8.0.141"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.ToolCardController">
-    <TitledPane fx:id="tcPaneName" animated="false" collapsible="false" text="toolcard name">
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-            <Button fx:id="useBtn" layoutX="150.0" layoutY="141.0" mnemonicParsing="false" text="Usa"/>
-            <TextArea fx:id="description" editable="false" focusTraversable="false" layoutX="-1.0"
-                      prefHeight="132.0" prefWidth="202.0" text="toolcard description"/>
+<AnchorPane prefHeight="163.0" prefWidth="213.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.ToolCardController">
+    <TitledPane fx:id="tcPaneName" animated="false" collapsible="false" maxHeight="100.0" prefHeight="100.0"
+                prefWidth="200.0" text="toolcard name">
+        <AnchorPane prefHeight="137.0" prefWidth="223.0">
+            <VBox>
+                <TextArea fx:id="description" editable="false" focusTraversable="false" prefHeight="92.0"
+                          prefWidth="200.0" text="toolcard description" wrapText="true" VBox.vgrow="NEVER"/>
+                <Button fx:id="useBtn" mnemonicParsing="false" prefWidth="200.0" text="Usa"/>
+            </VBox>
         </AnchorPane>
     </TitledPane>
 </AnchorPane>
