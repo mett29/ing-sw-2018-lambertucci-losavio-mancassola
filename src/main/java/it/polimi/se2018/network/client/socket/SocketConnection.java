@@ -10,13 +10,12 @@ import java.rmi.RemoteException;
 
 public class SocketConnection implements IConnection, SocketClient {
     private static final int PORT = 1111;
-    private static final String HOST = "localhost";
     private Client client;
     private ServerInterface server;
 
     public SocketConnection(Client client, String username) {
         this.client = client;
-        NetworkHandler netHand = new NetworkHandler(HOST, PORT, this);
+        NetworkHandler netHand = new NetworkHandler(Client.ipAddress, PORT, this);
         netHand.start();
         this.server = netHand;
     }

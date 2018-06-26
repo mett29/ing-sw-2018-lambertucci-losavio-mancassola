@@ -45,7 +45,6 @@ public class ToolCardController {
 
         useBtn.setOnMouseClicked(e -> {
             client.activateToolCard(index);
-            useBtn.setDisable(true);
             disableComponents.run();
         });
     }

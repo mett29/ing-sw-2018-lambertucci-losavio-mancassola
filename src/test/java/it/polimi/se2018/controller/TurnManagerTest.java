@@ -213,7 +213,7 @@ public class TurnManagerTest {
 
         assertFalse(turnManager.activateToolcard("Pino", 1));
 
-        assertTrue(turnManager.activateToolcard("Pino", 2));
+        assertFalse(turnManager.activateToolcard("Pino", 2));
     }
 
     @Test
@@ -279,6 +279,6 @@ public class TurnManagerTest {
         assertTrue(turnManager.cancelOperation("Pino"));
 
         //Il player ovviamente ha perso i tokens e ora ne ha 4
-        assertEquals(4, currentPlayer.getToken());
+        assertEquals(5, currentPlayer.getToken());
     }
 }

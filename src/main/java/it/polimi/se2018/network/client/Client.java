@@ -19,6 +19,8 @@ public class Client {
     private IConnection connection;
     private ViewInterface view;
 
+    public static String ipAddress = "localhost";
+
     public String getUsername() {
         return username;
     }
@@ -42,6 +44,24 @@ public class Client {
     private static boolean useFX = false;
 
     public static void main(String[] args) {
+        for(int i = 0; i < args.length; i++){
+            System.out.println(i + ": " + args[i]);
+        }
+        if(args.length > 0){
+            switch(args[0]){
+                case "cli":
+                    useFX = false;
+                    break;
+                case "gui":
+                    useFX = true;
+                    break;
+                default:
+                    printUsageMessage();
+            }
+        }
+        if(args.length > 1){
+            Client.ipAddress = args[1];
+        }
         if(useFX) {
             Application.launch(GUI.class, args);
         } else {
@@ -51,6 +71,10 @@ public class Client {
 
             view.launch();
         }
+    }
+
+    private static void printUsageMessage() {
+        System.out.print("Usage: \n\tsagrada.exe [cli/gui] [ip_address]\n");
     }
 
     public void connect() throws RemoteException, NotBoundException, MalformedURLException {

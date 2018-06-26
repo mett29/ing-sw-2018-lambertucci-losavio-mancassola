@@ -51,7 +51,17 @@
   </dependencies>
 
   <build>
-    <plugins>
+      <resources>
+          <resource>
+              <directory>src/main/java</directory>
+              <filtering>false</filtering>
+          </resource>
+          <resource>
+              <directory>src/main/res</directory>
+              <filtering>false</filtering>
+          </resource>
+      </resources>
+      <plugins>
 
       <!-- Export the project as a runnable JAR, with the provided mainClass -->
       <plugin>
@@ -61,7 +71,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>it.polimi.se2018.App</mainClass>
+              <mainClass>it.polimi.se2018.network.client.Client</mainClass>
             </manifest>
           </archive>
         </configuration>

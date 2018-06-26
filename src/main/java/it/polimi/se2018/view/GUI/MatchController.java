@@ -210,6 +210,9 @@ public class MatchController {
         if(state.getActiveContainers().contains(Component.BOARD)){
             playerControllers.get(client.getUsername()).activate(state.getCellStates());
         }
+        if (state.getActiveContainers().contains(Component.ROUNDTRACKER)) {
+            roundTrackerController.activate(state.getCellStates());
+        }
 
         setDisableComponents(null, null, true, false);
     }
