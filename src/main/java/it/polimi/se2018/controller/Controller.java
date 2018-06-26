@@ -62,6 +62,7 @@ public class Controller {
             gameManager.calculateScore();
             gameManager.declareWinner();
         }
+
         getMatch().notifyObservers();
     }
 

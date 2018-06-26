@@ -118,7 +118,7 @@ class RoundManager {
     boolean passTurn(String username) {
         if(turnManager.passTurn(username)) {
             match.getPlayerQueue().poll();
-            if(!match.getPlayerQueue().isEmpty()) {
+            if(!match.getPlayerQueue().isEmpty() && !match.isFinished()) {
                 turnManager.newTurn(match.getPlayerQueue().peek());
             } else {
                 return true;

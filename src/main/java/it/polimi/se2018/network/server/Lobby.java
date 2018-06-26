@@ -151,8 +151,10 @@ public class Lobby implements Observer{
                 boolean response = controller.undo(message.username);
                 updateOne(message.username, new UndoResponse(true));
                 break;
-            case RECONNECT:
+            case LOGIN:
                 updateOne(message.username, new MatchStartMessage(controller.getMatch()));
+                break;
+            case QUEUE:
                 break;
             default:
                 // This should'n happen

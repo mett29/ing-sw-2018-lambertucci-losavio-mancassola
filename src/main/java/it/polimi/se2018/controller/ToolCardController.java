@@ -59,6 +59,7 @@ class ToolCardController {
             queue0.add((tcc, pm) -> {
                 DieCoord selection = (DieCoord) pm.getMove();
                 tcc.memory.add(selection);
+                pm.getActor().setPickedDie(selection.get());
                 return new PlayerState(EnumState.UPDOWN);
             });
             queue0.add((tcc, pm) -> {
@@ -78,6 +79,7 @@ class ToolCardController {
                 }
                 Action a = new SetValue(tcc.memory.get(0), targetValue);
                 a.perform();
+                pm.getActor().setPickedDie(null);
                 pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                 return new PlayerState(EnumState.YOUR_TURN);
             });
@@ -90,7 +92,9 @@ class ToolCardController {
 
             queue1.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue1.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
+                DieCoord selection = (DieCoord) pm.getMove();
+                tcc.memory.add(selection);
+                pm.getActor().setPickedDie(selection.get());
                 return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
             });
             queue1.add((tcc, pm) -> {
@@ -103,6 +107,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
+                    pm.getActor().setPickedDie(null);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -116,7 +121,9 @@ class ToolCardController {
 
             queue2.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue2.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
+                DieCoord selection = (DieCoord) pm.getMove();
+                tcc.memory.add(selection);
+                pm.getActor().setPickedDie(selection.get());
                 return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
             });
             queue2.add((tcc, pm) -> {
@@ -129,6 +136,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
+                    pm.getActor().setPickedDie(null);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -145,6 +153,7 @@ class ToolCardController {
                 DieCoord die = (DieCoord) pm.getMove();
                 tcc.memory.add(die);
                 tcc.pickedDice.add(die.get());
+                pm.getActor().setPickedDie(die.get());
                 return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
             });
             queue3.add((tcc, pm) -> {
@@ -157,6 +166,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     a.perform();
+                    pm.getActor().setPickedDie(null);
                     return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL));
                 }
             });
@@ -165,6 +175,7 @@ class ToolCardController {
                 if(die.get() == tcc.pickedDice.get(0))
                     return new PlayerState(EnumState.REPEAT);
                 tcc.memory.add(die);
+                pm.getActor().setPickedDie(die.get());
                 return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
             });
             queue3.add((tcc, pm) -> {
@@ -177,6 +188,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     b.perform();
+                    pm.getActor().setPickedDie(null);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -190,13 +202,16 @@ class ToolCardController {
 
             queue4.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue4.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
+                DieCoord selection = (DieCoord) pm.getMove();
+                tcc.memory.add(selection);
+                pm.getActor().setPickedDie(selection.get());
                 return new PickState(EnumSet.of(Component.ROUNDTRACKER), EnumSet.of(CellState.FULL));
             });
             queue4.add((tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action a = new Switch(tcc.memory.get(0), tcc.memory.get(1));
                 a.perform();
+                pm.getActor().setPickedDie(null);
                 pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                 return new PlayerState(EnumState.YOUR_TURN);
             });
@@ -209,7 +224,9 @@ class ToolCardController {
 
             queue5.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue5.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
+                DieCoord selection = (DieCoord) pm.getMove();
+                tcc.memory.add(selection);
+                pm.getActor().setPickedDie(selection.get());
                 Action a = new Reroll(tcc.memory.get(0));
                 a.perform();
                 return new PlayerState(EnumState.YESNO);
@@ -218,6 +235,7 @@ class ToolCardController {
                 boolean choice = (boolean) pm.getMove();
                 if(choice)
                     return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
+                pm.getActor().setPickedDie(null);
                 return new PlayerState(EnumState.YOUR_TURN);
             });
             queue5.add((tcc, pm) -> {
@@ -230,6 +248,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     b.perform();
+                    pm.getActor().setPickedDie(null);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -258,7 +277,9 @@ class ToolCardController {
 
             queue7.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue7.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
+                DieCoord selection = (DieCoord) pm.getMove();
+                tcc.memory.add(selection);
+                pm.getActor().setPickedDie(selection.get());
                 return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
             });
             queue7.add((tcc, pm) -> {
@@ -278,6 +299,7 @@ class ToolCardController {
                             newPlayerQueue.add(p);
                     }
                     tcc.match.setPlayerQueue(newPlayerQueue);
+                    pm.getActor().setPickedDie(null);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -291,7 +313,9 @@ class ToolCardController {
 
             queue8.add((tcc, pm) -> new PickState(EnumSet.of(Component.DRAFTPOOL), EnumSet.of(CellState.FULL)));
             queue8.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
+                DieCoord selection = (DieCoord) pm.getMove();
+                tcc.memory.add(selection);
+                pm.getActor().setPickedDie(selection.get());
                 return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
             });
             queue8.add((tcc, pm) -> {
@@ -303,6 +327,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
+                    pm.getActor().setPickedDie(null);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -336,6 +361,7 @@ class ToolCardController {
                 a.perform();
                 Die extractedDie = tcc.match.extractDie();
                 tcc.memory.add(asDieCoord(extractedDie));
+                pm.getActor().setPickedDie(extractedDie);
                 return new PlayerState(EnumState.VALUE);
             });
             queue10.add((tcc, pm) -> {
@@ -358,7 +384,9 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
+                    pm.getActor().setPickedDie(null);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    pm.getActor().possibleActionsRemove(PossibleAction.PICK_DIE);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
             });
@@ -381,6 +409,7 @@ class ToolCardController {
                 } else {
                     tcc.memory.add(die);
                     tcc.pickedDice.add(die.get());
+                    pm.getActor().setPickedDie(die.get());
                     return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
                 }
             });
@@ -394,6 +423,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
+                    pm.getActor().setPickedDie(null);
                     return new PlayerState(EnumState.YESNO);
                 }
             });
@@ -409,6 +439,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     tcc.memory.add(die);
+                    pm.getActor().setPickedDie(die.get());
                     return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
                 }
             });
@@ -422,6 +453,7 @@ class ToolCardController {
                     return new PlayerState(EnumState.REPEAT);
                 } else {
                     move.perform();
+                    pm.getActor().setPickedDie(null);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }

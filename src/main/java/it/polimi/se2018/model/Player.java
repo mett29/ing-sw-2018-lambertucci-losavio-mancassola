@@ -18,6 +18,7 @@ public class Player implements Serializable {
     private ToolCard activatedToolcard;
     private PlayerState state;
     private EnumSet<PossibleAction> possibleActions;
+    private Die pickedDie;
     private boolean winner;
     private boolean disconnected;
 
@@ -27,6 +28,7 @@ public class Player implements Serializable {
             throw new NullPointerException("`name` must be not null");
         this.name = name;
         this.state = new PlayerState(EnumState.IDLE);
+        pickedDie = null;
         this.winner = false;
         this.disconnected = false;
     }
@@ -184,5 +186,21 @@ public class Player implements Serializable {
      */
     public boolean isDisconnected() {
         return disconnected;
+    }
+
+    /**
+     * Show if a player has a die in his hand
+     * @return the picked die
+     */
+    public Die getPickedDie() {
+        return pickedDie;
+    }
+
+    /**
+     * Set the die picked from the player
+     * @param pickedDie die picked
+     */
+    public void setPickedDie(Die pickedDie) {
+        this.pickedDie = pickedDie;
     }
 }

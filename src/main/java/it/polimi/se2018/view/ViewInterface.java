@@ -8,7 +8,6 @@ public interface ViewInterface {
     void onToolCardActivationResponse(boolean isOk);
     void updateMatch(Match match);
     void onConnect(boolean isOk);
-    void onReconnect(Match match);
     void onConnectionError(Exception e);
     void onMatchStart(Match match);
     void onPatternRequest(PatternRequest message);

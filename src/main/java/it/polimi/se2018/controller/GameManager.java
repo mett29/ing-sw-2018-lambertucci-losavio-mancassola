@@ -5,6 +5,7 @@ import it.polimi.se2018.network.server.Lobby;
 import it.polimi.se2018.utils.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 class GameManager implements Comparator<Score>{
     private Match match;
@@ -73,16 +74,18 @@ class GameManager implements Comparator<Score>{
      */
     void calculateScore() {
         for(Player player : match.getPlayers()) {
-            int privCards, publCards = 0, tok, empty;
+            int privCards = 0, publCards = 0, tok = 0, empty = 20;
 
-            privCards = player.getPrivateObjCard().getBonus(player.getBoard());
+            if(!player.isDisconnected()) {
+                privCards = player.getPrivateObjCard().getBonus(player.getBoard());
 
-            for (PublicObjCard publicObjCard : match.getPublicObjCards())
-                publCards += publicObjCard.getBonus(player.getBoard());
+                for (PublicObjCard publicObjCard : match.getPublicObjCards())
+                    publCards += publicObjCard.getBonus(player.getBoard());
 
-            tok = player.getToken();
+                tok = player.getToken();
 
-            empty = 20 - player.getBoard().countDice();
+                empty = 20 - player.getBoard().countDice();
+            }
 
             match.setScore(player, new Score(privCards, publCards, tok, empty));
         }
@@ -101,12 +104,12 @@ class GameManager implements Comparator<Score>{
             int finalCompare = compare(match.getScore(players.get(0)), match.getScore(players.get(1)));
 
             if(finalCompare == 0)
-                finalCompare = q.indexOf(match.getPlayers().get(0)) - q.indexOf(match.getPlayers().get(1));
+                finalCompare = q.indexOf(players.get(0)) - q.indexOf(players.get(1));
 
             if(finalCompare < 0)
-                players.remove(match.getPlayers().get(0));
+                players.remove(players.get(0));
             else
-                players.remove(match.getPlayers().get(1));
+                players.remove(players.get(1));
         }
 
         players.get(0).setWinner(true);

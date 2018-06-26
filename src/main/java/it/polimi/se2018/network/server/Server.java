@@ -10,13 +10,12 @@ import it.polimi.se2018.network.server.rmi.RMIServer;
 import it.polimi.se2018.network.server.socket.SocketServer;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.*;
 
 public class Server {
 
-    private static final int MAX_PLAYER_NUMBER = 2; //TODO: change to 4 before deployment
+    private static final int MAX_PLAYER_NUMBER = 3; //TODO: change to 4 before deployment
 
     private PlayerQueue queue;
 
@@ -67,38 +66,49 @@ public class Server {
 
     public void addClient(String username, ClientInterface clientInterface) {
         // Login of the player
-        if(lobbies.containsKey(username) && usernames.get(username).getState() == Client.State.DISCONNECTED) {
+        if(lobbies.containsKey(username) && usernames.get(username).getState() == Client.State.CONNECTED) {
+            try {
+                clientInterface.notify(new LoginResponse(false, null));
+            } catch (RemoteException e1) {
+                //Client disconnected before registering
+            }
+        }
+        else if(lobbies.containsKey(username) && usernames.get(username).getState() == Client.State.DISCONNECTED) {
             Client client = usernames.get(username);
             client.setClientInterface(clientInterface);
             client.setState(Client.State.CONNECTED);
             Player player = lobbies.get(username).getMatch().getPlayerByName(username);
             try {
                 player.setDisconnected(false);
-                clientInterface.notify(new ReconnectResponse(true, lobbies.get(username).getMatch()));
+                clientInterface.notify(new LoginResponse(true, lobbies.get(username).getMatch()));
             } catch (NullPointerException|RemoteException e) {
                 e.printStackTrace();
             }
-        } else if (!lobbies.containsKey(username)){
+        } else {
             try {
                 Client client = new Client(username, clientInterface);
                 if (usernames.containsKey(username)) throw new InvalidUsernameException();
                 usernames.put(username, client);
-                clientInterface.notify(new LoginResponse(true));
+                clientInterface.notify(new LoginResponse(true, null));
             } catch (InvalidUsernameException e) {
                 try {
-                    clientInterface.notify(new LoginResponse(false));
+                    clientInterface.notify(new LoginResponse(false, null));
                 } catch (RemoteException e1) {
                     //Client disconnected before registering
                 }
             } catch (RemoteException e) {
                 //Client disconnected while server was notifying ok
-                onDisconnect(username);
+                try {
+                    onDisconnect(username);
+                } catch (IOException e2) {
+                    e2.printStackTrace();
+                }
             }
         }
         System.out.println(usernames);
     }
 
-    public void onDisconnect(String username){
+    public void onDisconnect(String username) throws IOException{
         if(!lobbies.containsKey(username)) {
             queue.remove(username);
             usernames.remove(username);
@@ -107,13 +117,10 @@ public class Server {
             Player player = lobbies.get(username).getMatch().getPlayerByName(username);
             try {
                 player.setDisconnected(true);
-                if(player.getState().get() == EnumState.YOUR_TURN) {
-                    try {
-                        onReceive(new PassRequest(player.getName()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                if(player.getBoard() == null)
+                    onReceive(new PatternResponse(player.getName(), 0));
+                if(player.getState().get() == EnumState.YOUR_TURN)
+                    onReceive(new PassRequest(player.getName()));
                 if(lobbies.containsKey(username))
                     while(lobbies.get(username).getMatch().getPlayerQueue().remove(player));
             } catch (NullPointerException e) {
@@ -138,6 +145,8 @@ public class Server {
             lobbies.get(message.username).onReceive(message);
         } else if(usernames.containsKey(message.username) && message.content == Message.Content.QUEUE) {
             handleQueueRequest((QueueRequest) message);
+        } else if(!lobbies.containsKey(message.username)) {
+            //do nothing
         } else {
             System.err.println("Unhandled message received from: " + message.username);
             // Ignore message received from unknown client

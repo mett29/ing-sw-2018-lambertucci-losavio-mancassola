@@ -51,11 +51,6 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void onReconnect(Match match) {
-        //TODO
-    }
-
-    @Override
     public void onConnectionError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore di connessione");

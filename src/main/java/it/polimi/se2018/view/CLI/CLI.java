@@ -7,6 +7,7 @@ import it.polimi.se2018.network.message.UndoResponse;
 import it.polimi.se2018.view.ViewInterface;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -33,10 +34,7 @@ public class CLI implements ViewInterface {
         askLogin();
         askTypeOfConnection();
         try {
-            if(match != null)
-                client.connect();
-            else
-                client.reconnect();
+            client.connect();
         } catch (Exception e) {
             client.onConnectionError(e);
         }
@@ -116,6 +114,8 @@ public class CLI implements ViewInterface {
         displayCards(match.getToolCards());
         System.out.println("+ PUBLIC OBJECTIVE CARDS +");
         displayCards(match.getPublicObjCards());
+        if(match.getPlayerQueue().peek().getPickedDie() != null)
+            System.out.println(match.getPlayerQueue().peek().getPickedDie());
     }
 
     private static void displayCards(Card[] cards){
@@ -484,17 +484,6 @@ public class CLI implements ViewInterface {
         return m.getPlayers().stream()
                 .filter(p -> p.getName().equals(client.getUsername()))
                 .findFirst().orElse(null);
-    }
-
-    public void onReconnect(Match match) {
-        System.out.println("Login successful.");
-        System.out.println("Press ENTER to re-enter the match.");
-
-        try {
-            System.in.read();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

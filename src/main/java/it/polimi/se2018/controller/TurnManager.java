@@ -49,6 +49,8 @@ class TurnManager {
             currentPlayer.getBoard().restoreState(savedBoard);
             match.getDraftPool().restoreState(savedDraftpool);
             match.getRoundTracker().restoreState(savedRoundtracker);
+            memory = new ArrayList<>();
+            currentPlayer.setPickedDie(null);
             if(toolcard != null) {
                 currentPlayer.setToken(currentPlayer.getToken() + oldCost);
                 currentPlayer.getActivatedToolcard().setCost(oldCost);
@@ -104,6 +106,7 @@ class TurnManager {
             //If 'memory' is empty, add the first DieCoord
             if (memory.isEmpty()) {
                 memory.add(coord);
+                move.getActor().setPickedDie(coord.get());
                 //Sets the new state to 'PICK' on current player's board and he must select only EMPTY cells NEAR dice
                 newState = new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
             } else {
@@ -124,6 +127,7 @@ class TurnManager {
                     moveDice.perform();
                     //Remove 'PICK_DIE' possible action from possibleActions of the current player, so he can't do this action anymore on the current turn
                     currentPlayer.possibleActionsRemove(PossibleAction.PICK_DIE);
+                    move.getActor().setPickedDie(null);
                     //Actions finished, the new state is 'YOUR_TURN'
                     newState = new PlayerState(EnumState.YOUR_TURN);
                 }

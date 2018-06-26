@@ -4,6 +4,7 @@ import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.ClientInterface;
 import it.polimi.se2018.network.server.Server;
 
+import javax.imageio.IIOException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -44,7 +45,11 @@ public class SocketServer extends Thread {
     }
 
     void onDisconnect(String username){
-        server.onDisconnect(username);
+        try {
+            server.onDisconnect(username);
+        } catch (IOException e) {
+
+        }
     }
 
     /**
