@@ -129,9 +129,10 @@ public class Lobby implements Observer{
                 controller.activateNormalMove(message.username);
                 break;
             case PASS:
+                timer.cancel();
                 controller.passTurn(message.username);
                 // Uncomment this line to restart timer
-                //startTimer(controller);
+                startTimer(controller);
                 break;
             case PLAYER_MOVE:
                 // Convert Message to PlayerMove and send to controller
@@ -214,8 +215,10 @@ public class Lobby implements Observer{
     @Override
     public void update(Observable match, Object o) {
         updateAll(new MatchStateMessage((Match) match));
-        if(((Match) match).isFinished())
+        if(((Match) match).isFinished()) {
+            timer.cancel();
             server.deleteLobbyByPlayerNames(((Match) match).getPlayers());
+        }
     }
 
     /**
