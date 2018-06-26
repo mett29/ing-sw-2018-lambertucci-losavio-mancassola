@@ -69,6 +69,7 @@ public class MatchController {
         PlayerState state = match.getPlayerByName(client.getUsername()).getState();
         switch(state.get()){
             case IDLE:
+                onIdleState();
                 break;
             case YOUR_TURN:
                 onYourTurn(match);
@@ -89,6 +90,10 @@ public class MatchController {
                 onRepeatState(this.match);
                 break;
         }
+    }
+
+    private void onIdleState() {
+        setDisableComponents(true, true, true, true);
     }
 
     public void update(Match match){
@@ -197,21 +202,14 @@ public class MatchController {
 
     private void onYourTurn(Match newMatch) {
         EnumSet<PossibleAction> actions = newMatch.getPlayerByName(client.getUsername()).getPossibleActions();
-        if(actions.contains(PossibleAction.ACTIVATE_TOOLCARD))
-            setDisableComponents(null, null, false, null);
-        if(actions.contains(PossibleAction.PICK_DIE))
-            setDisableComponents(false, null, null, null);
-        if(actions.contains(PossibleAction.PASS_TURN))
-            setDisableComponents(null, false, null, null);
+        setDisableComponents(!actions.contains(PossibleAction.PICK_DIE), !actions.contains(PossibleAction.PASS_TURN), !actions.contains(PossibleAction.ACTIVATE_TOOLCARD), true);
 
         normalMoveBtn.setOnMouseClicked(e -> {
             client.activateNormalMove();
-            disableNormTcPassUndo();
         });
 
         passBtn.setOnMouseClicked(e -> {
             client.pass();
-            disableNormTcPassUndo();
         });
     }
 
@@ -284,7 +282,6 @@ public class MatchController {
             draftPoolController.disableAll();
             roundTrackerController.disableAll();
             playerControllers.get(client.getUsername()).disableAll();
-            disableNormTcPassUndo();
             client.sendUndoRequest();
         });
     }
