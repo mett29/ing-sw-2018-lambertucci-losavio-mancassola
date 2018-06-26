@@ -72,6 +72,7 @@ public class Client {
     }
 
     public void notify(Message message){
+        System.out.println("Received: " + message);
         switch(message.content){
             case LOGIN:
                 view.onConnect(((LoginResponse) message).response == Message.Type.OK);

@@ -6,11 +6,13 @@ import it.polimi.se2018.network.message.PatternRequest;
 import it.polimi.se2018.network.message.UndoResponse;
 import it.polimi.se2018.view.ViewInterface;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
@@ -115,7 +117,10 @@ public class GUI extends Application implements ViewInterface {
         stage.setResizable(false);
         stage.show();
 
-
+        stage.setOnCloseRequest((WindowEvent t) -> {
+            Platform.exit();
+            System.exit(0);
+        });
 
         this.stage = stage;
 

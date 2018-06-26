@@ -7,11 +7,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -101,8 +99,7 @@ public class MatchController {
         draftPoolController.update(match.getDraftPool());
         roundTrackerController.update(match.getRoundTracker());
 
-        normalMoveBtn.setDisable(true);
-        passBtn.setDisable(true);
+        setDisableComponents(true, true, true, true);
 
         switchStates(match);
 
@@ -131,7 +128,7 @@ public class MatchController {
             choices.add("Si");
             choices.add("No");
 
-            ChoiceDialog<String> dialog = new ChoiceDialog<>("+1", choices);
+            ChoiceDialog<String> dialog = new ChoiceDialog<>("Si", choices);
             dialog.setTitle("Toolcard");
             dialog.setHeaderText("Vuoi fare la prossima mossa?");
             dialog.setContentText("Scelta:");
@@ -187,7 +184,6 @@ public class MatchController {
     }
 
     private void onPickState(Match newMatch){
-        toolcardContainer.setDisable(true);
         PickState state = (PickState) newMatch.getPlayerByName(client.getUsername()).getState();
         if(state.getActiveContainers().contains(Component.DRAFTPOOL)){
             draftPoolController.activate(state.getCellStates());
@@ -196,27 +192,45 @@ public class MatchController {
             playerControllers.get(client.getUsername()).activate(state.getCellStates());
         }
 
-        undoBtn.setDisable(false);
+        setDisableComponents(null, null, true, false);
     }
 
     private void onYourTurn(Match newMatch) {
         EnumSet<PossibleAction> actions = newMatch.getPlayerByName(client.getUsername()).getPossibleActions();
         if(actions.contains(PossibleAction.ACTIVATE_TOOLCARD))
-            toolcardContainer.setDisable(false);
+            setDisableComponents(null, null, false, null);
         if(actions.contains(PossibleAction.PICK_DIE))
-            normalMoveBtn.setDisable(false);
+            setDisableComponents(false, null, null, null);
         if(actions.contains(PossibleAction.PASS_TURN))
-            passBtn.setDisable(false);
+            setDisableComponents(null, false, null, null);
 
         normalMoveBtn.setOnMouseClicked(e -> {
             client.activateNormalMove();
-            normalMoveBtn.setDisable(true);
+            disableNormTcPassUndo();
         });
 
         passBtn.setOnMouseClicked(e -> {
             client.pass();
-            passBtn.setDisable(true);
+            disableNormTcPassUndo();
         });
+    }
+
+    public synchronized void setDisableComponents(Boolean normalMove, Boolean passButton, Boolean toolCardContainer, Boolean undoButton){
+        if(normalMove != null)
+            normalMoveBtn.setDisable(normalMove);
+        if(passButton != null)
+            passBtn.setDisable(passButton);
+        if(toolCardContainer != null)
+            toolcardContainer.setDisable(toolCardContainer);
+        if(undoButton != null)
+            undoBtn.setDisable(undoButton);
+    }
+
+    /**
+     * Disable the `pass` button, the `normal move` button and each toolcard `use` button
+     */
+    private void disableNormTcPassUndo(){
+        setDisableComponents(true, true, true, true);
     }
 
     @FXML
@@ -254,7 +268,7 @@ public class MatchController {
             final int toolcardIndex = i;
             loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/ToolCardGUI.fxml"));
-            loader.setControllerFactory(c -> new ToolCardController(match.getToolCards()[toolcardIndex], toolcardIndex, client));
+            loader.setControllerFactory(c -> new ToolCardController(match.getToolCards()[toolcardIndex], toolcardIndex, client, this::disableNormTcPassUndo));
 
             try {
                 toolcardContainer.getChildren().add(loader.load());
@@ -262,17 +276,16 @@ public class MatchController {
                 e.printStackTrace();
             }
 
-            toolcardContainer.setDisable(true);
         }
 
-        passBtn.setDisable(true);
-        undoBtn.setDisable(true);
+        disableNormTcPassUndo();
+
         undoBtn.setOnMouseClicked(e -> {
-            client.sendUndoRequest();
             draftPoolController.disableAll();
             roundTrackerController.disableAll();
             playerControllers.get(client.getUsername()).disableAll();
-            undoBtn.setDisable(true);
+            disableNormTcPassUndo();
+            client.sendUndoRequest();
         });
     }
 }
