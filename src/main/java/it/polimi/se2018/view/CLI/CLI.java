@@ -7,7 +7,6 @@ import it.polimi.se2018.network.message.UndoResponse;
 import it.polimi.se2018.view.ViewInterface;
 
 import java.io.IOException;
-import java.net.SocketException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
