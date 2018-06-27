@@ -23,10 +23,6 @@ public class ServerImplementation extends UnicastRemoteObject implements ServerI
 
     @Override
     public void send(Message message) {
-        try {
-            server.onReceive(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        server.onReceive(message);
     }
 }

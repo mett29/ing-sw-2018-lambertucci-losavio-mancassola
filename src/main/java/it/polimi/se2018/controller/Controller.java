@@ -11,7 +11,7 @@ import java.util.Queue;
 public class Controller {
     private GameManager gameManager;
 
-    public Controller(Lobby lobby) throws IOException {
+    public Controller(Lobby lobby) {
         this.gameManager = new GameManager(lobby);
     }
 
