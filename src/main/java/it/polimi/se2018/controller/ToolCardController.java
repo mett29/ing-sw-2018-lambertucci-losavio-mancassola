@@ -229,7 +229,12 @@ class ToolCardController {
                 pm.getActor().setPickedDie(selection.get());
                 Action a = new Reroll(tcc.memory.get(0));
                 a.perform();
-                return new PlayerState(EnumState.YESNO);
+                if (pm.getActor().getPossibleActions().contains(PossibleAction.PICK_DIE)) {
+                    return new PlayerState(EnumState.YESNO);
+                } else {
+                    pm.getActor().setPickedDie(null);
+                    return new PlayerState(EnumState.YOUR_TURN);
+                }
             });
             queue5.add((tcc, pm) -> {
                 boolean choice = (boolean) pm.getMove();
@@ -249,6 +254,7 @@ class ToolCardController {
                 } else {
                     b.perform();
                     pm.getActor().setPickedDie(null);
+                    pm.getActor().possibleActionsRemove(PossibleAction.PICK_DIE);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -328,6 +334,7 @@ class ToolCardController {
                 } else {
                     move.perform();
                     pm.getActor().setPickedDie(null);
+                    pm.getActor().possibleActionsRemove(PossibleAction.PICK_DIE);
                     pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
@@ -385,8 +392,8 @@ class ToolCardController {
                 } else {
                     move.perform();
                     pm.getActor().setPickedDie(null);
-                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     pm.getActor().possibleActionsRemove(PossibleAction.PICK_DIE);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
                     return new PlayerState(EnumState.YOUR_TURN);
                 }
             });

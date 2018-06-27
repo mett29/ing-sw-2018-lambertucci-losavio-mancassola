@@ -89,7 +89,7 @@ class TurnManager {
      */
     boolean handleMove(PlayerMove move) {
         Player currentPlayer = match.getPlayerQueue().peek();
-        PlayerState newState = null;
+        PlayerState newState = currentPlayer.getState();
 
         boolean isToolcardActive = (currentPlayer.getActivatedToolcard() != null);
 
@@ -314,7 +314,7 @@ class TurnManager {
 
             //-----------------------------------------------------------
 
-            BiFunction<Match, PlayerMove, Boolean> tc5 = (match, playerMove) -> true;
+            BiFunction<Match, PlayerMove, Boolean> tc5 = (match, playerMove) -> !checkDiePicked(playerMove);
 
             tmpChecks.put(5, tc5);
 
@@ -332,7 +332,7 @@ class TurnManager {
 
             //-----------------------------------------------------------
 
-            BiFunction<Match, PlayerMove, Boolean> tc8 = (match, playerMove) -> true;
+            BiFunction<Match, PlayerMove, Boolean> tc8 = (match, playerMove) -> !checkDiePicked(playerMove);
 
             tmpChecks.put(8, tc8);
 
@@ -344,7 +344,7 @@ class TurnManager {
 
             //-----------------------------------------------------------
 
-            BiFunction<Match, PlayerMove, Boolean> tc10 = (match, playerMove) -> true;
+            BiFunction<Match, PlayerMove, Boolean> tc10 = (match, playerMove) -> !checkDiePicked(playerMove);
 
             tmpChecks.put(10, tc10);
 
