@@ -23,7 +23,7 @@ public class LoginController {
     public void initialize(){
         connectionTypeBox.getItems().removeAll(connectionTypeBox.getItems());
         connectionTypeBox.getItems().addAll("Connessione con RMI", "Connessione con Socket");
-        connectionTypeBox.getSelectionModel().select(0);
+        connectionTypeBox.getSelectionModel().select(1);
     }
 
     public void setClient(Client client){
