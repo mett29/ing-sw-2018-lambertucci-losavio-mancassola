@@ -9,7 +9,8 @@ public interface ViewInterface {
     void updateMatch(Match match);
     void onConnect(boolean isOk);
     void onConnectionError(Exception e);
-    void onMatchStart(Match match);
+    void onMatchStart(Match match, int timerValue);
     void onPatternRequest(PatternRequest message);
     void onUndoResponse(UndoResponse message);
+    void onTimeReset();
 }

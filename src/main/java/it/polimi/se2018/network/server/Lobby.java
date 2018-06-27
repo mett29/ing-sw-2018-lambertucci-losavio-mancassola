@@ -18,7 +18,7 @@ public class Lobby implements Observer{
     private List<ParsedBoard> parsedBoards;
     private JsonParser jsonParser = new JsonParser();
     private Timer timer;
-    private int maxTime;
+    private int timerValue = -1;
 
     // This Map contains the name of the player and the set of the boards between which he will choose
     private Map<String, List<ParsedBoard>> playerPatternsMap;
@@ -129,10 +129,10 @@ public class Lobby implements Observer{
                 controller.activateNormalMove(message.username);
                 break;
             case PASS:
-                timer.cancel();
                 controller.passTurn(message.username);
-                // Uncomment this line to restart timer
-                startTimer(controller);
+                // Send to the client the time reset message and restart timer for the next turn
+                updateOne(message.username, new TimeResetMessage(message.username, Message.Content.TIME_RESET));
+                restartTimer();
                 break;
             case PLAYER_MOVE:
                 // Convert Message to PlayerMove and send to controller
@@ -149,8 +149,10 @@ public class Lobby implements Observer{
                     // The match can be started
                     // Set match to new match created by controller
                     match = controller.getMatch();
-                    updateAll(new MatchStartMessage(match));
-                    // Handle timer
+                    // Initialize timer value and send it to the client with the Match object
+                    timerValue = 20;
+                    updateAll(new MatchStartMessage(match, timerValue));
+                    // Start timer for the first time
                     startTimer(controller);
                 }
                 break;
@@ -159,7 +161,7 @@ public class Lobby implements Observer{
                 updateOne(message.username, new UndoResponse(true));
                 break;
             case LOGIN:
-                updateOne(message.username, new MatchStartMessage(controller.getMatch()));
+                updateOne(message.username, new MatchStartMessage(controller.getMatch(), timerValue));
                 break;
             case QUEUE:
                 break;
@@ -226,20 +228,26 @@ public class Lobby implements Observer{
      */
     private void startTimer(Controller controller) {
         timer = new Timer();
-        maxTime = 20;
+        timerValue = 20;
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 setInterval(controller);
             }
         }, 0, 1000);
     }
+    
+    private void restartTimer() {
+        timerValue = 20;
+    }
 
     private void setInterval(Controller controller) {
-        //System.out.println(maxTime);
-        if (maxTime == 0) {
-            timer.cancel();
-            onReceive(new PassRequest(controller.getMatch().getPlayerQueue().peek().getName()));
+        System.out.println(timerValue);
+        if (timerValue == 0) {
+            String username = controller.getMatch().getPlayerQueue().peek().getName();
+            onReceive(new PassRequest(username));
+            //updateOne(username, new TimeResetMessage(username, Message.Content.TIME_RESET));
+            //restartTimer();
         }
-        --maxTime;
+        --timerValue;
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.se2018.network.server;
 
 import it.polimi.se2018.controller.Configuration;
+import it.polimi.se2018.model.Color;
 import it.polimi.se2018.network.message.LoginResponse;
 
 import java.io.IOException;

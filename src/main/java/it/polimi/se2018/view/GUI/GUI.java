@@ -65,7 +65,7 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void onMatchStart(Match match) {
+    public void onMatchStart(Match match, int timerValue) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/MatchGUI.fxml"));
@@ -103,6 +103,12 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void onUndoResponse(UndoResponse message) {
         //TODO
+    }
+
+    @Override
+    public void onTimeReset() {
+        // TODO
+        System.out.println("Time reset.");
     }
 
     @Override

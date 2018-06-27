@@ -111,7 +111,8 @@ public class Client {
 
             case MATCH_START:
                 Match match = ((MatchStartMessage) message).payload;
-                view.onMatchStart(match);
+                int timerValue = ((MatchStartMessage) message).timerValue;
+                view.onMatchStart(match, timerValue);
                 break;
 
             case PATTERN_REQUEST:
@@ -120,6 +121,10 @@ public class Client {
 
             case UNDO_RESPONSE:
                 view.onUndoResponse((UndoResponse) message);
+                break;
+
+            case TIME_RESET:
+                view.onTimeReset();
                 break;
 
             default:

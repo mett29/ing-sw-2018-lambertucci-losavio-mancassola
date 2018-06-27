@@ -71,7 +71,7 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void onMatchStart(Match match) {
+    public void onMatchStart(Match match, int timerValue) {
         this.match = match;
         displayMatch(match);
         if(getMyself(match).getState().get() == EnumState.YOUR_TURN){
@@ -157,7 +157,7 @@ public class CLI implements ViewInterface {
                 "" + player.getName(),
                 player.getName().equals(client.getUsername()) ? "  (YOU)" : "" + playerDisconnected,
                 player.getState().get().toString(),
-                "Mano: " + player.getPickedDie().toString(),
+                player.getPickedDie() == null ? "" : "Hand: " + player.getPickedDie().toString(),
                 "Tokens:",
                 " " + tokenString,
                 "Private: " + (player.getName().equals(client.getUsername()) ? player.getPrivateObjCard().getColor().toString() : "")
@@ -558,6 +558,12 @@ public class CLI implements ViewInterface {
         System.out.println("    ┃  spegnerà.                          ┃");
         System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
         //e.printStackTrace();
+    }
+
+    @Override
+    public void onTimeReset() {
+        // TODO
+        System.out.println("Time reset.");
     }
 
     public static class Stringifier{
