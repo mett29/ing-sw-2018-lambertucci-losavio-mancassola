@@ -17,8 +17,7 @@ public class Lobby implements Observer{
     private Controller controller;
     private List<ParsedBoard> parsedBoards;
     private JsonParser jsonParser = new JsonParser();
-    private Timer timer;
-    private int timerValue = -1;
+    private CountdownTimer timer;
 
     // This Map contains the name of the player and the set of the boards between which he will choose
     private Map<String, List<ParsedBoard>> playerPatternsMap;
@@ -42,6 +41,16 @@ public class Lobby implements Observer{
     protected void startMatch() throws IOException {
         controller = new Controller(this);
         playerPatternsMap = new HashMap<>();
+
+        //setup timer
+        timer = new CountdownTimer(20,
+                () -> {
+                    String playerToPass = controller.getMatch().getPlayerQueue().peek().getName();
+                    onReceive(new PassRequest(playerToPass));
+                },
+                () -> updateAll(new TimeResetMessage()),
+                () -> {}
+                );
 
         Extractor<ParsedBoard> parsedBoardExtractor = new Extractor<>();
         for (ParsedBoard pb : this.parsedBoards) {
@@ -130,9 +139,8 @@ public class Lobby implements Observer{
                 break;
             case PASS:
                 controller.passTurn(message.username);
-                // Send to the client the time reset message and restart timer for the next turn
-                updateOne(message.username, new TimeResetMessage(message.username, Message.Content.TIME_RESET));
-                restartTimer();
+                // restart timer for the next turn
+                timer.reset();
                 break;
             case PLAYER_MOVE:
                 // Convert Message to PlayerMove and send to controller
@@ -149,11 +157,9 @@ public class Lobby implements Observer{
                     // The match can be started
                     // Set match to new match created by controller
                     match = controller.getMatch();
-                    // Initialize timer value and send it to the client with the Match object
-                    timerValue = 20;
-                    updateAll(new MatchStartMessage(match, timerValue));
-                    // Start timer for the first time
-                    startTimer(controller);
+                    // Start timer and send infos to clients within the MatchStartMessage
+                    timer.start();
+                    updateAll(new MatchStartMessage(match, timer.getDuration()));
                 }
                 break;
             case UNDO_REQUEST:
@@ -161,7 +167,7 @@ public class Lobby implements Observer{
                 updateOne(message.username, new UndoResponse(true));
                 break;
             case LOGIN:
-                updateOne(message.username, new MatchStartMessage(controller.getMatch(), timerValue));
+                updateOne(message.username, new MatchStartMessage(controller.getMatch(), timer.getDuration()));
                 break;
             case QUEUE:
                 break;
@@ -221,33 +227,5 @@ public class Lobby implements Observer{
             timer.cancel();
             server.deleteLobbyByPlayerNames(((Match) match).getPlayers());
         }
-    }
-
-    /**
-     * Timer to handle players' moves
-     */
-    private void startTimer(Controller controller) {
-        timer = new Timer();
-        timerValue = 20;
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                setInterval(controller);
-            }
-        }, 0, 1000);
-    }
-    
-    private void restartTimer() {
-        timerValue = 20;
-    }
-
-    private void setInterval(Controller controller) {
-        System.out.println(timerValue);
-        if (timerValue == 0) {
-            String username = controller.getMatch().getPlayerQueue().peek().getName();
-            onReceive(new PassRequest(username));
-            //updateOne(username, new TimeResetMessage(username, Message.Content.TIME_RESET));
-            //restartTimer();
-        }
-        --timerValue;
     }
 }

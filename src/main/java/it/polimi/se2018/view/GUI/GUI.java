@@ -69,10 +69,12 @@ public class GUI extends Application implements ViewInterface {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/MatchGUI.fxml"));
-            loader.setControllerFactory(c -> new MatchController(match, client));
 
+
+            loader.setControllerFactory(c -> new MatchController(match, client, timerValue));
             Parent matchParent = loader.load();
             matchController = loader.getController();
+
             stage.getScene().setRoot(matchParent);
 
             updateMatch(match);
@@ -91,8 +93,6 @@ public class GUI extends Application implements ViewInterface {
 
             System.out.println(message.boards);
 
-
-
             stage.getScene().setRoot(matchParent);
         } catch(IOException e){
             System.err.println(e.getMessage());
@@ -107,8 +107,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void onTimeReset() {
-        // TODO
-        System.out.println("Time reset.");
+        matchController.onTimeReset();
     }
 
     @Override

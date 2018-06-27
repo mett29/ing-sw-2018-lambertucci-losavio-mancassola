@@ -2,6 +2,7 @@ package it.polimi.se2018.view.GUI;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
+import it.polimi.se2018.network.server.CountdownTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -45,10 +47,31 @@ public class MatchController {
     private DiceContainerController roundTrackerController;
     private DiceContainerController draftPoolController;
 
+    private CountdownTimer timer;
 
-    public MatchController(Match match, Client client){
+    private ProgressBar timerBar;
+
+
+    public MatchController(Match match, Client client, int timerValue){
         panes = new HashMap<>();
+
+        timerBar = new ProgressBar(1d);
+
         this.client = client;
+        this.timer = new CountdownTimer(timerValue,
+                () -> {},
+                () -> {
+                    Platform.runLater(() -> {
+                        timerBar.setProgress(1d);
+                    });
+                },
+                () -> {
+                    Platform.runLater(() -> {
+                        timerBar.setProgress(timerBar.getProgress() - 1d/timerValue);
+                        System.out.println(timerBar.getProgress());
+                    });
+                }
+        );
 
         playerControllers = new HashMap<>();
         for(Player p : match.getPlayers()){
@@ -67,6 +90,8 @@ public class MatchController {
         }
 
         this.match = match;
+
+        timer.start();
     }
 
     private void switchStates(Match match){
@@ -310,5 +335,12 @@ public class MatchController {
             playerControllers.get(client.getUsername()).disableAll();
             client.sendUndoRequest();
         });
+
+        publicObjContainer.getChildren().add(timerBar);
+
+    }
+
+    public void onTimeReset() {
+        timer.reset();
     }
 }
