@@ -170,7 +170,7 @@ public class Lobby implements Observer{
                 break;
             case UNDO_REQUEST:
                 boolean response = controller.undo(message.username);
-                updateOne(message.username, new UndoResponse(true));
+                updateOne(message.username, new UndoResponse(response));
                 break;
             case LOGIN:
                 updateOne(message.username, new MatchStartMessage(controller.getMatch(), timer.getDuration()));

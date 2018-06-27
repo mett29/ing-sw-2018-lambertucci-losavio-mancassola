@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.PatternPickController">
    <children>
@@ -22,6 +22,9 @@
               </rowConstraints>
             </GridPane>
          </center>
+         <left>
+            <VBox fx:id="playerInfos" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+         </left>
       </BorderPane>
    </children>
 </AnchorPane>
