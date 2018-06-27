@@ -78,6 +78,7 @@ public class PlayerController {
             e.printStackTrace();
         }
 
+        // Display private object card color
         if(isMe){
             Color privateColor = player.getPrivateObjCard().getColor();
             loader = new FXMLLoader(getClass().getResource("/CellGUI.fxml"));

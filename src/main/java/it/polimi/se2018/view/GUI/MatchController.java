@@ -68,7 +68,6 @@ public class MatchController {
                 () -> {
                     Platform.runLater(() -> {
                         timerBar.setProgress(timerBar.getProgress() - 1d/timerValue);
-                        System.out.println(timerBar.getProgress());
                     });
                 }
         );

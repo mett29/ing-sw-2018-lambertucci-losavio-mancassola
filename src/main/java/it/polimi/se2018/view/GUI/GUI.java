@@ -88,10 +88,8 @@ public class GUI extends Application implements ViewInterface {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/PatternPicker.fxml"));
-            loader.setControllerFactory(c -> new PatternPickController(message.boards, client));
+            loader.setControllerFactory(c -> new PatternPickController(message.boards, client, message.privateObjCard));
             Parent matchParent = loader.load();
-
-            System.out.println(message.boards);
 
             stage.getScene().setRoot(matchParent);
         } catch(IOException e){
@@ -102,7 +100,13 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void onUndoResponse(UndoResponse message) {
-        //TODO
+        if(!message.ok){
+            Alert unableToUnload = new Alert(Alert.AlertType.ERROR);
+            unableToUnload.setTitle("Impossibile annullare");
+            unableToUnload.setHeaderText("È impossibile annullare l'azione in questo momento");
+
+            unableToUnload.show();
+        }
     }
 
     @Override
