@@ -63,7 +63,7 @@ public class Lobby implements Observer{
             // For each extracted pattern, add corresponding board to `patterns`, which will be sent to the client
             extractedPatterns.forEach(parsedBoard -> patterns.add(patternToBoard(parsedBoard)));
             extractedPatterns.forEach(parsedBoard -> patternNames.add(parsedBoard.getName()));
-            updateOne(player.getName(), new PatternRequest(player.getName(), patterns, patternNames));
+            updateOne(player.getName(), new PatternRequest(player.getName(), patterns, patternNames, player.getPrivateObjCard()));
         }
     }
 

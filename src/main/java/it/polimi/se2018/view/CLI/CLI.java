@@ -83,6 +83,8 @@ public class CLI implements ViewInterface {
     public void onPatternRequest(PatternRequest message) {
         List<String> selections = new ArrayList<>();
 
+        //message.privateObjCard.getColor(); here
+
         int iteration = 0;
         for(Board b : message.boards){
             System.out.println("[ -- " + message.boardNames.get(iteration) + " | Diff.: " + b.getBoardDifficulty() + " -- ]");
@@ -875,13 +877,14 @@ public class CLI implements ViewInterface {
             StringBuilder buffer = new StringBuilder();
             int[] points = score.getValues();
             boolean winner = player.isWinner();
+            boolean disconnected = player.isDisconnected();
             buffer.append("┏");
             for(int i = 0; i < PLAYER_WIDTH; i++)
                 buffer.append("━");
             buffer.append("┓");
             ret.add(buffer.toString());
 
-            ret.add(scoreLine(player.getName(), -1, " ", false));
+            ret.add(scoreLine(player.getName() + (disconnected ? " (DISCONN.)" : ""), -1, " ", false));
             ret.add(scoreLine("Private Card", points[0], "   ", true));
             ret.add(scoreLine("Public Cards", points[1], "   ", true));
             ret.add(scoreLine("Tokens", points[2], "   ", true));
