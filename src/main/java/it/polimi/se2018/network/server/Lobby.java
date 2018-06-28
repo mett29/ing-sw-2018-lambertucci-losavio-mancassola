@@ -17,7 +17,7 @@ public class Lobby implements Observer{
     private Server server;
     private Controller controller;
     private List<ParsedBoard> parsedBoards;
-    private JsonParser jsonParser = new JsonParser();
+    private JsonParser jsonParser;
     private CountdownTimer timer;
 
     // This Map contains the name of the player and the set of the boards between which he will choose
@@ -26,20 +26,26 @@ public class Lobby implements Observer{
     // This Map contains all the lobby's player with their equivalent board's index
     private Map<String, Integer> playerWithBoard;
 
-    Lobby(List<String> usernames, Server server) throws IOException{
+    Lobby(List<String> usernames, Server server) {
         System.out.println("New lobby created");
         this.usernames = usernames;
         newPlayerMap();
         newPlayerWithBoard();
         this.server = server;
-        this.parsedBoards = jsonParser.getParsedBoards();
+
+        try {
+            jsonParser = new JsonParser();
+            this.parsedBoards = jsonParser.getParsedBoards();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Start match
      * This function creates a new controller, a new match and starts the controller.
      */
-    protected void startMatch() throws IOException {
+    protected void startMatch() {
         controller = new Controller(this);
         playerPatternsMap = new HashMap<>();
 

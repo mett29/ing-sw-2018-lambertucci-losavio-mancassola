@@ -56,7 +56,7 @@ public class Server {
         rmiServer.startServer(rmiPort);
     }
 
-    void newLobby(List<String> players) throws IOException {
+    void newLobby(List<String> players)  {
         Lobby lobby = new Lobby(players, this);
         for (String username : players) {
             lobbies.put(username, lobby);
@@ -98,17 +98,13 @@ public class Server {
                 }
             } catch (RemoteException e) {
                 //Client disconnected while server was notifying ok
-                try {
-                    onDisconnect(username);
-                } catch (IOException e2) {
-                    e2.printStackTrace();
-                }
+                onDisconnect(username);
             }
         }
         System.out.println(usernames);
     }
 
-    public void onDisconnect(String username) throws IOException{
+    public void onDisconnect(String username) {
         if(!lobbies.containsKey(username)) {
             queue.remove(username);
             usernames.remove(username);
@@ -130,8 +126,11 @@ public class Server {
     }
 
     public void send(String username, Message message){
-        if(usernames.containsKey(username) && usernames.get(username).getState() == Client.State.CONNECTED)
+        if(usernames.containsKey(username) && usernames.get(username).getState() == Client.State.CONNECTED) {
             usernames.get(username).notify(message);
+        } else {
+            onDisconnect(username);
+        }
     }
 
     /**
@@ -139,7 +138,7 @@ public class Server {
      * Function called when a client sends a message.
      * @param message Message received
      */
-    public void onReceive(Message message) throws IOException {
+    public void onReceive(Message message)  {
         System.out.println(message);
         if(lobbies.containsKey(message.username)){
             lobbies.get(message.username).onReceive(message);
@@ -158,7 +157,7 @@ public class Server {
      * Add new player to the queue.
      * @param message Message received from player who whats to connect
      */
-    private void handleQueueRequest(QueueRequest message) throws IOException {
+    private void handleQueueRequest(QueueRequest message) {
         queue.add(message.username);
     }
 

@@ -37,18 +37,30 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void onConnect(boolean isOk) {
         // TODO: handle isOk true or false (username already exists)
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/LobbyGUI.fxml"));
-            Parent lobby = loader.load();
+        if(isOk) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/LobbyGUI.fxml"));
+                Parent lobby = loader.load();
 
-            LobbyController controller = loader.getController();
-            controller.setClient(client);
+                LobbyController controller = loader.getController();
+                controller.setClient(client);
 
-            Stage mainStage = stage;
-            mainStage.getScene().setRoot(lobby);
-        } catch (IOException e) {
-            e.printStackTrace();
+                Stage mainStage = stage;
+                mainStage.getScene().setRoot(lobby);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Platform.runLater(
+                () -> {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Username già preso");
+                    alert.setHeaderText("Scegli un username differente");
+
+                    alert.showAndWait();
+                }
+            );
         }
     }
 

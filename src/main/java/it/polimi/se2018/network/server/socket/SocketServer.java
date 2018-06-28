@@ -45,11 +45,7 @@ public class SocketServer extends Thread {
     }
 
     void onDisconnect(String username){
-        try {
-            server.onDisconnect(username);
-        } catch (IOException e) {
-
-        }
+        server.onDisconnect(username);
     }
 
     /**

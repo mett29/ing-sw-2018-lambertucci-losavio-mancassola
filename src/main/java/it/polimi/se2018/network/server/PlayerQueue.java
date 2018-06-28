@@ -35,7 +35,7 @@ public class PlayerQueue {
      * If queue is empty before adding (this is the first player to enter the lobby), start lobby timer
      * @param username Username of the player to be added
      */
-    public synchronized void add(String username) throws IOException {
+    public synchronized void add(String username)  {
         // Start timer if this is the first player
         if(queue.isEmpty()) {
             timer = new Timer();
@@ -71,11 +71,7 @@ public class PlayerQueue {
             @Override
             public void run() {
                 if(queue.size() > 1) {
-                    try {
-                        spawnLobby();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    spawnLobby();
                 } else {
                     try {
                         // If there is only one player, restart the timer
@@ -88,7 +84,7 @@ public class PlayerQueue {
         }, Configuration.getInstance().getQueueTimer());
     }
 
-    private void spawnLobby() throws IOException {
+    private void spawnLobby()  {
         System.out.println("Lobby spawned");
         List<String> elected = new ArrayList<>();
         while(!queue.isEmpty()){
