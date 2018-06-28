@@ -1,5 +1,6 @@
 package it.polimi.se2018.network.server;
 
+import it.polimi.se2018.controller.Configuration;
 import it.polimi.se2018.controller.Controller;
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.message.MatchStartMessage;
@@ -43,7 +44,7 @@ public class Lobby implements Observer{
         playerPatternsMap = new HashMap<>();
 
         //setup timer
-        timer = new CountdownTimer(20,
+        timer = new CountdownTimer(Configuration.getInstance().getInGameTimer(),
                 () -> {
                     String playerToPass = controller.getMatch().getPlayerQueue().peek().getName();
                     onReceive(new PassRequest(playerToPass));

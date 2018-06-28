@@ -5,15 +5,16 @@ import java.util.Properties;
 
 public class Configuration {
     private static Configuration ourInstance = new Configuration();
-
     public static Configuration getInstance() {
         return ourInstance;
     }
+
 
     private String address;
     private int socketPort;
     private int rmiPort;
     private int queueTimer;
+    private int inGameTimer;
 
     /**
      * Load configuration from file. If file is not present, set default configuration
@@ -37,12 +38,14 @@ public class Configuration {
                 socketPort = Integer.parseInt(prop.getProperty("socketPort"));
                 rmiPort = Integer.parseInt(prop.getProperty("rmiPort"));
                 queueTimer = Integer.parseInt(prop.getProperty("queueTimer"));
+                inGameTimer = Integer.parseInt(prop.getProperty("inGameTimer"));
             } else {
                 //Set default configuration values
                 address = "localhost";
                 socketPort = 1111;
                 rmiPort = 1099;
                 queueTimer = 30;
+                inGameTimer = 20;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,5 +66,9 @@ public class Configuration {
 
     public int getSocketPort() {
         return socketPort;
+    }
+
+    public int getInGameTimer() {
+        return inGameTimer;
     }
 }

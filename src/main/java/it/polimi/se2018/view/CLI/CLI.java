@@ -8,10 +8,12 @@ import it.polimi.se2018.view.ViewInterface;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static it.polimi.se2018.view.CLI.InputManager.selectionMap;
 import static java.lang.Integer.max;
 
 /**
@@ -24,7 +26,6 @@ public class CLI implements ViewInterface {
 
     private static final int PLAYER_HEIGHT = 11;
     private static final int PLAYER_WIDTH = 47;
-    private static final String selectionMap = "ABCDEFGHIJKLMNOPQRST";
     private static final int CARD_WIDTH = 26;
 
     public CLI(Client client){ this.client = client; }
@@ -32,11 +33,7 @@ public class CLI implements ViewInterface {
     public void launch(){
         askLogin();
         askTypeOfConnection();
-        try {
-            client.connect();
-        } catch (Exception e) {
-            client.onConnectionError(e);
-        }
+
     }
 
     private void askLogin(){
@@ -62,12 +59,20 @@ public class CLI implements ViewInterface {
         connections.add("Socket");
         connections.add("RMI");
 
-        int selected = makeSelection(connections);
-        if(selected == 0){
-            client.setConnection(false);
-        } else {
-            client.setConnection(true);
-        }
+        makeSelection(connections, (selected) -> {
+            if(selected == 0){
+                client.setConnection(false);
+            } else {
+                client.setConnection(true);
+            }
+            try {
+                client.connect();
+            } catch (Exception e) {
+                client.onConnectionError(e);
+            }
+        });
+
+
     }
 
     @Override
@@ -95,8 +100,9 @@ public class CLI implements ViewInterface {
             iteration++;
         }
 
-        int selection = makeSelection(selections);
-        client.sendPatternResponse(selection);
+        makeSelection(selections, (selection) -> {
+            client.sendPatternResponse(selection);
+        });
     }
 
     @Override
@@ -204,31 +210,26 @@ public class CLI implements ViewInterface {
     }
 
     private void onChangeState(PlayerState oldState, PlayerState newState){
-        ClientMove move = null;
         switch(newState.get()){
             case IDLE:
                 break;
             case PICK:
-                move = onPickState(newState);
+                onPickState(newState);
                 break;
             case VALUE:
-                move = onValueState(newState);
+                onValueState(newState);
                 break;
             case UPDOWN:
-                move = onUpDownState(newState);
+                onUpDownState(newState);
                 break;
             case YESNO:
-                move = onYesNoState(newState);
+                onYesNoState(newState);
                 break;
             case REPEAT:
                 onRepeatState(oldState);
-                return;
+                break;
             case YOUR_TURN:
                 onYourTurnState();
-                return;
-        }
-        if(move != null){
-            client.sendMove(move);
         }
     }
 
@@ -242,43 +243,34 @@ public class CLI implements ViewInterface {
         System.out.println("    ┃  2 - Passa                             ┃");
         System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 
-        Scanner sc = new Scanner(System.in);
-        int selection = -1;
-        while(selection == -1){
-            if(sc.hasNextInt()){
-                selection = sc.nextInt();
-                if(selection < 0 || selection >= 3){
-                    selection = -1;
-                    System.out.println("Type a number between 0 and 2");
+        Pattern pattern = Pattern.compile("[0-2]");
+        InputManager.ask(pattern,
+                Integer::parseInt,
+                (Integer in) -> {
+                    switch(in){
+                        case 0:
+                            client.activateNormalMove();
+                            break;
+                        case 1:
+                            askToolCardActivation();
+                            break;
+                        case 2:
+                            client.pass();
+                            break;
+                        default:
+                            throw new UnsupportedOperationException();
+                    }
                 }
-            } else {
-                sc.next();
-                selection = -1;
-                System.out.println("Type a number between 0 and 2");
-            }
-        }
-
-        switch(selection){
-            case 0:
-                client.activateNormalMove();
-                break;
-            case 1:
-                int index = askToolCardActivation();
-                client.activateToolCard(index);
-                break;
-            case 2:
-                client.pass();
-                break;
-            default:
-                throw new UnsupportedOperationException();
-        }
+        );
     }
 
-    private int askToolCardActivation() {
+    private void askToolCardActivation() {
         displayCards(match.getToolCards());
         List<String> selectables = new ArrayList<>();
         Arrays.stream(match.getToolCards()).map(ToolCard::getTitle).forEachOrdered(selectables::add);
-        return makeSelection(selectables);
+        makeSelection(selectables, (selectedIndex) -> {
+            client.activateToolCard(selectedIndex);
+        });
     }
 
     private void onRepeatState(PlayerState oldState) {
@@ -286,132 +278,76 @@ public class CLI implements ViewInterface {
         setState(oldState);
     }
 
-    private ClientMove onUpDownState(PlayerState newState) {
+    private void onUpDownState(PlayerState newState) {
         System.out.println("Do you want to add or subtract 1 to the die value?");
         List<String> selections = Arrays.stream(new String[]{"+1", "-1"}).collect(Collectors.toList());
-        int selection = makeSelection(selections);
-        return new UpDownMove(selection == 0);
+        makeSelection(selections, (selection) -> {
+            client.sendMove(new UpDownMove(selection == 0));
+        });
     }
 
-    private ClientMove onYesNoState(PlayerState newState) {
+    private void onYesNoState(PlayerState newState) {
         System.out.println("Do you want to continue?");
         List<String> selections = Arrays.stream(new String[]{"Yes", "No"}).collect(Collectors.toList());
-        int selection = makeSelection(selections);
-        return new YesNoMove(selection == 0);
+        makeSelection(selections, (selection) -> {
+            client.sendMove(new YesNoMove(selection == 0));
+        });
     }
 
-    private ClientMove onValueState(PlayerState newState) {
+    private void onValueState(PlayerState newState) {
         System.out.println("Now pick a value from 1 to 6");
-        Scanner sc = new Scanner(System.in);
-        int selected = -1;
-        while(selected == -1){
-            if(sc.hasNextInt()){
-                selected = sc.nextInt();
-                if(selected < 1 || selected > 6){
-                    selected = -1;
-                    System.out.println("Unacceptable value. Pick a value from 1 to 6");
-                }
-            } else {
-                sc.next();
-                System.out.println("Unacceptable value. Pick a value from 1 to 6");
-            }
-        }
-        return new ValueMove(selected);
+
+        List<Integer> selections = new ArrayList<>();
+        selections.add(1);
+        selections.add(2);
+        selections.add(3);
+        selections.add(4);
+        selections.add(5);
+        selections.add(6);
+
+        InputManager.ask(selections, (selected) -> {
+            client.sendMove(new ValueMove(selected));
+        });
     }
 
-    private ClientMove onPickState(PlayerState newState){
+    private void onPickState(PlayerState newState){
         PickState pState= (PickState) newState;
 
-        ClientMove move = null;
 
         switch(pState.getActiveContainers().toArray(new Component[1])[0]){
             case BOARD:
-                move = pickBoard(match.getPlayerByName(client.getUsername()).getBoard(), pState.getCellStates());
+                pickBoard(match.getPlayerByName(client.getUsername()).getBoard(), pState.getCellStates());
                 break;
             case DRAFTPOOL:
-                move = pickDiceContainer(match.getDraftPool(), pState.getCellStates(), true);
+                pickDiceContainer(match.getDraftPool(), pState.getCellStates(), true);
                 break;
             case ROUNDTRACKER:
-                move = pickDiceContainer(match.getRoundTracker(), pState.getCellStates(), false);
+                pickDiceContainer(match.getRoundTracker(), pState.getCellStates(), false);
                 break;
             default:
                 // do nothing
         }
-
-        if(move == null){
-            client.sendUndoRequest();
-        }
-
-        return move;
     }
 
-    private ClientMove pickDiceContainer(DiceContainer diceContainer, EnumSet<CellState> cellStates, boolean isDraftPool) {
+    private void pickDiceContainer(DiceContainer diceContainer, EnumSet<CellState> cellStates, boolean isDraftPool) {
         printLines(Stringifier.diceContainerToStrings(diceContainer, true, cellStates));
         System.out.println(Stringifier.pickContainerMessage(cellStates));
-        Scanner sc = new Scanner(System.in);
-        Pattern ptn = Pattern.compile("[A-T]?", Pattern.CASE_INSENSITIVE);
-        int selection = -1;
-        while(selection == -1){
-            if(sc.hasNext("undo")){
-                return null;
-            }
-            if(sc.hasNext(ptn)){
-                String found = sc.next(ptn);
-                selection = selectionMap.indexOf(found.toUpperCase().charAt(0));
-                if(selection < 0 || selection >= diceContainer.getMaxSize() || !Stringifier.acceptedCell(diceContainer, selection, cellStates)){
-                    System.out.println("Unacceptable selection. " + Stringifier.pickContainerMessage(cellStates));
-                    selection = -1;
-                }
-            }  else {
-                sc.next();
-                System.out.println("Unacceptable selection. " + Stringifier.pickContainerMessage(cellStates));
-            }
-        }
-        return new DiceContainerCoordMove(selection, isDraftPool ? DiceContainerCoordMove.DiceContainerName.DRAFT_POOL : DiceContainerCoordMove.DiceContainerName.ROUND_TRACKER);
+
+        InputManager.askDiceContainer(diceContainer, cellStates, isDraftPool, client);
     }
 
-    private ClientMove pickBoard(Board board, EnumSet<CellState> cellStates) {
+    private void pickBoard(Board board, EnumSet<CellState> cellStates) {
         StringBuilder buffer = new StringBuilder();
         buffer.append("Now s");
         buffer.append(Stringifier.toString(cellStates));
         buffer.append(" (type the corresponding character)");
         System.out.println(buffer.toString());
         printLines(Stringifier.boardToStrings(board, true, cellStates));
-        Scanner sc = new Scanner(System.in);
-        int selection = -1;
-        Pattern ptn = Pattern.compile("[A-T]?", Pattern.CASE_INSENSITIVE);
-        while(selection == -1){
-            if(sc.hasNext("undo")){
-                return null;
-            }
-            if(sc.hasNext(ptn)) {
-                String found = sc.next(ptn);
-                selection = selectionMap.indexOf(found.toUpperCase().charAt(0));
-                if(!(Stringifier.acceptedCell(board, selection % 5, selection / 5, cellStates))){
-                    buffer = new StringBuilder();
-                    buffer.append("The cell you selected is not acceptable. S");
-                    buffer.append(Stringifier.toString(cellStates));
-                    buffer.append(" (type the corresponding character)");
-                    System.out.println(buffer.toString());
-                    selection = -1;
-                }
-            } else {
-                buffer = new StringBuilder();
-                buffer.append("The cell you selected is not acceptable. S");
-                buffer.append(Stringifier.toString(cellStates));
-                buffer.append(" (type the corresponding character)");
-                System.out.println(buffer.toString());
-                sc.next();
-                selection = -1;
-            }
-        }
-        int x = selection % 5;
-        int y = selection / 5;
 
-        return new BoardCoordMove(x, y);
+        InputManager.askBoard(board, cellStates, client);
     }
 
-    private int makeSelection(List selectables){
+    private void makeSelection(List selectables, Consumer<Integer> onSelected){
         StringBuilder buffer = new StringBuilder();
         for(int i = 0; i < selectables.size(); i++){
             buffer.append(i);
@@ -421,24 +357,8 @@ public class CLI implements ViewInterface {
         }
         System.out.println(buffer.toString());
         System.out.println("Select one option");
-        Scanner sc = new Scanner(System.in);
-        int i;
-        if(sc.hasNextInt()) {
-            i = sc.nextInt();
-        } else {
-            sc.next();
-            i = -1;
-        }
-        while(i < 0 || i >= selectables.size()){
-            System.out.println("Type a number between 0 and " + (selectables.size() - 1));
-            if(sc.hasNextInt()){
-                i = sc.nextInt();
-            } else {
-                sc.next();
-                i = -1;
-            }
-        }
-        return i;
+
+        InputManager.ask(selectables, onSelected);
     }
 
     private void printPick(PickState pState){
@@ -564,8 +484,7 @@ public class CLI implements ViewInterface {
 
     @Override
     public void onTimeReset() {
-        // TODO
-        System.out.println("Time reset.");
+        InputManager.closeInput();
     }
 
     public static class Stringifier{
@@ -842,7 +761,7 @@ public class CLI implements ViewInterface {
             return buffer.toString();
         }
 
-        private static String pickContainerMessage(EnumSet<CellState> cellStates){
+        public static String pickContainerMessage(EnumSet<CellState> cellStates){
             StringBuilder buffer = new StringBuilder();
             buffer.append("Select a");
             if(cellStates.contains(CellState.EMPTY)) {
@@ -854,7 +773,7 @@ public class CLI implements ViewInterface {
             return buffer.toString();
         }
 
-        private static String toString(EnumSet<CellState> cellStates){
+        public static String toString(EnumSet<CellState> cellStates){
             StringBuilder buffer = new StringBuilder();
             buffer.append("elect a");
             if(cellStates.contains(CellState.EMPTY)) {
