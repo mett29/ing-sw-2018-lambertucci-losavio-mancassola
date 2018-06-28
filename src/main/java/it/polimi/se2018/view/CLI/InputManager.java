@@ -10,7 +10,6 @@ import it.polimi.se2018.network.client.DiceContainerCoordMove;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -35,7 +34,7 @@ public class InputManager {
             int selected = -1;
             Scanner scanner = new Scanner(System.in);
             while(selected ==-1){
-                if(Thread.currentThread().isInterrupted()){
+                if(getInstance().thread.isInterrupted()){
                     return;
                 }
                 if (scanner.hasNext(accepted)) {
@@ -58,7 +57,7 @@ public class InputManager {
             Scanner sc = new Scanner(System.in);
             int selection = -1;
             while(selection == -1){
-                if (Thread.currentThread().isInterrupted()) {
+                if (getInstance().thread.isInterrupted()) {
                     return;
                 }
                 if(sc.hasNext("undo")){
@@ -99,7 +98,7 @@ public class InputManager {
             Pattern ptn = Pattern.compile("[A-T]?", Pattern.CASE_INSENSITIVE);
             int selection = -1;
             while(selection == -1){
-                if(Thread.currentThread().isInterrupted()){
+                if(getInstance().thread.isInterrupted()){
                     return;
                 }
                 if(sc.hasNext("undo")){
@@ -128,7 +127,7 @@ public class InputManager {
             Scanner sc = new Scanner(System.in);
             int i = -1;
             while(i < 0 || i >= selectables.size()){
-                if (Thread.currentThread().isInterrupted()) {
+                if (getInstance().thread.isInterrupted()) {
                     return;
                 }
                 System.out.println("Type a number between 0 and " + (selectables.size() - 1));

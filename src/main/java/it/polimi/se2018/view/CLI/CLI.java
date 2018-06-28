@@ -33,7 +33,6 @@ public class CLI implements ViewInterface {
     public void launch(){
         askLogin();
         askTypeOfConnection();
-
     }
 
     private void askLogin(){
@@ -210,6 +209,7 @@ public class CLI implements ViewInterface {
     }
 
     private void onChangeState(PlayerState oldState, PlayerState newState){
+        InputManager.closeInput();
         switch(newState.get()){
             case IDLE:
                 break;
@@ -356,7 +356,6 @@ public class CLI implements ViewInterface {
             buffer.append("    ");
         }
         System.out.println(buffer.toString());
-        System.out.println("Select one option");
 
         InputManager.ask(selectables, onSelected);
     }
@@ -484,7 +483,7 @@ public class CLI implements ViewInterface {
 
     @Override
     public void onTimeReset() {
-        InputManager.closeInput();
+        // do nothing
     }
 
     public static class Stringifier{
