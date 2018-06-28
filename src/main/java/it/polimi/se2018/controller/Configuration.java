@@ -34,26 +34,20 @@ public class Configuration {
             if (inputStream != null) {
                 prop.load(inputStream);
 
-                address = prop.getProperty("address");
-                socketPort = Integer.parseInt(prop.getProperty("socketPort"));
-                rmiPort = Integer.parseInt(prop.getProperty("rmiPort"));
-                queueTimer = Integer.parseInt(prop.getProperty("queueTimer"));
-                inGameTimer = Integer.parseInt(prop.getProperty("inGameTimer"));
+                socketPort = Integer.parseInt(prop.getProperty("socketPort", "1111"));
+                rmiPort = Integer.parseInt(prop.getProperty("rmiPort", "1099"));
+                queueTimer = Integer.parseInt(prop.getProperty("queueTimer", "30000"));
+                inGameTimer = Integer.parseInt(prop.getProperty("inGameTimer", "20"));
             } else {
                 //Set default configuration values
-                address = "localhost";
                 socketPort = 1111;
                 rmiPort = 1099;
-                queueTimer = 30;
+                queueTimer = 30000;
                 inGameTimer = 20;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public String getAddress() {
-        return address;
     }
 
     public int getQueueTimer() {
