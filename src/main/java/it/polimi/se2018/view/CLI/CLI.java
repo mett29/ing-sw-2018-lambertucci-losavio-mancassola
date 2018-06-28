@@ -238,8 +238,11 @@ public class CLI implements ViewInterface {
         System.out.println("    ┃              = TOCCA A TE =            ┃");
         System.out.println("    ┠────────────────────────────────────────┨");
         System.out.println("    ┃  Cosa vuoi fare?                       ┃");
+        if(match.getPlayerByName(client.getUsername()).getPossibleActions().contains(PossibleAction.PICK_DIE))
         System.out.println("    ┃  0 - Prendi un dado dalla Draft Pool   ┃");
+        if(match.getPlayerByName(client.getUsername()).getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD))
         System.out.println("    ┃  1 - Usa una ToolCard                  ┃");
+        if(match.getPlayerByName(client.getUsername()).getPossibleActions().contains(PossibleAction.PASS_TURN))
         System.out.println("    ┃  2 - Passa                             ┃");
         System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 
