@@ -15,7 +15,7 @@ import java.util.*;
 
 public class Server {
 
-    private static final int MAX_PLAYER_NUMBER = 2; //TODO: change to 4 before deployment
+    private static final int MAX_PLAYER_NUMBER = 3; //TODO: change to 4 before deployment
 
     private PlayerQueue queue;
 
@@ -118,7 +118,8 @@ public class Server {
                 while(player.getState().get() == EnumState.YOUR_TURN) {
                     onReceive(new PassRequest(player.getName()));
                 }
-                while(lobbies.get(username).getMatch().getPlayerQueue().remove(player));
+                if(usernames.containsKey(username))
+                    while(lobbies.get(username).getMatch().getPlayerQueue().remove(player));
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
