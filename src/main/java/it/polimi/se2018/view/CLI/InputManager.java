@@ -148,10 +148,10 @@ class InputManager {
             int i = -1;
             try {
                 while (i < 0 || i >= selectables.size()) {
+                    System.out.println("Type a number between 0 and " + (selectables.size() - 1));
                     while (!bufferedReader.ready()) {
                         Thread.sleep(100);
                     }
-                    System.out.println("Type a number between 0 and " + (selectables.size() - 1));
                     if (sc.hasNextInt()) {
                         i = sc.nextInt();
                     } else {
