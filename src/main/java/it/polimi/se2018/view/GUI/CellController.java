@@ -15,6 +15,8 @@ import javafx.util.Callback;
 
 import java.security.InvalidParameterException;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CellController {
     private final boolean active;
@@ -42,16 +44,29 @@ public class CellController {
     }
 
     CellController(Cell cell, boolean active) {
+        colorStyleMap = new HashMap<>();
+        colorStyleMap.put(Color.RED, "-fx-background-color: red");
+        colorStyleMap.put(Color.BLUE, "-fx-background-color: blue");
+        colorStyleMap.put(Color.GREEN, "-fx-background-color: green");
+        colorStyleMap.put(Color.PURPLE, "-fx-background-color: purple");
+        colorStyleMap.put(Color.YELLOW, "-fx-background-color: yellow");
+
+
         this.cell = cell;
         this.active = active;
         this.onClick = null;
 
         this.die = new Button();
 
+        this.die.setId("die-button");
+
         if(cell.getDie() != null){
-            this.die.setText(cell.getDie().toString());
+            this.die.setText(String.valueOf(cell.getDie().getValue()));
+            this.die.setStyle(colorStyleMap.get(cell.getDie().getColor()));
         }
     }
+
+    private final Map<Color, String> colorStyleMap;
 
     CellController(Cell cell, boolean active, DiceContainerCoordMove.DiceContainerName name, int[] coordinates){
         this(cell, active);
@@ -137,8 +152,10 @@ public class CellController {
     void update(Cell cell) {
         if (cell.getDie() == null) {
             setDieText("");
+            die.setStyle("-fx-background-color: white");
         } else {
-            setDieText(cell.getDie().toString());
+            setDieText(String.valueOf(cell.getDie().getValue()));
+            die.setStyle(colorStyleMap.get(cell.getDie().getColor()));
         }
     }
 

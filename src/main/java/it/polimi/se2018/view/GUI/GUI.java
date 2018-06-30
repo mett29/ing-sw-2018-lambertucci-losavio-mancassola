@@ -36,7 +36,6 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void onConnect(boolean isOk) {
-        // TODO: handle isOk true or false (username already exists)
         if(isOk) {
             try {
                 FXMLLoader loader = new FXMLLoader();
@@ -58,7 +57,7 @@ public class GUI extends Application implements ViewInterface {
                     alert.setTitle("Username già preso");
                     alert.setHeaderText("Scegli un username differente");
 
-                    alert.showAndWait();
+                    alert.show();
                 }
             );
         }
@@ -132,8 +131,9 @@ public class GUI extends Application implements ViewInterface {
         loader.setLocation(getClass().getResource("/LoginGUI.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
-        stage.setScene(scene);
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
+        stage.setScene(scene);
 
         stage.setResizable(false);
         stage.show();

@@ -1,0 +1,37 @@
+.root {
+    -fx-background-color: blanchedalmond;
+    -fx-font-family: serif;
+}
+
+#title {
+    -fx-font-weight: bold;
+    -fx-font-size: 200%;
+}
+
+#die-button {
+    -fx-alignment: center;
+    -fx-cell-size: 100%;
+    -fx-text-fill: black;
+    -fx-font-weight: 200%;
+    -fx-font-size: 200%;
+
+    -fx-pref-height: 100%;
+    -fx-pref-width: 100%;
+    -fx-opacity: 80%;
+
+    -fx-border-width: 200%;
+    -fx-border-color: tomato;
+}
+
+#die-button:disabled {
+    -fx-text-fill: black;
+    -fx-opacity: 60%;
+
+    -fx-border-width: 100%;
+    -fx-border-color: transparent;
+}
+
+#anchorPane {
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+}

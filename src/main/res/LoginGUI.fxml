@@ -14,7 +14,7 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.LoginController">
    <HBox prefHeight="200.0" prefWidth="1100.0">
       <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS"/>
-      <Label contentDisplay="CENTER" text="Sagrada Online" textAlignment="CENTER"/>
+      <Label fx:id="title" contentDisplay="CENTER" text="Sagrada Online" textAlignment="CENTER"/>
       <Region layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS"/>
    </HBox>
    <VBox prefHeight="720.0" prefWidth="1100.0">
