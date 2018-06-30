@@ -17,12 +17,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-public class InputManager {
+class InputManager {
     private InputManager(){}
 
     private Thread thread;
 
-    public static final String selectionMap = "ABCDEFGHIJKLMNOPQRST";
+    static final String selectionMap = "ABCDEFGHIJKLMNOPQRST";
 
     private static InputManager instance;
     private static InputManager getInstance(){
@@ -32,7 +32,7 @@ public class InputManager {
         return instance;
     }
 
-    public static void ask(Pattern accepted, Function<String, Integer> converter, Consumer<Integer> onSelected){
+    static void ask(Pattern accepted, Function<String, Integer> converter, Consumer<Integer> onSelected){
         getInstance().thread = new Thread(() -> {
             int selected = -1;
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
@@ -49,6 +49,7 @@ public class InputManager {
                     } else {
                         scanner.next();
                         selected = -1;
+                        System.out.println("Unacceptable selection, repeat again");
                     }
                 }
             } catch(IOException|InterruptedException e){
@@ -59,7 +60,7 @@ public class InputManager {
         getInstance().thread.start();
     }
 
-    public static void askBoard(Board board, EnumSet<CellState> cellStates, Client client){
+    static void askBoard(Board board, EnumSet<CellState> cellStates, Client client){
         getInstance().thread = new Thread(() -> {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             Pattern ptn = Pattern.compile("[A-T]?", Pattern.CASE_INSENSITIVE);
@@ -105,7 +106,7 @@ public class InputManager {
         getInstance().thread.start();
     }
 
-    public static void askDiceContainer(DiceContainer diceContainer, EnumSet<CellState> cellStates, boolean isDraftPool, Client client){
+    static void askDiceContainer(DiceContainer diceContainer, EnumSet<CellState> cellStates, boolean isDraftPool, Client client){
         getInstance().thread = new Thread(() -> {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             Scanner sc = new Scanner(bufferedReader);
@@ -140,17 +141,17 @@ public class InputManager {
         getInstance().thread.start();
     }
 
-    public static void ask(List selectables, Consumer<Integer> onSelected){
+    static void ask(List selectables, Consumer<Integer> onSelected){
         getInstance().thread = new Thread(() -> {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             Scanner sc = new Scanner(bufferedReader);
             int i = -1;
             try {
                 while (i < 0 || i >= selectables.size()) {
+                    System.out.println("Type a number between 0 and " + (selectables.size() - 1));
                     while (!bufferedReader.ready()) {
                         Thread.sleep(100);
                     }
-                    System.out.println("Type a number between 0 and " + (selectables.size() - 1));
                     if (sc.hasNextInt()) {
                         i = sc.nextInt();
                     } else {
@@ -167,7 +168,7 @@ public class InputManager {
         getInstance().thread.start();
     }
 
-    public static void closeInput(){
+    static void closeInput(){
         try {
             // If there is something in System.in, consume it
             BufferedReader tmp = new BufferedReader(new InputStreamReader(System.in));
