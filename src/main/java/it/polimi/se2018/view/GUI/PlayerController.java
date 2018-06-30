@@ -2,6 +2,7 @@ package it.polimi.se2018.view.GUI;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.Client;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -31,7 +32,7 @@ public class PlayerController {
 
     public void update(Player player){
         this.player = player;
-        playerName.setText(player.getName());
+        Platform.runLater(() -> playerName.setText(player.getName() + (player.isDisconnected() ? " (DISCONN.)" : "")));
         tokens.setProgress(player.getToken() / 10D);
 
         Board board = player.getBoard();
@@ -62,7 +63,7 @@ public class PlayerController {
         }
         boardController = loader.getController();
 
-        playerName.setText(player.getName());
+        playerName.setText(player.getName() + (player.isDisconnected() ? " (DISCONN.)" : ""));
         tokens.setProgress(player.getToken() / 10D);
 
         // deactivate pane if it isn't "mine"

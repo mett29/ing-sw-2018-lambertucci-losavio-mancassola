@@ -29,10 +29,12 @@ class TurnManager {
     void newTurn(Player player) {
         //Resets the ArrayList 'memory' for the new player
         memory = new ArrayList<>();
-        //Sets the player state as 'YOUR_TURN'
-        player.setState(new PlayerState(EnumState.YOUR_TURN));
-        //Sets up all possible actions to the current player
-        player.possibleActionsSetUp();
+        if(player != null) {
+            //Sets the player state as 'YOUR_TURN'
+            player.setState(new PlayerState(EnumState.YOUR_TURN));
+            //Sets up all possible actions to the current player
+            player.possibleActionsSetUp();
+        }
     }
 
     /**
