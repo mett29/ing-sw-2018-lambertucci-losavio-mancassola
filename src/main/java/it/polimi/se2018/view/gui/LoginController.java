@@ -1,4 +1,4 @@
-package it.polimi.se2018.view.GUI;
+package it.polimi.se2018.view.gui;
 
 import it.polimi.se2018.network.client.Client;
 import javafx.event.ActionEvent;

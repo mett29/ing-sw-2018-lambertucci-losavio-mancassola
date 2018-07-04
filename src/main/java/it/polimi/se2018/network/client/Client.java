@@ -4,8 +4,8 @@ import it.polimi.se2018.model.Match;
 import it.polimi.se2018.network.message.*;
 import it.polimi.se2018.network.client.rmi.RMIConnection;
 import it.polimi.se2018.network.client.socket.SocketConnection;
-import it.polimi.se2018.view.CLI.CLI;
-import it.polimi.se2018.view.GUI.GUI;
+import it.polimi.se2018.view.cli.CLI;
+import it.polimi.se2018.view.gui.GUI;
 import it.polimi.se2018.view.ViewInterface;
 import javafx.application.Application;
 
@@ -19,7 +19,11 @@ public class Client {
     private IConnection connection;
     private ViewInterface view;
 
-    public static String ipAddress = "localhost";
+    private static String ipAddress;
+
+    public static String getIpAddress() {
+        return ipAddress;
+    }
 
     public String getUsername() {
         return username;
@@ -44,9 +48,6 @@ public class Client {
     private static boolean useFX = false;
 
     public static void main(String[] args) {
-        for(int i = 0; i < args.length; i++){
-            System.out.println(i + ": " + args[i]);
-        }
         if(args.length > 0){
             switch(args[0]){
                 case "cli":
@@ -61,6 +62,8 @@ public class Client {
         }
         if(args.length > 1){
             Client.ipAddress = args[1];
+        } else {
+            Client.ipAddress = "localhost";
         }
         if(useFX) {
             Application.launch(GUI.class, args);
@@ -79,10 +82,10 @@ public class Client {
 
     public void connect() throws RemoteException, NotBoundException, MalformedURLException {
         if(rmi){
-            connection = new RMIConnection(this, username);
+            connection = new RMIConnection(this);
             connection.registerClient(username);
         } else {
-            connection = new SocketConnection(this, username);
+            connection = new SocketConnection(this);
             connection.send(new LoginRequest(username));
         }
     }

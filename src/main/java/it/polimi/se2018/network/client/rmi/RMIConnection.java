@@ -15,7 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class RMIConnection implements IConnection {
     private ServerInterface server;
     private ClientInterface remoteClientRef;
-    public RMIConnection(Client c, String username) throws RemoteException, NotBoundException, MalformedURLException {
+    public RMIConnection(Client c) throws RemoteException, NotBoundException, MalformedURLException {
         server = (ServerInterface)Naming.lookup("Server");
         ClientImplementation client = new ClientImplementation(c);
         remoteClientRef = (ClientInterface) UnicastRemoteObject.exportObject(client, 0);

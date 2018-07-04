@@ -5,7 +5,6 @@ import it.polimi.se2018.network.server.Lobby;
 import it.polimi.se2018.utils.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 class GameManager implements Comparator<Score>{
     private Match match;
@@ -74,20 +73,23 @@ class GameManager implements Comparator<Score>{
      */
     void calculateScore() {
         for(Player player : match.getPlayers()) {
-            int privCards = 0, publCards = 0, tok = 0, empty = 20;
+            int privateCards = 0;
+            int publicCards = 0;
+            int tokens = 0;
+            int empty = 20;
 
             if(!player.isDisconnected()) {
-                privCards = player.getPrivateObjCard().getBonus(player.getBoard());
+                privateCards = player.getPrivateObjCard().getBonus(player.getBoard());
 
                 for (PublicObjCard publicObjCard : match.getPublicObjCards())
-                    publCards += publicObjCard.getBonus(player.getBoard());
+                    publicCards += publicObjCard.getBonus(player.getBoard());
 
-                tok = player.getToken();
+                tokens = player.getToken();
 
                 empty = 20 - player.getBoard().countDice();
             }
 
-            match.setScore(player, new Score(privCards, publCards, tok, empty));
+            match.setScore(player, new Score(privateCards, publicCards, tokens, empty));
         }
     }
 

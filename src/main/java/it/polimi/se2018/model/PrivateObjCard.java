@@ -56,7 +56,7 @@ public class PrivateObjCard implements ObjCard {
         static final Map<Color, String> colorNames;
 
         static {
-            Map<Color, String> tmpColorNames = new HashMap<>();
+            Map<Color, String> tmpColorNames = new EnumMap<>(Color.class);
             tmpColorNames.put(Color.RED, "Rosse");
             tmpColorNames.put(Color.YELLOW, "Gialle");
             tmpColorNames.put(Color.GREEN, "Verdi");

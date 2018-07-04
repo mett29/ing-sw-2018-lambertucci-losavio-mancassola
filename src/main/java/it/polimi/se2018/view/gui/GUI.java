@@ -1,4 +1,4 @@
-package it.polimi.se2018.view.GUI;
+package it.polimi.se2018.view.gui;
 
 import it.polimi.se2018.model.Match;
 import it.polimi.se2018.network.client.Client;
@@ -26,7 +26,13 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void onToolCardActivationResponse(boolean isOk) {
+        if(!isOk){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Attivazione toolcard fallita");
+            alert.setHeaderText("Non puoi attivare la toolcard in questo momento");
 
+            alert.show();
+        }
     }
 
     @Override

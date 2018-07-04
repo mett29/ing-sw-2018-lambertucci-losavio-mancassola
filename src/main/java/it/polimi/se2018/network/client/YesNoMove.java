@@ -5,7 +5,7 @@ import it.polimi.se2018.model.Player;
 import it.polimi.se2018.model.PlayerMove;
 
 public class YesNoMove extends ClientMove {
-    public final boolean isYes;
+    private final boolean isYes;
     public YesNoMove(boolean isYes) {
         super(ContentType.UPDOWN);
         this.isYes = isYes;

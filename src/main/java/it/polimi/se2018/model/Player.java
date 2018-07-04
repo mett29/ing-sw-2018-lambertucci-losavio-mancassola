@@ -3,7 +3,7 @@ package it.polimi.se2018.model;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.EnumSet;
-import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This class describes the object Player
@@ -152,7 +152,7 @@ public class Player implements Serializable {
     /**
      * @return all possible actions of the player
      */
-    public EnumSet<PossibleAction> getPossibleActions() {
+    public Set<PossibleAction> getPossibleActions() {
         return possibleActions;
     }
 

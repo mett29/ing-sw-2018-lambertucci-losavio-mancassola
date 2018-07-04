@@ -1,6 +1,7 @@
 package it.polimi.se2018.model;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * This class represents the generic placement error
@@ -14,10 +15,6 @@ public class PlacementError {
     public PlacementError(Flags flag) { errorByte = EnumSet.of(flag); }
 
     private PlacementError(EnumSet<Flags> flags) { errorByte = flags; }
-
-    public EnumSet<Flags> getErrorByte() {
-        return errorByte;
-    }
 
     /**
      * Check if the die placed near another die has the same value
@@ -65,7 +62,7 @@ public class PlacementError {
      * @param b object to unite
      * @return the two object united
      */
-    public static PlacementError union(PlacementError a, PlacementError b) {
+    static PlacementError union(PlacementError a, PlacementError b) {
         EnumSet<Flags> c = EnumSet.copyOf(a.errorByte);
         c.addAll(b.errorByte);
 
@@ -76,18 +73,18 @@ public class PlacementError {
      * Check if it has any error inside the enumset
      * @return true if any error
      */
-    public boolean hasError() {
+    boolean hasError() {
         return !errorByte.isEmpty();
     }
 
-    public boolean hasErrorFilter(EnumSet<Flags> filters){
+    public boolean hasErrorFilter(Set<Flags> filters){
         EnumSet<Flags> tmpErrs = errorByte.clone();
         tmpErrs.removeAll(filters);
         return !tmpErrs.isEmpty();
     }
 
-    public boolean hasNoErrorExceptEdgeFilter(EnumSet<Flags> filters) {
-        EnumSet<Flags> tmpErrs = errorByte.clone();
+    public boolean hasNoErrorExceptEdgeFilter(Set<Flags> filters) {
+        Set<Flags> tmpErrs = errorByte.clone();
         tmpErrs.removeAll(filters);
         return tmpErrs.equals(EnumSet.of(Flags.EDGE)) || tmpErrs.isEmpty();
     }

@@ -20,8 +20,8 @@ public class VirtualClient extends Thread implements SocketClient {
         this.server = server;
         this.clientConnection = clientConnection;
         try {
-            this.ois = new ObjectInputStream(clientConnection.getInputStream());
-            this.oos = new ObjectOutputStream(clientConnection.getOutputStream());
+            this.ois = new ObjectInputStream(this.clientConnection.getInputStream());
+            this.oos = new ObjectOutputStream(this.clientConnection.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }

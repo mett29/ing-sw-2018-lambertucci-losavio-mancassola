@@ -11,10 +11,10 @@ public interface Card extends Serializable {
     /**
      * @return the card's description
      */
-    public String getDescription();
+    String getDescription();
 
     /**
      * @return the card's name
      */
-    public String getTitle();
+    String getTitle();
 }

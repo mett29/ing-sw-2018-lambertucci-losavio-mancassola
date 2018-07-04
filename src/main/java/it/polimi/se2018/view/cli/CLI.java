@@ -1,4 +1,4 @@
-package it.polimi.se2018.view.CLI;
+package it.polimi.se2018.view.cli;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static it.polimi.se2018.view.CLI.InputManager.selectionMap;
+import static it.polimi.se2018.view.cli.InputManager.selectionMap;
 import static java.lang.Integer.max;
 
 /**
@@ -78,7 +78,8 @@ public class CLI implements ViewInterface {
     public void onMatchStart(Match match, int timerValue) {
         this.match = match;
         displayMatch(match);
-        if(getMyself(match).getState().get() == EnumState.YOUR_TURN){
+        Player me = getMyself(match);
+        if(me != null && me.getState().get() == EnumState.YOUR_TURN){
             onYourTurnState();
         }
     }
@@ -101,9 +102,9 @@ public class CLI implements ViewInterface {
             iteration++;
         }
 
-        makeSelection(selections, (selection) -> {
-            client.sendPatternResponse(selection);
-        });
+        makeSelection(selections, selection ->
+            client.sendPatternResponse(selection)
+        );
     }
 
     @Override
@@ -219,13 +220,13 @@ public class CLI implements ViewInterface {
                 onPickState(newState);
                 break;
             case VALUE:
-                onValueState(newState);
+                onValueState();
                 break;
             case UPDOWN:
-                onUpDownState(newState);
+                onUpDownState();
                 break;
             case YESNO:
-                onYesNoState(newState);
+                onYesNoState();
                 break;
             case REPEAT:
                 onRepeatState(oldState);
@@ -241,11 +242,11 @@ public class CLI implements ViewInterface {
         System.out.println("    ┠────────────────────────────────────────┨");
         System.out.println("    ┃  Cosa vuoi fare?                       ┃");
         if(match.getPlayerByName(client.getUsername()).getPossibleActions().contains(PossibleAction.PICK_DIE))
-        System.out.println("    ┃  0 - Prendi un dado dalla Draft Pool   ┃");
+            System.out.println("    ┃  0 - Prendi un dado dalla Draft Pool   ┃");
         if(match.getPlayerByName(client.getUsername()).getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD))
-        System.out.println("    ┃  1 - Usa una ToolCard                  ┃");
+            System.out.println("    ┃  1 - Usa una ToolCard                  ┃");
         if(match.getPlayerByName(client.getUsername()).getPossibleActions().contains(PossibleAction.PASS_TURN))
-        System.out.println("    ┃  2 - Passa                             ┃");
+            System.out.println("    ┃  2 - Passa                             ┃");
         System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 
         Pattern pattern = Pattern.compile("[0-2]");
@@ -283,7 +284,7 @@ public class CLI implements ViewInterface {
         setState(oldState);
     }
 
-    private void onUpDownState(PlayerState newState) {
+    private void onUpDownState() {
         System.out.println("Do you want to add or subtract 1 to the die value?");
         List<String> selections = Arrays.stream(new String[]{"+1", "-1"}).collect(Collectors.toList());
         makeSelection(selections, (selection) -> {
@@ -291,7 +292,7 @@ public class CLI implements ViewInterface {
         });
     }
 
-    private void onYesNoState(PlayerState newState) {
+    private void onYesNoState() {
         System.out.println("Do you want to continue?");
         List<String> selections = Arrays.stream(new String[]{"Yes", "No"}).collect(Collectors.toList());
         makeSelection(selections, (selection) -> {
@@ -299,7 +300,7 @@ public class CLI implements ViewInterface {
         });
     }
 
-    private void onValueState(PlayerState newState) {
+    private void onValueState() {
         System.out.println("Now pick a value from 1 to 6");
 
         List<Integer> selections = new ArrayList<>();
@@ -310,9 +311,9 @@ public class CLI implements ViewInterface {
         selections.add(5);
         selections.add(6);
 
-        InputManager.ask(selections, (selected) -> {
-            client.sendMove(new ValueMove(selected));
-        });
+        InputManager.ask(selections, selected ->
+            client.sendMove(new ValueMove(selected))
+        );
     }
 
     private void onPickState(PlayerState newState){
@@ -334,14 +335,14 @@ public class CLI implements ViewInterface {
         }
     }
 
-    private void pickDiceContainer(DiceContainer diceContainer, EnumSet<CellState> cellStates, boolean isDraftPool) {
+    private void pickDiceContainer(DiceContainer diceContainer, Set<CellState> cellStates, boolean isDraftPool) {
         printLines(Stringifier.diceContainerToStrings(diceContainer, true, cellStates));
         System.out.println(Stringifier.pickContainerMessage(cellStates));
 
         InputManager.askDiceContainer(diceContainer, cellStates, isDraftPool, client);
     }
 
-    private void pickBoard(Board board, EnumSet<CellState> cellStates) {
+    private void pickBoard(Board board, Set<CellState> cellStates) {
         StringBuilder buffer = new StringBuilder();
         buffer.append("Now s");
         buffer.append(Stringifier.toString(cellStates));
@@ -366,8 +367,8 @@ public class CLI implements ViewInterface {
     }
 
     private void printPick(PickState pState){
-        EnumSet<Component> containers = pState.getActiveContainers();
-        EnumSet<CellState> states = pState.getCellStates();
+        Set<Component> containers = pState.getActiveContainers();
+        Set<CellState> states = pState.getCellStates();
         String[] columnBoard = null;
         if(containers.contains(Component.BOARD)){
             columnBoard = playerToStrings(getMyself(match));
@@ -432,16 +433,12 @@ public class CLI implements ViewInterface {
         }
     }
 
-    public void onNewMatchState(Match oldMatch, Match newMatch) {
+    private void onNewMatchState(Match newMatch) {
         if(newMatch.isFinished()){
             displayScores(newMatch);
         } else {
             displayMatch(newMatch);
-            Player me = null;
-            for (Player p : newMatch.getPlayers()) {
-                if (p.getName().equals(client.getUsername()))
-                    me = p;
-            }
+            Player me = getMyself(newMatch);
             if (me != null) {
                 setState(me.getState());
             }
@@ -455,9 +452,7 @@ public class CLI implements ViewInterface {
     }
 
     public void onToolCardActivationResponse(boolean isOk){
-        if(isOk) {
-            System.out.println("Toolcard attivata");
-        } else {
+        if(!isOk) {
             System.out.println("Non sono disponibili abbastanza token per attivare la Toolcard");
         }
     }
@@ -469,9 +464,8 @@ public class CLI implements ViewInterface {
     }
 
     public void updateMatch(Match newMatch) {
-        Match oldMatch = match;
         match = newMatch;
-        onNewMatchState(oldMatch, match);
+        onNewMatchState(match);
     }
 
     @Override
@@ -483,7 +477,6 @@ public class CLI implements ViewInterface {
         System.out.println("    ┃  connessione.  L'applicazione  si   ┃");
         System.out.println("    ┃  spegnerà.                          ┃");
         System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
-        //e.printStackTrace();
     }
 
     @Override
@@ -555,7 +548,7 @@ public class CLI implements ViewInterface {
             return ret.toArray(new String[0]);
         }
 
-        private static String[] diceContainerToStrings(DiceContainer container, boolean printSelectors, EnumSet<CellState> cellStates){
+        private static String[] diceContainerToStrings(DiceContainer container, boolean printSelectors, Set<CellState> cellStates){
             List<String> ret = new ArrayList<>();
 
             int maxSize = container.getMaxSize();
@@ -657,7 +650,7 @@ public class CLI implements ViewInterface {
          *                   Performs the handling of the "first move situation" automatically (no filter on borders when `board.isEmpty()`).
          * @return "Stringified" version of the board.
          */
-        private static String[] boardToStrings(Board board, boolean printSelectors, EnumSet<CellState> cellStates){
+        private static String[] boardToStrings(Board board, boolean printSelectors, Set<CellState> cellStates){
             List<String> boardString = new ArrayList<>();
             boardString.add("┌────┬────┬────┬────┬────┐");
             for (int j = 0; j < board.getRows().size(); j++) {
@@ -687,7 +680,8 @@ public class CLI implements ViewInterface {
 
             if(cellStates.contains(CellState.FULL) && diceContainer.getDie(index) == null){
                 return false;
-            } else if(cellStates.contains(CellState.EMPTY) && diceContainer.getDie(index) != null){
+            }
+            if(cellStates.contains(CellState.EMPTY) && diceContainer.getDie(index) != null){
                 return false;
             }
             return true;
@@ -701,24 +695,17 @@ public class CLI implements ViewInterface {
                 return x == 0 || x == 4 || y == 0 || y == 3;
             }
 
-            if (cellStates.contains(CellState.EMPTY)) {
-                if(!board.getCell(x, y).isEmpty())
-                    return false;
+            if (cellStates.contains(CellState.EMPTY) && !board.getCell(x, y).isEmpty()){
+                return false;
             }
-            if (cellStates.contains(CellState.FULL)) {
-                if(board.getCell(x, y).isEmpty()){
-                    return false;
-                }
+            if (cellStates.contains(CellState.FULL) && board.getCell(x, y).isEmpty()){
+                return false;
             }
-            if(cellStates.contains(CellState.NEAR)){
-                if(board.getNeighbours(x, y).isEmpty()){
-                    return false;
-                }
+            if(cellStates.contains(CellState.NEAR) && board.getNeighbours(x, y).isEmpty()){
+                return false;
             }
-            if(cellStates.contains(CellState.NOTNEAR)){
-                if(!board.getNeighbours(x, y).isEmpty()){
-                    return false;
-                }
+            if(cellStates.contains(CellState.NOT_NEAR) && !board.getNeighbours(x, y).isEmpty()){
+                return false;
             }
             return true;
         }
@@ -765,7 +752,7 @@ public class CLI implements ViewInterface {
             return buffer.toString();
         }
 
-        public static String pickContainerMessage(EnumSet<CellState> cellStates){
+        public static String pickContainerMessage(Set<CellState> cellStates){
             StringBuilder buffer = new StringBuilder();
             buffer.append("Select a");
             if(cellStates.contains(CellState.EMPTY)) {
@@ -777,7 +764,7 @@ public class CLI implements ViewInterface {
             return buffer.toString();
         }
 
-        public static String toString(EnumSet<CellState> cellStates){
+        public static String toString(Set<CellState> cellStates){
             StringBuilder buffer = new StringBuilder();
             buffer.append("elect a");
             if(cellStates.contains(CellState.EMPTY)) {
@@ -788,7 +775,7 @@ public class CLI implements ViewInterface {
             buffer.append(" cell");
             if(cellStates.contains(CellState.NEAR)){
                 buffer.append(" that is near a die");
-            } else if (cellStates.contains(CellState.NOTNEAR)) {
+            } else if (cellStates.contains(CellState.NOT_NEAR)) {
                 buffer.append(" that is not near a die");
             }
             buffer.append(":");

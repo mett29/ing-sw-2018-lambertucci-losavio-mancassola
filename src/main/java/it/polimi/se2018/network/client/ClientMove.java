@@ -24,9 +24,9 @@ public abstract class ClientMove implements Serializable {
     /**
      * Translate ClientMove to a PlayerMove object, which helds references to `match` components
      *
-     * @param player
-     * @param match
-     * @return
+     * @param player The actor of the move
+     * @param match The match that is being played
+     * @return A usable `PlayerMove.
      */
     public abstract PlayerMove toPlayerMove(Player player, Match match);
 }

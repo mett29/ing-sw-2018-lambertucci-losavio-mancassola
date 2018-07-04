@@ -1,10 +1,7 @@
 package it.polimi.se2018.network.server;
 
 import it.polimi.se2018.controller.Configuration;
-import it.polimi.se2018.model.Color;
-import it.polimi.se2018.network.message.LoginResponse;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -56,8 +53,7 @@ public class PlayerQueue {
             try {
                 spawnLobby();
             } catch(IllegalStateException e){
-                // probably do nothing (?)
-                //TODO: check if this random assumption is actually true
+                // do nothing
             }
         }
     }

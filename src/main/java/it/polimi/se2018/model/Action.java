@@ -9,10 +9,10 @@ public interface Action {
      * Check possible errors before the action is performed
      * @return the related error
      */
-    public PlacementError check();
+    PlacementError check();
 
     /**
      * Perform the action
      */
-    public void perform();
+    void perform();
 }

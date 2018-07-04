@@ -1,4 +1,4 @@
-package it.polimi.se2018.view.CLI;
+package it.polimi.se2018.view.cli;
 
 import it.polimi.se2018.model.Board;
 import it.polimi.se2018.model.CellState;
@@ -10,9 +10,9 @@ import it.polimi.se2018.network.client.DiceContainerCoordMove;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -60,7 +60,7 @@ class InputManager {
         getInstance().thread.start();
     }
 
-    static void askBoard(Board board, EnumSet<CellState> cellStates, Client client){
+    static void askBoard(Board board, Set<CellState> cellStates, Client client){
         getInstance().thread = new Thread(() -> {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             Pattern ptn = Pattern.compile("[A-T]?", Pattern.CASE_INSENSITIVE);
@@ -106,7 +106,7 @@ class InputManager {
         getInstance().thread.start();
     }
 
-    static void askDiceContainer(DiceContainer diceContainer, EnumSet<CellState> cellStates, boolean isDraftPool, Client client){
+    static void askDiceContainer(DiceContainer diceContainer, Set<CellState> cellStates, boolean isDraftPool, Client client){
         getInstance().thread = new Thread(() -> {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             Scanner sc = new Scanner(bufferedReader);

@@ -5,7 +5,7 @@ import it.polimi.se2018.model.Player;
 import it.polimi.se2018.model.PlayerMove;
 
 public class UpDownMove extends ClientMove {
-    public final boolean isAdd;
+    private final boolean isAdd;
     public UpDownMove(boolean isAdd) {
         super(ContentType.UPDOWN);
         this.isAdd = isAdd;

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane prefHeight="100.0" prefWidth="202.0" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.CardController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.gui.CardController">
     <TitledPane fx:id="cPaneName" animated="false" collapsible="false" text="card name">
         <AnchorPane minHeight="50.0" minWidth="200.0" prefHeight="100.0">
             <TextArea fx:id="description" editable="false" focusTraversable="false" layoutX="-1.0"

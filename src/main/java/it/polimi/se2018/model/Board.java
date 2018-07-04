@@ -12,8 +12,8 @@ import java.util.*;
 public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
 
     private Cell[][] window;
-    private static final int boardWidth = 5;
-    private static final int boardHeight = 4;
+    private static final int BOARD_WIDTH = 5;
+    private static final int BOARD_HEIGHT = 4;
     private int boardDifficulty;
 
     /**
@@ -22,7 +22,7 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
      * @param boardDifficulty Number of token to be assigned to the player who chooses this board
      */
     public Board(Restriction[][] pattern, int boardDifficulty){
-        this.window = new Cell[boardHeight][boardWidth];
+        this.window = new Cell[BOARD_HEIGHT][BOARD_WIDTH];
 
         if(boardDifficulty <= 0){
             throw new InvalidParameterException("Board Difficulty must be greater than 0");
@@ -30,8 +30,8 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
 
         this.boardDifficulty = boardDifficulty;
 
-        for (int i = 0; i < boardHeight; i++) {
-            for (int j = 0; j < boardWidth; j++) {
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
+            for (int j = 0; j < BOARD_WIDTH; j++) {
                 window[i][j] = new Cell(pattern[i][j]);
             }
         }
@@ -42,10 +42,10 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
      * @param board object to deep copy
      */
     public Board(Board board){
-        this.window = new Cell[boardHeight][boardWidth];
+        this.window = new Cell[BOARD_HEIGHT][BOARD_WIDTH];
         this.boardDifficulty = board.getBoardDifficulty();
-        for (int i = 0; i < boardHeight; i++) {
-            for (int j = 0; j < boardWidth; j++) {
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
+            for (int j = 0; j < BOARD_WIDTH; j++) {
                 this.window[i][j] = new Cell(board.window[i][j].getRestriction());
                 if(board.window[i][j].getDie() != null) {
                     this.window[i][j].setDie(new Die(board.window[i][j].getDie()));
@@ -134,10 +134,10 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
     public List<Die> getNeighbours(int x, int y) {
         List<Die> adjacentDies = new ArrayList<>();
 
-        int leftX = (x - 1 + boardWidth) % boardWidth;
-        int rightX = (x + 1) % boardWidth;
-        int belowY = (y - 1 + boardHeight) % boardHeight;
-        int aboveY = (y + 1) % boardHeight;
+        int leftX = (x - 1 + BOARD_WIDTH) % BOARD_WIDTH;
+        int rightX = (x + 1) % BOARD_WIDTH;
+        int belowY = (y - 1 + BOARD_HEIGHT) % BOARD_HEIGHT;
+        int aboveY = (y + 1) % BOARD_HEIGHT;
 
         if(x != 0 && !getCell(leftX, y).isEmpty()) {
             adjacentDies.add(getDie(leftX, y));
@@ -184,7 +184,7 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
     public List<Cell[]> getColumns() {
         List<Cell[]> cols = new ArrayList<>();
 
-        for (int i = 0; i < boardWidth; i++) {
+        for (int i = 0; i < BOARD_WIDTH; i++) {
             cols.add(getColumn(i));
         }
         return cols;
@@ -197,7 +197,7 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
     public List<Cell[]> getRows() {
         List<Cell[]> rows = new ArrayList<>();
 
-        for (int i = 0; i < boardHeight; i++) {
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
             rows.add(getRow(i));
         }
         return rows;
@@ -207,15 +207,6 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
      * @return the board's difficulty
      */
     public int getBoardDifficulty() { return this.boardDifficulty; }
-
-    /**
-     * This method reset the board
-     */
-    private void reset() {
-        for(Cell cell : this){
-            cell.setDie(null);
-        }
-    }
 
     /**
      * @return how many dice there are on the board

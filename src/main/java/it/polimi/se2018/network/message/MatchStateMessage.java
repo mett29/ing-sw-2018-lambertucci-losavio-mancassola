@@ -11,7 +11,6 @@ public class MatchStateMessage extends Message{
      */
     public MatchStateMessage(Match match) {
         super("admin", Content.MATCH_STATE);
-        //TODO
         payload = match;
     }
 }

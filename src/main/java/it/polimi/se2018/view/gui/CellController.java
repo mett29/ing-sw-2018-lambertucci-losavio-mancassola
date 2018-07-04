@@ -1,11 +1,10 @@
-package it.polimi.se2018.view.GUI;
+package it.polimi.se2018.view.gui;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.BoardCoordMove;
 import it.polimi.se2018.network.client.ClientMove;
 import it.polimi.se2018.network.client.DiceContainerCoordMove;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,8 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 
 import java.security.InvalidParameterException;
-import java.util.EnumSet;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class CellController {
@@ -44,7 +42,7 @@ public class CellController {
     }
 
     CellController(Cell cell, boolean active) {
-        colorStyleMap = new HashMap<>();
+        colorStyleMap = new EnumMap<>(Color.class);
         colorStyleMap.put(Color.RED, "-fx-background-color: red");
         colorStyleMap.put(Color.BLUE, "-fx-background-color: blue");
         colorStyleMap.put(Color.GREEN, "-fx-background-color: green");

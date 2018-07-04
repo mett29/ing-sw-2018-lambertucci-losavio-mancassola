@@ -6,7 +6,6 @@ import it.polimi.se2018.network.server.socket.ServerInterface;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class NetworkHandler extends Thread implements ServerInterface {
 
@@ -17,7 +16,7 @@ public class NetworkHandler extends Thread implements ServerInterface {
 
     private ClientInterface client;
 
-    private boolean connectionEstabilished;
+    private boolean connectionEstablished;
 
     NetworkHandler(String host, int port, ClientInterface client) {
         try {
@@ -26,22 +25,20 @@ public class NetworkHandler extends Thread implements ServerInterface {
             this.oos.flush();
             this.ois = new ObjectInputStream(new BufferedInputStream(socketClient.getInputStream()));
             this.client = client;
-            this.connectionEstabilished = true;
+            this.connectionEstablished = true;
         } catch (IOException e) {
-            //e.printStackTrace();
-            this.connectionEstabilished = false;
+            this.connectionEstablished = false;
         }
     }
 
     @Override
     public void run() {
         boolean loop = true;
-        while (connectionEstabilished && loop && !this.socketClient.isClosed()) {
+        while (connectionEstablished && loop && !this.socketClient.isClosed()) {
             try {
                 Message message = (Message) ois.readObject();
                 if (message == null) {
                     loop = false;
-                    //this.stopConnection();
                 } else {
                     try {
                         client.notify(message);

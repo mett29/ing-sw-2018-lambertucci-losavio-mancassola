@@ -1,4 +1,4 @@
-package it.polimi.se2018.view.GUI;
+package it.polimi.se2018.view.gui;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.Client;
@@ -7,11 +7,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.EnumSet;
+import java.util.Set;
 
 public class PlayerController {
     private final boolean isMe;
@@ -98,7 +97,7 @@ public class PlayerController {
         pickedController.update(pp);
     }
 
-    void activate(EnumSet<CellState> cellStates) {
+    void activate(Set<CellState> cellStates) {
         boardController.activate(cellStates);
     }
 

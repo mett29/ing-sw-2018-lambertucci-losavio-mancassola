@@ -1,4 +1,4 @@
-package it.polimi.se2018.view.GUI;
+package it.polimi.se2018.view.gui;
 
 import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class MatchController {
+
+    private static final String TOOLCARD_MESSAGE_TITLE = "Toolcard";
 
     private Match match;
 
@@ -60,16 +62,8 @@ public class MatchController {
         this.client = client;
         this.timer = new CountdownTimer(timerValue,
                 () -> {},
-                () -> {
-                    Platform.runLater(() -> {
-                        timerBar.setProgress(1d);
-                    });
-                },
-                () -> {
-                    Platform.runLater(() -> {
-                        timerBar.setProgress(timerBar.getProgress() - 1d/timerValue);
-                    });
-                }
+                () -> Platform.runLater(() -> timerBar.setProgress(1d)),
+                () -> Platform.runLater(() -> timerBar.setProgress(timerBar.getProgress() - 1d/timerValue))
         );
 
         playerControllers = new HashMap<>();
@@ -178,7 +172,7 @@ public class MatchController {
             choices.add("No");
 
             ChoiceDialog<String> dialog = new ChoiceDialog<>("Si", choices);
-            dialog.setTitle("Toolcard");
+            dialog.setTitle(TOOLCARD_MESSAGE_TITLE);
             dialog.setHeaderText("Vuoi fare la prossima mossa?");
             dialog.setContentText("Scelta:");
 
@@ -195,7 +189,7 @@ public class MatchController {
             choices.add("-1");
 
             ChoiceDialog<String> dialog = new ChoiceDialog<>("+1", choices);
-            dialog.setTitle("Toolcard");
+            dialog.setTitle(TOOLCARD_MESSAGE_TITLE);
             dialog.setHeaderText("Vuoi aggiungere o sottrarre uno al dado?");
             dialog.setContentText("Scelta:");
 
@@ -216,7 +210,7 @@ public class MatchController {
             choices.add("6");
 
             ChoiceDialog<String> dialog = new ChoiceDialog<>("1", choices);
-            dialog.setTitle("Toolcard");
+            dialog.setTitle(TOOLCARD_MESSAGE_TITLE);
             dialog.setHeaderText("Scegli il valore che vuoi assegnare");
             dialog.setContentText("Valore:");
 
@@ -242,7 +236,7 @@ public class MatchController {
     }
 
     private void onYourTurn(Match newMatch) {
-        EnumSet<PossibleAction> actions = newMatch.getPlayerByName(client.getUsername()).getPossibleActions();
+        Set<PossibleAction> actions = newMatch.getPlayerByName(client.getUsername()).getPossibleActions();
         setDisableComponents(!actions.contains(PossibleAction.PICK_DIE), !actions.contains(PossibleAction.PASS_TURN), !actions.contains(PossibleAction.ACTIVATE_TOOLCARD), true);
 
         normalMoveBtn.setOnMouseClicked(e -> client.activateNormalMove());

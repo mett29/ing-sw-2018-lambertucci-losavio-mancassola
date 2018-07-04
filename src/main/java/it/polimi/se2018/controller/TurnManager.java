@@ -235,6 +235,7 @@ class TurnManager {
      * A static class where belongs all checks of every toolcard.
      */
     private static class Checks {
+        private Checks(){}
         static final Map<Integer, BiFunction<Match, PlayerMove, Boolean>> checks;
 
         /**

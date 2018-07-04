@@ -4,7 +4,6 @@ import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.ClientInterface;
 import it.polimi.se2018.network.server.Server;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 

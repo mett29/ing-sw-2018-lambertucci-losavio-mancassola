@@ -8,7 +8,7 @@ public class MoveMessage extends Message {
      * Constructor
      *
      * @param username Who created the message
-     * @param payload
+     * @param payload The move crafted by the Client
      */
     public MoveMessage(String username, ClientMove payload) {
         super(username, Content.PLAYER_MOVE);

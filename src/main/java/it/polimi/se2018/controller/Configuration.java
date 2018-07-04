@@ -9,8 +9,6 @@ public class Configuration {
         return ourInstance;
     }
 
-
-    private String address;
     private int socketPort;
     private int rmiPort;
     private int queueTimer;

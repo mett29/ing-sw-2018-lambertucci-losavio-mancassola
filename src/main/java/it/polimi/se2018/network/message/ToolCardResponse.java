@@ -5,8 +5,7 @@ public class ToolCardResponse extends Message {
 
     /**
      * Constructor
-     *
-     * @param ok   False if login went wrong, true otherwise
+     * @param ok   False if Toolcard activation went wrong, true otherwise
      */
     public ToolCardResponse(boolean ok) {
         super("admin", Content.TOOLCARD_RESPONSE);

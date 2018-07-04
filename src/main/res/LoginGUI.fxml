@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="content" prefHeight="700.0" prefWidth="1125.0" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.LoginController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.gui.LoginController">
    <HBox prefHeight="200.0" prefWidth="1100.0">
       <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS"/>
       <Label fx:id="title" contentDisplay="CENTER" text="Sagrada Online" textAlignment="CENTER"/>

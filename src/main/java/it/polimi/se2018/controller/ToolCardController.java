@@ -48,6 +48,8 @@ class ToolCardController {
      * A static class where belongs all operations of every toolcard.
      */
     private static class Operations{
+        private Operations(){}
+
         static final Map<Integer, Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>>> ops;
 
         static {

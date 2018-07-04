@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="163.0" prefWidth="213.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.GUI.ToolCardController">
+<AnchorPane prefHeight="163.0" prefWidth="213.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2018.view.gui.ToolCardController">
     <TitledPane fx:id="tcPaneName" animated="false" collapsible="false" maxHeight="100.0" prefHeight="100.0"
                 prefWidth="200.0" text="toolcard name">
         <AnchorPane prefHeight="137.0" prefWidth="223.0">

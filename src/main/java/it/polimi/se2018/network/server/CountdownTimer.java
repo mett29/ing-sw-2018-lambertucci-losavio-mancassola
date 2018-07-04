@@ -3,6 +3,9 @@ package it.polimi.se2018.network.server;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * A countdown timer that can run a user-defined action each second that the timer is going (called ` tick`), each time the timer ends and each time the timer is reset.
+ */
 public class CountdownTimer {
     private Timer timer;
     private int duration;
@@ -17,7 +20,7 @@ public class CountdownTimer {
      * @param duration Timer duration in seconds
      * @param onTimerEnd Runnable run when the timer reaches 0
      * @param onTimerReset Runnable run every time the function `reset` is called
-     * @param onTick
+     * @param onTick Runnable run each second the timer is going down
      */
     public CountdownTimer(int duration, Runnable onTimerEnd, Runnable onTimerReset, Runnable onTick){
         timer = new Timer();
@@ -29,7 +32,7 @@ public class CountdownTimer {
         this.onTick = onTick;
     }
 
-    public int getDuration(){
+    int getDuration(){
         return duration;
     }
 
@@ -65,7 +68,7 @@ public class CountdownTimer {
     /**
      * Delete timer
      */
-    public void cancel(){
+    void cancel(){
         timer.cancel();
     }
 }

@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 
 public class ClientImplementation implements ClientInterface {
     private Client client;
-    public ClientImplementation(Client client){
+    ClientImplementation(Client client){
         this.client = client;
     }
 

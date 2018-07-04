@@ -5,7 +5,7 @@ package it.polimi.se2018.model;
  * @author ontech7
  */
 public enum Component {
-    DRAFTPOOL, BOARD, ROUNDTRACKER, DICEBAG;
+    DRAFTPOOL, BOARD, ROUNDTRACKER;
 
     @Override
     public String toString() {

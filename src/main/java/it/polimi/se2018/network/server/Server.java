@@ -9,7 +9,6 @@ import it.polimi.se2018.network.client.ClientInterface;
 import it.polimi.se2018.network.server.rmi.RMIServer;
 import it.polimi.se2018.network.server.socket.SocketServer;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.*;
 

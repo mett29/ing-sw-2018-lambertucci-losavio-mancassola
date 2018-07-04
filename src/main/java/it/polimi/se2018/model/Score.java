@@ -11,20 +11,20 @@ public class Score implements Serializable{
     private int privateObjCards;
     private int publicObjCards;
     private int tokens;
-    private int emptyElems;
+    private int emptyElements;
 
     public Score() {
         privateObjCards = 0;
         publicObjCards = 0;
         tokens = 0;
-        emptyElems = 0;
+        emptyElements = 0;
     }
 
     public Score(int privCards, int publCards, int tok, int empty) {
         privateObjCards = privCards;
         publicObjCards = publCards;
         tokens = tok;
-        emptyElems = empty;
+        emptyElements = empty;
     }
 
     /**
@@ -32,7 +32,7 @@ public class Score implements Serializable{
      * @return the 4 scores
      */
     public int[] getValues() {
-        return new int[]{privateObjCards, publicObjCards, tokens, emptyElems};
+        return new int[]{privateObjCards, publicObjCards, tokens, emptyElements};
     }
 
     /**
@@ -47,7 +47,7 @@ public class Score implements Serializable{
             privateObjCards = privCards;
             publicObjCards = publCards;
             tokens = tok;
-            emptyElems = empty;
+            emptyElements = empty;
         } else {
             throw new InvalidParameterException("All sub-scores must be greater or equal than 0");
         }
@@ -58,6 +58,6 @@ public class Score implements Serializable{
      * @return the sum of the 4 scores
      */
     public int getOverallScore() {
-        return publicObjCards + privateObjCards + tokens - emptyElems;
+        return publicObjCards + privateObjCards + tokens - emptyElements;
     }
 }

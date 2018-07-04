@@ -5,5 +5,5 @@ package it.polimi.se2018.model;
  * @author ontech7
  */
 public enum CellState {
-    FULL, EMPTY, NEAR, NOTNEAR
+    FULL, EMPTY, NEAR, NOT_NEAR
 }

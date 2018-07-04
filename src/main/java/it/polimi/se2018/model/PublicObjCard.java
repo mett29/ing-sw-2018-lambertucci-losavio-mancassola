@@ -42,6 +42,8 @@ public class PublicObjCard implements ObjCard{
      * Static class containing all the PublicObjCard's infos
      */
     private static class CardInfos {
+        private CardInfos(){}
+
         static final Map<Integer, String> titles;
         static final Map<Integer, String> descriptions;
         static final Map<Integer, Function<Board, Integer>> bonuses;
@@ -174,7 +176,7 @@ public class PublicObjCard implements ObjCard{
          * @return true if there is no duplicate, false otherwise
          */
         private static boolean differentColors(List<Cell> elems) {
-            Map<Color, Integer> count = new HashMap<>();
+            Map<Color, Integer> count = new EnumMap<>(Color.class);
             for(Color color : Color.values()){
                 count.put(color, numberOf(color, elems));
             }
@@ -250,8 +252,8 @@ public class PublicObjCard implements ObjCard{
                 for (int[] i : diagonalNeighbours(x, y)) {
                     try {
                         Die iDie = board.getDie(i[0], i[1]);
-                        if (iDie != null) {
-                            if (color == iDie.getColor()) return true;
+                        if (iDie != null && color == iDie.getColor()){
+                            return true;
                         }
                     } catch (InvalidParameterException e) {
                         // do nothing

@@ -3,7 +3,6 @@ package it.polimi.se2018.model;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * This class represents the object ToolCard
@@ -68,6 +67,8 @@ public class ToolCard implements Card{
      * Static class containing all the ToolCard's infos
      */
     private static class CardInfos {
+        private CardInfos(){}
+
         static final Map<Integer, String> titles;
         static final Map<Integer, String> descriptions;
         static final Map<Integer, Color> colors;

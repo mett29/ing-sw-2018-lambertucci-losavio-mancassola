@@ -1,20 +1,17 @@
-package it.polimi.se2018.view.GUI;
+package it.polimi.se2018.view.gui;
 
 import it.polimi.se2018.model.Board;
 import it.polimi.se2018.model.Cell;
 import it.polimi.se2018.model.CellState;
-import it.polimi.se2018.model.Restriction;
 import it.polimi.se2018.network.client.BoardCoordMove;
 import it.polimi.se2018.network.client.Client;
-import it.polimi.se2018.view.CLI.CLI;
+import it.polimi.se2018.view.cli.CLI;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
-import java.util.EnumSet;
+import java.util.Set;
 
 public class BoardGUIController {
     private final Client client;
@@ -24,7 +21,7 @@ public class BoardGUIController {
     private CellController[][] controllerMatrix;
 
     private Board board;
-    public BoardGUIController(Board board, Client client){
+    BoardGUIController(Board board, Client client){
         this.board = board;
         this.client = client;
         controllerMatrix = new CellController[4][5];
@@ -63,7 +60,7 @@ public class BoardGUIController {
         this.board = board;
     }
 
-    void activate(EnumSet<CellState> cellStates) {
+    void activate(Set<CellState> cellStates) {
         final BoardGUIController toDisable = this;
         for(int y = 0; y < 4; y++) {
             for (int x = 0; x < 5; x++) {
