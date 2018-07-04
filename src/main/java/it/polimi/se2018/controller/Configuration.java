@@ -13,6 +13,7 @@ public class Configuration {
     private int rmiPort;
     private int queueTimer;
     private int inGameTimer;
+    private String patternPath;
 
     /**
      * Load configuration from file. If file is not present, set default configuration
@@ -28,21 +29,15 @@ public class Configuration {
     private void readConfig() {
         Properties prop = new Properties();
         String propertiesFileName = "config.properties";
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propertiesFileName)) {
-            if (inputStream != null) {
-                prop.load(inputStream);
+        String dir = System.getProperty("user.dir");
+        try (InputStream inputStream = new FileInputStream(dir + "/" + propertiesFileName)) {
+            prop.load(inputStream);
 
-                socketPort = Integer.parseInt(prop.getProperty("socketPort", "1111"));
-                rmiPort = Integer.parseInt(prop.getProperty("rmiPort", "1099"));
-                queueTimer = Integer.parseInt(prop.getProperty("queueTimer", "30000"));
-                inGameTimer = Integer.parseInt(prop.getProperty("inGameTimer", "20"));
-            } else {
-                //Set default configuration values
-                socketPort = 1111;
-                rmiPort = 1099;
-                queueTimer = 30000;
-                inGameTimer = 20;
-            }
+            socketPort = Integer.parseInt(prop.getProperty("socketPort", "1111"));
+            rmiPort = Integer.parseInt(prop.getProperty("rmiPort", "1099"));
+            queueTimer = Integer.parseInt(prop.getProperty("queueTimer", "30000"));
+            inGameTimer = Integer.parseInt(prop.getProperty("inGameTimer", "20"));
+            patternPath = prop.getProperty("patternPath", "null");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,4 +58,6 @@ public class Configuration {
     public int getInGameTimer() {
         return inGameTimer;
     }
+
+    public String getPatternPath() { return patternPath; }
 }

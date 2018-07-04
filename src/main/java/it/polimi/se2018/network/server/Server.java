@@ -14,7 +14,7 @@ import java.util.*;
 
 public class Server {
 
-    private static final int MAX_PLAYER_NUMBER = 3; //TODO: change to 4 before deployment
+    private static final int MAX_PLAYER_NUMBER = 2; //TODO: change to 4 before deployment
 
     private PlayerQueue queue;
 

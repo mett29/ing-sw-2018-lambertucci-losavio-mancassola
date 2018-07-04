@@ -3,12 +3,15 @@ package it.polimi.se2018.utils;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.Gson;
+import it.polimi.se2018.controller.Configuration;
 import it.polimi.se2018.network.server.ParsedBoard;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This class is used to load the boards' json configuration files and parse them into Board objects
@@ -16,7 +19,7 @@ import java.util.List;
  */
 public class JsonParser {
 
-    // Contains all the ParsedBoard
+    // Contains all the ParsedBoards
     private List<ParsedBoard> parsedBoards;
 
     // Constructor
@@ -30,10 +33,24 @@ public class JsonParser {
      * @throws IOException
      */
     private List<ParsedBoard> loadParsedBoards() throws IOException {
+        // Loading the standard patterns' file
         Gson gson = new GsonBuilder().create();
-        JsonReader jsonBoard = new JsonReader(new FileReader("src\\main\\res\\boards.json"));
+        JsonReader jsonBoard = new JsonReader(new InputStreamReader(getClass().getResourceAsStream("/boards.json")));
         ParsedBoard[] parsedBoards = gson.fromJson(jsonBoard, ParsedBoard[].class);
         jsonBoard.close();
+
+        // Loading the patterns' file specified by user
+        String patternPath = Configuration.getInstance().getPatternPath();
+        if (!patternPath.equals("null")) {
+            String dir = System.getProperty("user.dir");
+            JsonReader jsonUserBoard = new JsonReader(new FileReader(dir + "/" + patternPath));
+            ParsedBoard[] userParsedBoards = gson.fromJson(jsonUserBoard, ParsedBoard[].class);
+            // Join files
+            parsedBoards = Stream.concat(Arrays.stream(parsedBoards), Arrays.stream(userParsedBoards))
+                    .toArray(ParsedBoard[]::new);
+            jsonUserBoard.close();
+        }
+
         return Arrays.asList(parsedBoards);
     }
 
