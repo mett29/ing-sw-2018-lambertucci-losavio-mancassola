@@ -34,6 +34,8 @@ public class ScoreController {
             scoreBoard.getChildren().add(new Label("Tokens: " + scores.get(players.get(i)).getValues()[2]));
             scoreBoard.getChildren().add(new Label("Empty cells: " + scores.get(players.get(i)).getValues()[3]));
             scoreBoard.getChildren().add(new Label("Total: " + scores.get(players.get(i)).getOverallScore()));
+            scoreBoard.getChildren().add(new Label(""));
+            scoreBoard.getChildren().add(new Label(players.get(i).isWinner() ? "       (WINNER!)" : ""));
 
             scoreGrid.add(scoreBoard, i / 2, i % 2);
         }
