@@ -6,6 +6,11 @@ import it.polimi.se2018.network.client.ClientInterface;
 
 import java.rmi.RemoteException;
 
+/**
+ * This class represents the logic of a RMI client
+ * Implements {@link ClientInterface}
+ * @author mett29
+ */
 public class ClientImplementation implements ClientInterface {
     private Client client;
     ClientImplementation(Client client){
@@ -13,7 +18,7 @@ public class ClientImplementation implements ClientInterface {
     }
 
     @Override
-    public void notify(Message message) throws RemoteException {
+    public void notify(Message message) {
         (new Thread(() -> client.notify(message))).start();
     }
 

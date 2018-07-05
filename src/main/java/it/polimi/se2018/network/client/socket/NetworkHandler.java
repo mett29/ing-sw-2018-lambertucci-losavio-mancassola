@@ -7,6 +7,13 @@ import it.polimi.se2018.network.server.socket.ServerInterface;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * This class represents the server in the client.
+ * It creates the real Socket object and then it starts listening
+ * Extends {@link Thread}
+ * Implements {@link ServerInterface}
+ * @author mett29, MicheleLambertucci
+ */
 public class NetworkHandler extends Thread implements ServerInterface {
 
     private Socket socketClient;

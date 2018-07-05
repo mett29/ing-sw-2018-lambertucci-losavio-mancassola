@@ -2,6 +2,10 @@ package it.polimi.se2018.network.client;
 
 import it.polimi.se2018.model.*;
 
+/**
+ * This class extends {@link ClientMove} to be used with BoardCoord
+ * @author MicheleLambertucci
+ */
 public class BoardCoordMove extends ClientMove {
     private final int x;
     private final int y;

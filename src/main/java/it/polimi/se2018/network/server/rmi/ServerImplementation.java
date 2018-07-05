@@ -7,6 +7,10 @@ import it.polimi.se2018.network.server.Server;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * This class represents the 'service' I want to offer to the client
+ * @author mett29
+ */
 public class ServerImplementation extends UnicastRemoteObject implements ServerInterface {
 
     private Server server;

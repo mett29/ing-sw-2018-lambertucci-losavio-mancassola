@@ -1,6 +1,6 @@
 package it.polimi.se2018.network.message;
 
-public class LoginRequest extends Message{
+public class LoginRequest extends Message {
     public final Type type;
 
     /**

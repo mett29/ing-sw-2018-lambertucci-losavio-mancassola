@@ -12,6 +12,11 @@ import it.polimi.se2018.network.server.socket.SocketServer;
 import java.rmi.RemoteException;
 import java.util.*;
 
+/**
+ * This class is the main Server class.
+ * It runs both RMI and Socket servers and it handles lobbies and clients' connection
+ * @author mett29, MicheleLambertucci, ontech7
+ */
 public class Server {
 
     private static final int MAX_PLAYER_NUMBER = 2; //TODO: change to 4 before deployment

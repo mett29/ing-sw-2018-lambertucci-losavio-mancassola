@@ -5,6 +5,12 @@ import it.polimi.se2018.network.client.Client;
 import it.polimi.se2018.network.client.IConnection;
 import it.polimi.se2018.network.server.socket.ServerInterface;
 
+/**
+ * This class implements the logic of the Socket connection
+ * It creates a new NetworkHandler object, passing it the ip address of the client, the socket port and the client itself
+ * Implements {@link IConnection}{@link SocketClient}
+ * @author mett29
+ */
 public class SocketConnection implements IConnection, SocketClient {
     private static final int PORT = 1111;
     private Client client;

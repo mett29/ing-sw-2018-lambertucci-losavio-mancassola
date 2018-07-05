@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * This class represents the Socket server, run by the main Server class in the start-up phase
+ * @author mett29
+ */
 public class SocketServer extends Thread {
 
     private ServerSocket serverSocket;

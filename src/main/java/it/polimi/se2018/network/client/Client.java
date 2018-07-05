@@ -13,6 +13,10 @@ import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+/**
+ * This class is the main client class.
+ * @author mett29, MicheleLambertucci
+ */
 public class Client {
     private boolean rmi;
     private String username;
@@ -45,6 +49,7 @@ public class Client {
         rmi = false;
     }
 
+    // If true run GUI
     private static boolean useFX = false;
 
     public static void main(String[] args) {
@@ -80,6 +85,10 @@ public class Client {
         System.out.print("Usage: \n\tsagrada.exe [cli/gui] [ip_address]\n");
     }
 
+    /**
+     * This method creates the connection according to the user's choice
+     * {@link RMIConnection}{@link SocketConnection}
+     */
     public void connect() throws RemoteException, NotBoundException, MalformedURLException {
         if(rmi){
             connection = new RMIConnection(this);
@@ -90,6 +99,10 @@ public class Client {
         }
     }
 
+    /**
+     * This method sends the user's move using the previously created connection
+     * @param move, the client's move
+     */
     public void sendMove(ClientMove move) {
         try {
             connection.send(new MoveMessage(username, move));
@@ -98,6 +111,10 @@ public class Client {
         }
     }
 
+    /**
+     * According to the type of message, this method notifies the View (CLI/GUI)
+     * @param message
+     */
     public void notify(Message message){
         switch(message.content){
             case LOGIN:
@@ -156,6 +173,10 @@ public class Client {
         this.view = view;
     }
 
+    /**
+     * This method sends a ToolCard activation request to the server
+     * @param index, index of the toolcard
+     */
     public void activateToolCard(int index) {
         Message message = new ToolCardRequest(username, index);
         try {
@@ -165,6 +186,9 @@ public class Client {
         }
     }
 
+    /**
+     * This method sends a Normal Move activation request to the server
+     */
     public void activateNormalMove(){
         Message message = new NormalMoveRequest(username);
         try {
@@ -174,6 +198,10 @@ public class Client {
         }
     }
 
+    /**
+     * This method sends a PatternResponse message to the server
+     * @param index, index of the pattern chosen by the player
+     */
     public void sendPatternResponse(int index) {
         Message message = new PatternResponse(username, index);
         try {
@@ -183,6 +211,9 @@ public class Client {
         }
     }
 
+    /**
+     * Send to the server the desire of passing the turn
+     */
     public void pass() {
         Message message = new PassRequest(username);
         try {
@@ -192,6 +223,9 @@ public class Client {
         }
     }
 
+    /**
+     * Send to the server the desire of undoing the just took action
+     */
     public void sendUndoRequest() {
         try {
             connection.send(new UndoRequest(username));

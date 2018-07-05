@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 /**
  * A countdown timer that can run a user-defined action each second that the timer is going (called ` tick`), each time the timer ends and each time the timer is reset.
+ * @author MicheleLambertucci
  */
 public class CountdownTimer {
     private Timer timer;

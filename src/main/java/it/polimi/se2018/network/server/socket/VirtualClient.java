@@ -7,6 +7,11 @@ import it.polimi.se2018.network.client.socket.SocketClient;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * This class represents the logic of the client.
+ * A new VirtualClient is created whenever SocketServer receives a new connection request.
+ * @author mett29
+ */
 public class VirtualClient extends Thread implements SocketClient {
 
     private final SocketServer server;

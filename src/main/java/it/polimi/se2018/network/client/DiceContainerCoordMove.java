@@ -2,6 +2,10 @@ package it.polimi.se2018.network.client;
 
 import it.polimi.se2018.model.*;
 
+/**
+ * This class, like {@link BoardCoordMove}, extends {@link ClientMove} to be used with DiceContainerCoord
+ * @author MicheleLambertucci
+ */
 public class DiceContainerCoordMove extends ClientMove{
     public final int index;
     public final DiceContainerName container;

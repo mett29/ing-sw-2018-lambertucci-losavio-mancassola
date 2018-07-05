@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * This class encapsulates a message that can be sent over the network
+ * @author MicheleLambertucci
  */
 public class Message implements Serializable {
     public final String username;

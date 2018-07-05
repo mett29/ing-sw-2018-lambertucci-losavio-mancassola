@@ -11,6 +11,14 @@ import it.polimi.se2018.utils.JsonParser;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * This class implements the Lobby, where all the clients are "stored" before becoming real players.
+ * Once the lobby reaches the right number of players, the game starts.
+ * In this class the patterns written in the file are loaded and parsed and sent to the users, so that they can choose one.
+ * It also handles the client/server communication with messages.
+ * It observes the Match.
+ * @author MicheleLambertucci, mett29
+ */
 public class Lobby implements Observer{
     private List<String> usernames;
     private Map<String, Player> playerMap;

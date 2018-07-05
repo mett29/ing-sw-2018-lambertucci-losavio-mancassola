@@ -6,7 +6,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-// These classes are needed by GSON for the loading process
+/**
+ * These classes are needed by GSON for the loading process
+ * @author mett29
+ */
 public class ParsedBoard implements Serializable{
     private List<Board> boards = new ArrayList<>();
     private String name;

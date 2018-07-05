@@ -5,6 +5,10 @@ import it.polimi.se2018.network.message.Message;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * Extends {@link Remote}
+ * @author mett29, MicheleLambertucci
+ */
 public interface ClientInterface extends Remote {
     /**
      * Trigger client's message handler

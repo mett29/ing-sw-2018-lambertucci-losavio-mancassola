@@ -4,6 +4,10 @@ import it.polimi.se2018.network.message.Message;
 
 import java.rmi.RemoteException;
 
+/**
+ * General interface implemented by the SocketConnection class and the RMIConnection class
+ * @author mett29
+ */
 public interface IConnection {
 
     void registerClient(String username);
