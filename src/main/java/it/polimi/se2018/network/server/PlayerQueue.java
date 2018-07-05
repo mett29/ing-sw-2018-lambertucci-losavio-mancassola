@@ -3,6 +3,8 @@ package it.polimi.se2018.network.server;
 import it.polimi.se2018.controller.Configuration;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a queue of players waiting for a match.
@@ -14,6 +16,8 @@ public class PlayerQueue {
     private Queue<String> queue;
     private Server server;
     private Timer timer;
+
+    private static Logger logger = Logger.getLogger("playerQueue");
 
     /**
      * Constructor
@@ -44,7 +48,7 @@ public class PlayerQueue {
             queue.add(username);
 
 
-        System.out.println("Queue: " + queue);
+        logger.log(Level.INFO,"Queue: {0}", queue);
 
         // If the number of player wanted is reached, spawn a new lobby
         // "reset" the timer to avoid any interference while handling future players
@@ -73,7 +77,7 @@ public class PlayerQueue {
                         // If there is only one player, restart the timer
                         startTimer();
                     } catch(Exception e){
-
+                        logger.log(Level.WARNING, e.getMessage());
                     }
                 }
             }
@@ -81,7 +85,7 @@ public class PlayerQueue {
     }
 
     private void spawnLobby()  {
-        System.out.println("Lobby spawned");
+        logger.log(Level.INFO,"Lobby spawned");
         List<String> elected = new ArrayList<>();
         while(!queue.isEmpty()){
             elected.add(queue.poll());

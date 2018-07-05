@@ -30,6 +30,8 @@ public class Server {
     private SocketServer socketServer;
     private RMIServer rmiServer;
 
+    private static Logger logger = Logger.getLogger("server");
+
     private Server() {
         this.queue = new PlayerQueue(MAX_PLAYER_NUMBER, this);
 
@@ -45,7 +47,7 @@ public class Server {
             Server server = new Server();
             server.startServer(Configuration.getInstance().getSocketPort(), Configuration.getInstance().getRmiPort());
         } catch (Exception e) {
-            Logger.getLogger("stdout").log(Level.WARNING, e.getMessage());
+            logger.log(Level.WARNING, e.getMessage());
         }
     }
 
@@ -87,7 +89,7 @@ public class Server {
             player.setDisconnected(false);
             clientInterface.notify(new LoginResponse(true, lobbies.get(username).getMatch()));
         } catch (NullPointerException|RemoteException e) {
-            Logger.getLogger("stdout").log(Level.WARNING, e.getMessage());
+            logger.log(Level.WARNING, e.getMessage());
         }
     }
 
@@ -103,7 +105,7 @@ public class Server {
             try {
                 clientInterface.notify(new LoginResponse(false, null));
             } catch (RemoteException e1) {
-                Logger.getLogger("stdout").log(Level.WARNING, e1.getMessage());
+                logger.log(Level.WARNING, e1.getMessage());
             }
         }
         else if(lobbies.containsKey(username) && usernames.get(username).getState() == Client.State.DISCONNECTED) {
@@ -118,14 +120,14 @@ public class Server {
                 try {
                     clientInterface.notify(new LoginResponse(false, null));
                 } catch (RemoteException e1) {
-                    Logger.getLogger("stdout").log(Level.WARNING, e1.getMessage());
+                    logger.log(Level.WARNING, e1.getMessage());
                 }
             } catch (RemoteException e) {
-                Logger.getLogger("stdout").log(Level.WARNING, e.getMessage());
+                logger.log(Level.WARNING, e.getMessage());
                 onDisconnect(username);
             }
         }
-        System.out.println(usernames);
+        logger.log(Level.INFO, "{0}", usernames);
     }
 
     /**
@@ -149,7 +151,7 @@ public class Server {
                 if(usernames.containsKey(username))
                     while(lobbies.get(username).getMatch().getPlayerQueue().remove(player));
             } catch (NullPointerException e) {
-                Logger.getLogger("stdout").log(Level.WARNING, e.getMessage());
+                logger.log(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -173,7 +175,7 @@ public class Server {
      * @param message Message received
      */
     public void onReceive(Message message)  {
-        System.out.println(message);
+        logger.log(Level.INFO, "{0}", message);
         if(lobbies.containsKey(message.username)){
             lobbies.get(message.username).onReceive(message);
         } else if(usernames.containsKey(message.username) && message.content == Message.Content.QUEUE) {
@@ -181,7 +183,7 @@ public class Server {
         } else if(!lobbies.containsKey(message.username)) {
             //do nothing
         } else {
-            System.err.println("Unhandled message received from: " + message.username);
+            logger.log(Level.WARNING, "Unhandled message received from: {0}", message.username);
             // Ignore message received from unknown client
             // He needs to re-register
         }

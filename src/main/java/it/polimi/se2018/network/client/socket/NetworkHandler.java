@@ -6,6 +6,8 @@ import it.polimi.se2018.network.server.socket.ServerInterface;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class represents the server in the client.
@@ -24,6 +26,8 @@ public class NetworkHandler extends Thread implements ServerInterface {
     private ClientInterface client;
 
     private boolean connectionEstablished;
+
+    private static Logger logger = Logger.getLogger("networkHandler");
 
     NetworkHandler(String host, int port, ClientInterface client) {
         try {
@@ -51,7 +55,7 @@ public class NetworkHandler extends Thread implements ServerInterface {
                 }
             } catch (IOException|ClassNotFoundException e) {
                 loop = false;
-                System.out.println("Client can't communicate with the server anymore. Connection closed.");
+                logger.log(Level.WARNING,"Client can't communicate with the server anymore. Connection closed.");
             } catch (NullPointerException e) {
                 //do nothing
             }
@@ -68,7 +72,7 @@ public class NetworkHandler extends Thread implements ServerInterface {
             oos.writeObject(message);
             oos.flush();
         } catch (IOException e) {
-            System.out.println("Can't send this message right now.");
+            logger.log(Level.WARNING,"Can't send this message right now.");
         }
     }
 }

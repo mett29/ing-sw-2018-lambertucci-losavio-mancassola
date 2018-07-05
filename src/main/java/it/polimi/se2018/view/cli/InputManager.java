@@ -10,6 +10,7 @@ import it.polimi.se2018.network.client.DiceContainerCoordMove;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -21,6 +22,8 @@ class InputManager {
     private InputManager(){}
 
     private Thread thread;
+
+    private static PrintStream ps = new PrintStream(System.out);
 
     static final String SELECTION_MAP = "ABCDEFGHIJKLMNOPQRST";
 
@@ -49,7 +52,7 @@ class InputManager {
                     } else {
                         scanner.next();
                         selected = -1;
-                        System.out.println("Unacceptable selection, repeat again");
+                        ps.println("Unacceptable selection, repeat again");
                     }
                 }
             } catch(IOException|InterruptedException e){
@@ -81,7 +84,7 @@ class InputManager {
                             String message = "The cell you selected is not acceptable. S" +
                                     CLI.Stringifier.toString(cellStates) +
                                     " (type the corresponding character)";
-                            System.out.println(message);
+                            ps.println(message);
                             selection = -1;
                         }
                     } else {
@@ -89,7 +92,7 @@ class InputManager {
                         buffer.append("The cell you selected is not acceptable. S");
                         buffer.append(CLI.Stringifier.toString(cellStates));
                         buffer.append(" (type the corresponding character)");
-                        System.out.println(buffer.toString());
+                        ps.println(buffer.toString());
                         sc.next();
                         selection = -1;
                     }
@@ -124,12 +127,12 @@ class InputManager {
                         String found = sc.next(ptn);
                         selection = SELECTION_MAP.indexOf(found.toUpperCase().charAt(0));
                         if (selection < 0 || selection >= diceContainer.getMaxSize() || !CLI.Stringifier.acceptedCell(diceContainer, selection, cellStates)) {
-                            System.out.println("Unacceptable selection. " + CLI.Stringifier.pickContainerMessage(cellStates));
+                            ps.println("Unacceptable selection. " + CLI.Stringifier.pickContainerMessage(cellStates));
                             selection = -1;
                         }
                     } else {
                         sc.next();
-                        System.out.println("Unacceptable selection. " + CLI.Stringifier.pickContainerMessage(cellStates));
+                        ps.println("Unacceptable selection. " + CLI.Stringifier.pickContainerMessage(cellStates));
                     }
                 }
                 client.sendMove(new DiceContainerCoordMove(selection,
@@ -148,7 +151,7 @@ class InputManager {
             int i = -1;
             try {
                 while (i < 0 || i >= selectables.size()) {
-                    System.out.println("Type a number between 0 and " + (selectables.size() - 1));
+                    ps.println("Type a number between 0 and " + (selectables.size() - 1));
                     while (!bufferedReader.ready()) {
                         Thread.sleep(100);
                     }
