@@ -167,7 +167,7 @@ public class CLI implements ViewInterface {
      */
     private static void displayCards(Card[] cards){
         if(cards.length != 3)
-            throw new RuntimeException("cards.length must be 3");
+            throw new MatchNotValidException("cards.length must be 3");
         printLines(Stringifier.display2(Stringifier.display2(Stringifier.toStrings(cards[0]), Stringifier.toStrings(cards[1])), Stringifier.toStrings(cards[2])));
     }
 
@@ -641,16 +641,7 @@ public class CLI implements ViewInterface {
             return ret.toArray(new String[0]);
         }
 
-        /**
-         * Creates a String[] array which represents a contrainer that can be printed on console.
-         * @param container object to read
-         * @param printSelectors boolean to read
-         * @param cellStates FULL, EMPTY and/or NEAR
-         * @return "Stringfied" version of the container.
-         */
-        private static String[] diceContainerToStrings(DiceContainer container, boolean printSelectors, Set<CellState> cellStates){
-            List<String> ret = new ArrayList<>();
-
+        private static String diceContainerFirstRow(DiceContainer container, boolean printSelectors, Set<CellState> cellStates){
             int maxSize = container.getMaxSize();
             StringBuilder buffer = new StringBuilder();
             buffer.append("╔");
@@ -683,9 +674,23 @@ public class CLI implements ViewInterface {
                 buffer.append("════╗");
             }
 
-            ret.add(buffer.toString());
+            return buffer.toString();
+        }
 
-            buffer = new StringBuilder();
+        /**
+         * Creates a String[] array which represents a contrainer that can be printed on console.
+         * @param container object to read
+         * @param printSelectors boolean to read
+         * @param cellStates FULL, EMPTY and/or NEAR
+         * @return "Stringfied" version of the container.
+         */
+        private static String[] diceContainerToStrings(DiceContainer container, boolean printSelectors, Set<CellState> cellStates){
+            List<String> ret = new ArrayList<>();
+
+            ret.add(diceContainerFirstRow(container, printSelectors, cellStates));
+
+            int maxSize = container.getMaxSize();
+            StringBuilder buffer = new StringBuilder();
             buffer.append("║");
             for(int i = 0; i < maxSize; i++) {
                 Die d = container.getDie(i);
@@ -762,7 +767,7 @@ public class CLI implements ViewInterface {
         private static String[] boardToStrings(Board board, boolean printSelectors, Set<CellState> cellStates){
             List<String> boardString = new ArrayList<>();
             boardString.add("┌────┬────┬────┬────┬────┐");
-            for (int j = 0; j < board.getRows().size(); j++) {
+            for (int j = board.getRows().size() - 1; j >= 0; j--) {
                 Cell[] row = board.getRow(j);
                 StringBuilder buffer = new StringBuilder();
                 for(int i = 0; i < row.length; i++){
@@ -775,7 +780,7 @@ public class CLI implements ViewInterface {
                 }
                 buffer.append("│");
                 boardString.add(buffer.toString());
-                if(j != board.getRows().size() - 1) {
+                if(j != 0) {
                     boardString.add("├────┼────┼────┼────┼────┤");
                 }
             }
@@ -871,7 +876,7 @@ public class CLI implements ViewInterface {
         /**
          * Creates a String  which represents a die that can be printed on console.
          * @param die object to read
-         * @return "Stringfied" version of the die
+         * @return "Stringified" version of the die
          */
         private static String dieToString(Die die){
             StringBuilder buffer = new StringBuilder();
@@ -920,7 +925,7 @@ public class CLI implements ViewInterface {
          * Creates a String[] array that represent the score to print on console
          * @param player object to read
          * @param score object to read
-         * @return "Stringfied" version of the scores
+         * @return "Stringified" version of the scores
          */
         private static String[] scoreToStrings(Player player, Score score) {
             List<String> ret = new ArrayList<>();

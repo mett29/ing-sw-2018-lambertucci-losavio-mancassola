@@ -51,7 +51,7 @@ public class BoardGUIController {
                 loader.setControllerFactory(c -> new CellController(cell, false, new int[]{x_coord, y_coord}));
 
                 try {
-                    gridPane.add(loader.load(), x, y);
+                    gridPane.add(loader.load(), x, 3 - y);
                     controllerMatrix[y][x] = loader.getController();
                 } catch (IOException e) {
                     Logger.getLogger("boardGuiController").log(Level.WARNING,e.getMessage());
