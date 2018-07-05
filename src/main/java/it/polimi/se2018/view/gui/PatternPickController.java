@@ -11,6 +11,8 @@ import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * JavaFX controller of the Pattern-Pick phase
@@ -42,6 +44,8 @@ public class PatternPickController {
 
     @FXML
     public void initialize(){
+        Logger logger = Logger.getLogger("patternPickController");
+
         // Add player infos
         playerInfos.getChildren().add(new Label(client.getUsername()));
 
@@ -52,7 +56,7 @@ public class PatternPickController {
             playerInfos.getChildren().add(new Label("Obiettivo privato:"));
             playerInfos.getChildren().add(loader.load());
         } catch(IOException e){
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
 
 
@@ -88,7 +92,7 @@ public class PatternPickController {
                 pane.setCenter(node);
                 boardGrid.add(pane, i % 2, i / 2);
             } catch(IOException e){
-                e.printStackTrace();
+                logger.log(Level.WARNING,e.getMessage());
             }
         }
 

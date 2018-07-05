@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,8 @@ public class CLI implements ViewInterface {
     private static final int CARD_WIDTH = 26;
 
     private static PrintStream ps = new PrintStream(System.out);
+
+    private static Logger logger = Logger.getLogger("cli");
 
     public CLI(Client client){ this.client = client; }
 
@@ -479,7 +483,7 @@ public class CLI implements ViewInterface {
             try {
                 System.in.read();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING,e.getMessage());
             }
             client.sendQueueRequest();
         } else {

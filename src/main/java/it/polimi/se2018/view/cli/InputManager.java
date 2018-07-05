@@ -16,6 +16,8 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 class InputManager {
@@ -26,6 +28,8 @@ class InputManager {
     private static PrintStream ps = new PrintStream(System.out);
 
     static final String SELECTION_MAP = "ABCDEFGHIJKLMNOPQRST";
+
+    private static Logger logger = Logger.getLogger("inputManager");
 
     private static InputManager instance;
     private static InputManager getInstance(){
@@ -180,7 +184,7 @@ class InputManager {
             }
             getInstance().thread.interrupt();
         } catch(NullPointerException|IOException e){
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
     }
 }

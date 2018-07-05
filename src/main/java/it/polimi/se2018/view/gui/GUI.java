@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GUI extends Application implements ViewInterface {
 
@@ -23,6 +25,8 @@ public class GUI extends Application implements ViewInterface {
     private Stage stage;
 
     private MatchController matchController;
+
+    private static Logger logger = Logger.getLogger("gui");
 
     @Override
     public void displayToolcardActivationResponse(boolean isOk) {
@@ -54,7 +58,7 @@ public class GUI extends Application implements ViewInterface {
                 Stage mainStage = stage;
                 mainStage.getScene().setRoot(lobby);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING,e.getMessage());
             }
         } else {
             Platform.runLater(
@@ -76,7 +80,7 @@ public class GUI extends Application implements ViewInterface {
         alert.setHeaderText("Si è verificato un errore di connessione");
         alert.setContentText("Verifica che la tua connessione sia attiva. Se lo è, forse il nome utente che hai scelto non è disponibile: scegline un altro.");
 
-        e.printStackTrace();
+        logger.log(Level.WARNING,e.getMessage());
 
         alert.showAndWait();
     }
@@ -96,7 +100,7 @@ public class GUI extends Application implements ViewInterface {
 
             updateMatch(match);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
     }
 
@@ -110,8 +114,7 @@ public class GUI extends Application implements ViewInterface {
 
             stage.getScene().setRoot(matchParent);
         } catch(IOException e){
-            System.err.println(e.getMessage());
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
     }
 

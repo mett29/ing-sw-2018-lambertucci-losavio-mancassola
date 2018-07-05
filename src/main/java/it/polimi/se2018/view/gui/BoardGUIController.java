@@ -12,6 +12,8 @@ import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * JavaFX controller of the Board
@@ -52,7 +54,7 @@ public class BoardGUIController {
                     gridPane.add(loader.load(), x, y);
                     controllerMatrix[y][x] = loader.getController();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logger.getLogger("boardGuiController").log(Level.WARNING,e.getMessage());
                 }
             }
         }

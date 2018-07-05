@@ -11,6 +11,8 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class implements the logic of the RMI connection.
@@ -20,6 +22,9 @@ import java.rmi.server.UnicastRemoteObject;
 public class RMIConnection implements IConnection {
     private ServerInterface server;
     private ClientInterface remoteClientRef;
+
+    private static Logger logger = Logger.getLogger("rmiConnection");
+
     public RMIConnection(Client c) throws RemoteException, NotBoundException, MalformedURLException {
         server = (ServerInterface)Naming.lookup("Server");
         ClientImplementation client = new ClientImplementation(c);
@@ -34,7 +39,7 @@ public class RMIConnection implements IConnection {
         try {
             server.register(username, remoteClientRef);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
     }
 
