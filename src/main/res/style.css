@@ -14,6 +14,10 @@
     -fx-font-weight: 900;
 }
 
+.button:hover {
+    -fx-background-color : #01579B;
+}
+
 #die-button {
     -fx-alignment: center;
     -fx-cell-size: 100%;
