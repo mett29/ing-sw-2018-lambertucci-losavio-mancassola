@@ -52,6 +52,39 @@ class ToolCardController {
 
         static final Map<Integer, Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>>> ops;
 
+        static BiFunction<ToolCardController, PlayerMove, PlayerState> handlePickAndPickFromBoardEmpty = (tcc, pm) -> {
+            DieCoord selection = (DieCoord) pm.getMove();
+            tcc.memory.add(selection);
+            pm.getActor().setPickedDie(selection.get());
+            return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
+        };
+
+        static BiFunction<ToolCardController, PlayerMove, PlayerState> performWithFilter(Flags filter) {
+            return (tcc, pm) -> {
+                tcc.memory.add((DieCoord) pm.getMove());
+                Action a = new Switch(tcc.memory.get(0), tcc.memory.get(1));
+                PlacementError err = a.check();
+                boolean isOkay = err.hasNoErrorExceptEdgeFilter(EnumSet.of(filter));
+                if(!isOkay){
+                    tcc.memory.remove(1);
+                    return new PlayerState(EnumState.REPEAT);
+                } else {
+                    a.perform();
+                    pm.getActor().setPickedDie(null);
+                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+                    return new PlayerState(EnumState.YOUR_TURN);
+                }
+            };
+        }
+
+        static PlayerState performAndRemovePick(Action action, Player actor){
+            action.perform();
+            actor.setPickedDie(null);
+            actor.possibleActionsRemove(PossibleAction.PICK_DIE);
+            actor.possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
+            return new PlayerState(EnumState.YOUR_TURN);
+        }
+
         static {
             Map<Integer, Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>>> tmpOps = new HashMap<>();
 
@@ -90,30 +123,13 @@ class ToolCardController {
 
             //-------------------------------------------------------------------------------------------------------
 
+
+
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue1 = new LinkedList<>();
 
             queue1.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
-            queue1.add((tcc, pm) -> {
-                DieCoord selection = (DieCoord) pm.getMove();
-                tcc.memory.add(selection);
-                pm.getActor().setPickedDie(selection.get());
-                return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
-            });
-            queue1.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
-                Action a = new Switch(tcc.memory.get(0), tcc.memory.get(1));
-                PlacementError err = a.check();
-                boolean isOkay = err.hasNoErrorExceptEdgeFilter(EnumSet.of(Flags.COLOR));
-                if(!isOkay){
-                    tcc.memory.remove(1);
-                    return new PlayerState(EnumState.REPEAT);
-                } else {
-                    a.perform();
-                    pm.getActor().setPickedDie(null);
-                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
-                    return new PlayerState(EnumState.YOUR_TURN);
-                }
-            });
+            queue1.add(handlePickAndPickFromBoardEmpty);
+            queue1.add(performWithFilter(Flags.COLOR));
 
             tmpOps.put(1, queue1);
 
@@ -122,27 +138,8 @@ class ToolCardController {
             Queue<BiFunction<ToolCardController, PlayerMove, PlayerState>> queue2 = new LinkedList<>();
 
             queue2.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
-            queue2.add((tcc, pm) -> {
-                DieCoord selection = (DieCoord) pm.getMove();
-                tcc.memory.add(selection);
-                pm.getActor().setPickedDie(selection.get());
-                return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
-            });
-            queue2.add((tcc, pm) -> {
-                tcc.memory.add((DieCoord) pm.getMove());
-                Action a = new Switch(tcc.memory.get(0), tcc.memory.get(1));
-                PlacementError err = a.check();
-                boolean isOkay = err.hasNoErrorExceptEdgeFilter(EnumSet.of(Flags.VALUE));
-                if(!isOkay){
-                    tcc.memory.remove(1);
-                    return new PlayerState(EnumState.REPEAT);
-                } else {
-                    a.perform();
-                    pm.getActor().setPickedDie(null);
-                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
-                    return new PlayerState(EnumState.YOUR_TURN);
-                }
-            });
+            queue2.add(handlePickAndPickFromBoardEmpty);
+            queue2.add(performWithFilter(Flags.VALUE));
 
             tmpOps.put(2, queue2);
 
@@ -254,15 +251,15 @@ class ToolCardController {
                     tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
-                    b.perform();
-                    pm.getActor().setPickedDie(null);
-                    pm.getActor().possibleActionsRemove(PossibleAction.PICK_DIE);
-                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
-                    return new PlayerState(EnumState.YOUR_TURN);
+                    return performAndRemovePick(b, pm.getActor());
                 }
             });
 
+
+
             tmpOps.put(5, queue5);
+
+
 
             //-------------------------------------------------------------------------------------------------------
 
@@ -334,11 +331,7 @@ class ToolCardController {
                     tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
-                    move.perform();
-                    pm.getActor().setPickedDie(null);
-                    pm.getActor().possibleActionsRemove(PossibleAction.PICK_DIE);
-                    pm.getActor().possibleActionsRemove(PossibleAction.ACTIVATE_TOOLCARD);
-                    return new PlayerState(EnumState.YOUR_TURN);
+                    return performAndRemovePick(move, pm.getActor());
                 }
             });
 

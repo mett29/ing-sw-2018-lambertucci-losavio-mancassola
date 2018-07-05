@@ -10,6 +10,8 @@ import it.polimi.se2018.utils.JsonParser;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class implements the Lobby, where all the clients are "stored" before becoming real players.
@@ -20,6 +22,8 @@ import java.util.*;
  * @author MicheleLambertucci, mett29
  */
 public class Lobby implements Observer{
+    private Logger logger;
+
     private List<String> usernames;
     private Map<String, Player> playerMap;
     private Server server;
@@ -35,7 +39,9 @@ public class Lobby implements Observer{
     private Map<String, Integer> playerWithBoard;
 
     Lobby(List<String> usernames, Server server) {
-        System.out.println("New lobby created");
+        logger = Logger.getLogger("Lobby");
+
+        logger.log(Level.INFO, "New lobby created");
         this.usernames = usernames;
         newPlayerMap();
         newPlayerWithBoard();
@@ -45,7 +51,7 @@ public class Lobby implements Observer{
             jsonParser = new JsonParser();
             this.parsedBoards = jsonParser.getParsedBoards();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -53,7 +59,7 @@ public class Lobby implements Observer{
      * Start match
      * This function creates a new controller, a new match and starts the controller.
      */
-    protected void startMatch() {
+    void startMatch() {
         controller = new Controller(this);
         playerPatternsMap = new HashMap<>();
 
@@ -118,7 +124,7 @@ public class Lobby implements Observer{
      * @param username A specific client's username
      * @param message Message to be sent
      */
-    public void updateOne(String username, Message message) {
+    private void updateOne(String username, Message message) {
         server.send(username, message);
     }
 
@@ -126,7 +132,7 @@ public class Lobby implements Observer{
      * Send a message (update clients' match state) to every lobby's client
      * @param message Message to be broadcasted
      */
-    public void updateAll(Message message){
+    private void updateAll(Message message){
         for(String username : usernames){
             if(!getMatch().getPlayerByName(username).isDisconnected())
                 server.send(username, message);
@@ -146,7 +152,7 @@ public class Lobby implements Observer{
      * This function is called when the server receives a message from one of the lobby's clients.
      * @param message Message to be handled
      */
-    public void onReceive(Message message){
+    void onReceive(Message message){
         switch(message.content){
             case TOOLCARD_REQUEST:
                 int toolCardIndex = ((ToolCardRequest) message).index;
@@ -177,6 +183,7 @@ public class Lobby implements Observer{
                     match = controller.getMatch();
                     // Start timer and send infos to clients within the MatchStartMessage
                     timer.start();
+                    logger.log(Level.INFO, "Match started");
                     updateAll(new MatchStartMessage(match, timer.getDuration()));
                 }
                 break;
@@ -190,8 +197,8 @@ public class Lobby implements Observer{
             case QUEUE:
                 break;
             default:
-                // This should'n happen
-                System.out.println("Received strange message");
+                // This shouldn't happen
+                logger.log(Level.WARNING, "Received malformed message");
         }
     }
 
@@ -230,7 +237,6 @@ public class Lobby implements Observer{
 
         // Getting the ParsedBoard object according to the index
         ParsedBoard chosenPattern = playerPatternsMap.get(username).get(chosenIndex);
-        System.out.println(chosenPattern.getName());
 
         Board chosenBoard = patternToBoard(chosenPattern);
 

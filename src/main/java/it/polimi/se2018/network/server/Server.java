@@ -20,7 +20,6 @@ import java.util.logging.Logger;
  * @author mett29, MicheleLambertucci, ontech7
  */
 public class Server {
-
     private static final int MAX_PLAYER_NUMBER = 2; //TODO: change to 4 before deployment
 
     private PlayerQueue queue;
