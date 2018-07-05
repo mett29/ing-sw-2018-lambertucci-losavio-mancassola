@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * JavaFX controller of the match phase
+ */
 public class MatchController {
 
     private static final String TOOLCARD_MESSAGE_TITLE = "Toolcard";
@@ -53,7 +56,13 @@ public class MatchController {
     private ProgressBar timerBar;
 
 
-    public MatchController(Match match, Client client, int timerValue){
+    /**
+     * Constructor
+     * @param match      Match to be displayed
+     * @param client     Reference to the Client object
+     * @param timerValue Initial in-game timer value
+     */
+    MatchController(Match match, Client client, int timerValue){
         panes = new HashMap<>();
 
         timerBar = new ProgressBar(1d);
@@ -86,26 +95,30 @@ public class MatchController {
         timer.start();
     }
 
+    /**
+     * Call the corresponding handler of the new PlayerState
+     * @param match New match state
+     */
     private void switchStates(Match match){
         PlayerState state = match.getPlayerByName(client.getUsername()).getState();
         switch(state.get()){
             case IDLE:
-                onIdleState();
+                disableAll();
                 break;
             case YOUR_TURN:
-                onYourTurn(match);
+                activatePossibleActions(match);
                 break;
             case PICK:
-                onPickState(match);
+                handlePickState(match);
                 break;
             case VALUE:
-                onValueState();
+                askValue();
                 break;
             case UPDOWN:
-                onUpDownState();
+                askUpDown();
                 break;
             case YESNO:
-                onYesNoState();
+                askYesNo();
                 break;
             case REPEAT:
                 onRepeatState(this.match);
@@ -113,10 +126,17 @@ public class MatchController {
         }
     }
 
-    private void onIdleState() {
+    /**
+     * Disable each component
+     */
+    private void disableAll() {
         setDisableComponents(true, true, true, true);
     }
 
+    /**
+     * Update view to display the new state
+     * @param match The new match state
+     */
     void update(Match match){
         if(match.isFinished()){
             Platform.runLater(() -> {
@@ -151,6 +171,10 @@ public class MatchController {
         }
     }
 
+    /**
+     * After displaying an error message, calls handler of the previous state
+     * @param oldMatch Previous match state
+     */
     private void onRepeatState(Match oldMatch) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -164,7 +188,10 @@ public class MatchController {
         switchStates(oldMatch);
     }
 
-    private void onYesNoState() {
+    /**
+     * Display a Yes/No dialog and sends the response to the Server
+     */
+    private void askYesNo() {
         Platform.runLater(() -> {
             List<String> choices = new ArrayList<>();
             choices.add("Si");
@@ -184,7 +211,10 @@ public class MatchController {
 
     }
 
-    private void onUpDownState() {
+    /**
+     * Display a +1/-1 dialog and sends the response to the Server
+     */
+    private void askUpDown() {
         Platform.runLater(() -> {
             List<String> choices = new ArrayList<>();
             choices.add("+1");
@@ -205,7 +235,10 @@ public class MatchController {
 
     }
 
-    private void onValueState() {
+    /**
+     * Display a "pick value" dialog and sends the response to the Server
+     */
+    private void askValue() {
         Platform.runLater(() -> {
             List<String> choices = new ArrayList<>();
             choices.add("1");
@@ -230,7 +263,11 @@ public class MatchController {
 
     }
 
-    private void onPickState(Match newMatch){
+    /**
+     * Activate each container cell that is said to be active in `newMatch`
+     * @param newMatch current match state
+     */
+    private void handlePickState(Match newMatch){
         PickState state = (PickState) newMatch.getPlayerByName(client.getUsername()).getState();
         if(state.getActiveContainers().contains(Component.DRAFTPOOL)){
             draftPoolController.activate(state.getCellStates());
@@ -245,7 +282,11 @@ public class MatchController {
         setDisableComponents(null, null, true, false);
     }
 
-    private void onYourTurn(Match newMatch) {
+    /**
+     * Activate each button that is said to be active in `newMatch`
+     * @param newMatch New match state
+     */
+    private void activatePossibleActions(Match newMatch) {
         Set<PossibleAction> actions = newMatch.getPlayerByName(client.getUsername()).getPossibleActions();
         setDisableComponents(!actions.contains(PossibleAction.PICK_DIE), !actions.contains(PossibleAction.PASS_TURN), !actions.contains(PossibleAction.ACTIVATE_TOOLCARD), true);
 
@@ -254,6 +295,13 @@ public class MatchController {
         passBtn.setOnMouseClicked(e -> client.pass());
     }
 
+    /**
+     * Call `setDisable` in each component. Each parameter can be set to `true` (which disable the button), `false` (which activates the button) or `null` (which leaves the button as is).
+     * @param normalMove        Normal move button parameter
+     * @param passButton        Pass button parameter
+     * @param toolCardContainer Toolcard buttons parameter (all "Usa" buttons)
+     * @param undoButton        Undo button parameter
+     */
     private synchronized void setDisableComponents(Boolean normalMove, Boolean passButton, Boolean toolCardContainer, Boolean undoButton){
         if(normalMove != null)
             normalMoveBtn.setDisable(normalMove);
@@ -343,7 +391,10 @@ public class MatchController {
 
     }
 
-    public void onTimeReset() {
+    /**
+     * Reset in-game timer display
+     */
+    void resetTimer() {
         timer.reset();
     }
 }

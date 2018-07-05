@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * JavaFX controller of the Score section
+ */
 public class ScoreController {
     @FXML
     private GridPane scoreGrid;
@@ -20,7 +23,11 @@ public class ScoreController {
     private List<Player> players;
     private Map<Player, Score> scores;
 
-    public ScoreController(Match match) {
+    /**
+     * Constructor
+     * @param match Match from which read scores
+     */
+    ScoreController(Match match) {
         players = match.getPlayers();
         scores = players.stream().collect(Collectors.toMap(Function.identity(), match::getScore));
     }

@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * JavaFX controller of DiceContainer
+ */
 public class DiceContainerController {
     private final Client client;
     private final DiceContainerCoordMove.DiceContainerName name;
@@ -27,7 +30,13 @@ public class DiceContainerController {
     private DiceContainer diceContainer;
     private GridPane gridPane;
 
-    public DiceContainerController(DiceContainer diceContainer, DiceContainerCoordMove.DiceContainerName name, Client client) {
+    /**
+     * Constructor
+     * @param diceContainer Reference to the diceContainer to be displayed
+     * @param name          Name of the diceContainer (RoundTracker or DraftPool)
+     * @param client        Reference to the client object
+     */
+    DiceContainerController(DiceContainer diceContainer, DiceContainerCoordMove.DiceContainerName name, Client client) {
         this.diceContainer = diceContainer;
         this.client = client;
 
@@ -46,7 +55,7 @@ public class DiceContainerController {
 
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/CellGUI.fxml"));
-            loader.setControllerFactory(c -> new CellController(cell, false, name, new int[]{index}));
+            loader.setControllerFactory(c -> new CellController(cell, false, name, index));
 
             try {
                 gridPane.addColumn(i, ((Node) loader.load()));
@@ -63,13 +72,21 @@ public class DiceContainerController {
         container.setPrefSize(30 * diceContainer.getMaxSize(), 30);
     }
 
+    /**
+     * Disable each cell of the container
+     * @param disabled If true, disable each cell, else activate each cell
+     */
     public void setDisabled(boolean disabled){
         for(int i = 0; i < diceContainer.getMaxSize(); i++){
             cellControllers.get(i).setDisabled(disabled);
         }
     }
 
-    public void update(DiceContainer diceContainer){
+    /**
+     * Update content of the diceContainer
+     * @param diceContainer New diceContainer state
+     */
+    void update(DiceContainer diceContainer){
         for(int i = 0; i < diceContainer.getMaxSize(); i++){
             cellControllers.get(i).update(diceContainer.getCell(i));
         }
@@ -77,6 +94,10 @@ public class DiceContainerController {
         this.diceContainer = diceContainer;
     }
 
+    /**
+     * Activate diceContainer cells that respect the state described in cellStates
+     * @param cellStates Set of accepted cell states
+     */
     void activate(Set<CellState> cellStates) {
         DiceContainerController toDisable = this;
         for (int i = 0; i < diceContainer.getMaxSize(); i++) {
@@ -93,7 +114,10 @@ public class DiceContainerController {
         }
     }
 
-    public void disableAll() {
+    /**
+     * Disable each cell of the container
+     */
+    void disableAll() {
         for (int i = 0; i < diceContainer.getMaxSize(); i++) {
             cellControllers.get(i).disable();
         }

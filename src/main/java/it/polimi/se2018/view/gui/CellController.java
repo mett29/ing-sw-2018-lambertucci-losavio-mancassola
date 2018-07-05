@@ -28,6 +28,13 @@ public class CellController {
     private ClientMove move;
 
 
+    /**
+     * Constructor
+     * To be used when displaying a cell in a board
+     * @param cell        Cell to be displayed
+     * @param active      If true, the cell will have a clickable button
+     * @param coordinates The coordinates of the cell to be displayed (length must be 2)
+     */
     CellController(Cell cell, boolean active, int[] coordinates){
         this(cell, active);
 
@@ -41,6 +48,11 @@ public class CellController {
         }
     }
 
+    /**
+     * Constructor
+     * @param cell   The cell to be displayed
+     * @param active If true, the cell will have a clickable button
+     */
     CellController(Cell cell, boolean active) {
         colorStyleMap = new EnumMap<>(Color.class);
         colorStyleMap.put(Color.RED, "-fx-background-color: red");
@@ -66,22 +78,23 @@ public class CellController {
 
     private final Map<Color, String> colorStyleMap;
 
-    CellController(Cell cell, boolean active, DiceContainerCoordMove.DiceContainerName name, int[] coordinates){
+    /**
+     * Constructor
+     * To be used when displaying a cell in a DiceContainer
+     * @param cell        Reference to the cell to be displayed
+     * @param active      If true, the cell will have a clickable button
+     * @param name        Type of container (RoundTracker or DraftPool)
+     * @param index       Index of the cell to be displayed
+     */
+    CellController(Cell cell, boolean active, DiceContainerCoordMove.DiceContainerName name, int index){
         this(cell, active);
-
-        if(coordinates.length != 1){
-            throw new InvalidParameterException("`coordinates.length` must be 1 to construct dice container's cells.\n" +
-                    "If you want to construct board's cells, call `CellController(cell, active, coords)`");
-        } else {
-            move = new DiceContainerCoordMove(coordinates[0], name);
-        }
+        move = new DiceContainerCoordMove(index, name);
     }
 
-
-    public void setOnClick(Callback<ClientMove, Void> onClick) {
-        this.onClick = onClick;
-    }
-
+    /**
+     * Disable component
+     * @param disabled If true, disable component
+     */
     public void setDisabled(boolean disabled){
         die.setDisable(disabled);
     }
@@ -104,6 +117,11 @@ public class CellController {
 
     }
 
+    /**
+     * Set background style of the cell with respect to the restriction
+     * @param cell        Reference to the cell whose background is to be set
+     * @param restriction Restriction to be displayed
+     */
     private void setCellStyle(AnchorPane cell, Restriction restriction){
         String sRestriction = restriction.toString();
         switch(sRestriction){
@@ -145,10 +163,18 @@ public class CellController {
         }
     }
 
+    /**
+     * Set text of the die button
+     * @param text String to be set
+     */
     private void setDieText(String text){
         Platform.runLater(() -> die.setText(text));
     }
 
+    /**
+     * Update content of the cell
+     * @param cell New cell state
+     */
     void update(Cell cell) {
         if (cell.getDie() == null) {
             setDieText("");
@@ -160,12 +186,19 @@ public class CellController {
         }
     }
 
+    /**
+     * Activate the cell button
+     * @param eventHandler Function that will be executed when the cell button will be clicked
+     */
     void activate(EventHandler<? super MouseEvent> eventHandler) {
         anchorPane.setDisable(false);
         die.setVisible(true);
         die.setOnMouseClicked(eventHandler);
     }
 
+    /**
+     * Disable cell
+     */
     void disable(){
         anchorPane.setDisable(true);
     }
