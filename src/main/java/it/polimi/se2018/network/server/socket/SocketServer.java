@@ -7,6 +7,8 @@ import it.polimi.se2018.network.server.Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class represents the Socket server, run by the main Server class in the start-up phase
@@ -17,6 +19,8 @@ public class SocketServer extends Thread {
     private ServerSocket serverSocket;
     private Server server;
 
+    private static Logger logger = Logger.getLogger("socketServer");
+
     public SocketServer(Server server) {
         this.server = server;
     }
@@ -24,9 +28,9 @@ public class SocketServer extends Thread {
     public void startServer(int port) {
         try {
             serverSocket = new ServerSocket(port);
-            System.out.println("Socket server is on");
+            logger.log(Level.INFO,"Socket server is on");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
     }
 
@@ -38,7 +42,7 @@ public class SocketServer extends Thread {
                 newClientConnection = serverSocket.accept();
                 (new VirtualClient(this, newClientConnection)).start();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING,e.getMessage());
             }
         }
     }

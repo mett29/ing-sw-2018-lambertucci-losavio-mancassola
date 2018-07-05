@@ -12,6 +12,8 @@ import javafx.application.Application;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is the main client class.
@@ -24,6 +26,8 @@ public class Client {
     private ViewInterface view;
 
     private static String ipAddress;
+
+    private static Logger logger = Logger.getLogger("client");
 
     public static String getIpAddress() {
         return ipAddress;
@@ -82,7 +86,7 @@ public class Client {
     }
 
     private static void printUsageMessage() {
-        System.out.print("Usage: \n\tsagrada.exe [cli/gui] [ip_address]\n");
+        logger.log(Level.INFO, "Usage: \n\tsagrada.exe [cli/gui] [ip_address]\n");
     }
 
     /**
@@ -113,7 +117,7 @@ public class Client {
 
     /**
      * According to the type of message, this method notifies the View (CLI/GUI)
-     * @param message
+     * @param message object to read
      */
     public void notify(Message message){
         switch(message.content){
@@ -149,7 +153,7 @@ public class Client {
 
             default:
                 // Strange message received. This shouldn't happen
-                System.out.println("Strange and stranger things might happen while programming");
+                logger.log(Level.INFO,"Strange and stranger things might happen while programming");
         }
     }
 
