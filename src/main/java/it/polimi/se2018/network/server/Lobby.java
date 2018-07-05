@@ -90,8 +90,8 @@ public class Lobby implements Observer{
             // This line associates each username to the related 4 extracted patterns
             playerPatternsMap.put(player.getName(), extractedPatterns);
             // Getting all the pattern's name that will be displayed to the player
-            List<Board> patterns = new ArrayList<>();
-            List<String> patternNames = new ArrayList<>();
+            ArrayList<Board> patterns = new ArrayList<>();
+            ArrayList<String> patternNames = new ArrayList<>();
 
             // For each extracted pattern, add corresponding board to `patterns`, which will be sent to the client
             extractedPatterns.forEach(parsedBoard -> patterns.add(patternToBoard(parsedBoard)));

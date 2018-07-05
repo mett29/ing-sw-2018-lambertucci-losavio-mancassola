@@ -194,25 +194,17 @@ public class CLI implements ViewInterface {
         }
     }
 
-    /**
-     * Transforms player's information into string
-     * @param player object to read
-     * @return the stringfied player's info
-     */
-    private String[] playerToStrings(Player player){
-        String[] boardString = Stringifier.toStrings(player.getBoard());
-
-        int tokens = player.getToken();
-        List<String> ret = new ArrayList<>();
+    private String[] playerFirstColumn(Player player){
         StringBuilder buffer = new StringBuilder();
-        for(int i = 0; i < tokens; i++){
+
+        String playerDisconnected = player.isDisconnected() ? " (DISCONN.)" : "";
+
+        for(int i = 0; i < player.getToken(); i++){
             buffer.append("*");
         }
         String tokenString = buffer.toString();
 
-        String playerDisconnected = player.isDisconnected() ? " (DISCONN.)" : "";
-
-        String[] firstCol = new String[]{
+        return new String[]{
                 "Player:",
                 "" + player.getName(),
                 player.getName().equals(client.getUsername()) ? "  (YOU)" : "" + playerDisconnected,
@@ -222,9 +214,22 @@ public class CLI implements ViewInterface {
                 " " + tokenString,
                 player.getName().equals(client.getUsername()) ? "Private: " + player.getPrivateObjCard().getColor().toString() : ""
         };
+    }
+
+    /**
+     * Transforms player's information into string
+     * @param player object to read
+     * @return the stringified player's info
+     */
+    private String[] playerToStrings(Player player){
+        String[] boardString = Stringifier.toStrings(player.getBoard());
+
+        List<String> ret = new ArrayList<>();
+
+        String[] firstCol = playerFirstColumn(player);
 
 
-        buffer = new StringBuilder();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("╔");
         for(int i = 0; i < PLAYER_WIDTH - 2; i++){
             buffer.append("═");
