@@ -6,6 +6,8 @@ import it.polimi.se2018.network.client.socket.SocketClient;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class represents the logic of the client.
@@ -21,6 +23,8 @@ public class VirtualClient extends Thread implements SocketClient {
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
 
+    private static Logger logger = Logger.getLogger("virtualClient");
+
     public VirtualClient(SocketServer server, Socket clientConnection) {
         this.server = server;
         this.clientConnection = clientConnection;
@@ -28,7 +32,7 @@ public class VirtualClient extends Thread implements SocketClient {
             this.ois = new ObjectInputStream(this.clientConnection.getInputStream());
             this.oos = new ObjectOutputStream(this.clientConnection.getOutputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
     }
 
@@ -63,7 +67,7 @@ public class VirtualClient extends Thread implements SocketClient {
             oos.writeObject(message);
             oos.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
     }
 }

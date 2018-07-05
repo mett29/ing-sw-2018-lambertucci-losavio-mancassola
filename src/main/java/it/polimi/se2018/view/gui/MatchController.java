@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * JavaFX controller of the match phase
@@ -55,6 +57,8 @@ public class MatchController {
 
     private ProgressBar timerBar;
 
+    private static Logger logger = Logger.getLogger("matchController");
+
 
     /**
      * Constructor
@@ -86,7 +90,7 @@ public class MatchController {
                 AnchorPane playerGui = loader.load();
                 panes.put(player.getKey(), playerGui);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING,e.getMessage());
             }
         }
 
@@ -149,7 +153,7 @@ public class MatchController {
                     stage.setScene(scene);
                     stage.show();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.log(Level.WARNING,e.getMessage());
                 }
             });
         } else {
@@ -337,7 +341,7 @@ public class MatchController {
             draftpoolContainer.getChildren().add(loader.load());
             draftPoolController = loader.getController();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
 
         // load roundtracker container
@@ -348,7 +352,7 @@ public class MatchController {
             roundTrackerContainer.getChildren().add(loader.load());
             roundTrackerController = loader.getController();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
 
         // load toolcards
@@ -361,7 +365,7 @@ public class MatchController {
             try {
                 toolcardContainer.getChildren().add(loader.load());
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING,e.getMessage());
             }
 
         }
@@ -374,7 +378,7 @@ public class MatchController {
             try {
                 publicObjContainer.getChildren().add(loader.load());
             } catch(IOException e){
-                e.printStackTrace();
+                logger.log(Level.WARNING,e.getMessage());
             }
         }
 

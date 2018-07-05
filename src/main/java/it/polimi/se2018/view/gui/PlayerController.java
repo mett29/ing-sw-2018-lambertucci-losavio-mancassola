@@ -11,6 +11,8 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PlayerController {
     private final boolean isMe;
@@ -59,6 +61,8 @@ public class PlayerController {
 
     @FXML
     public void initialize(){
+        Logger logger = Logger.getLogger("playerController");
+
         Board board = player.getBoard();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/BoardGUI.fxml"));
@@ -67,7 +71,7 @@ public class PlayerController {
         try {
             borderPane.setCenter(loader.load());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
         boardController = loader.getController();
 
@@ -86,7 +90,7 @@ public class PlayerController {
             playerInfoContainer.getChildren().add(loader.load());
             pickedController = loader.getController();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,e.getMessage());
         }
 
         // Display private object card color
@@ -98,7 +102,7 @@ public class PlayerController {
                 playerInfoContainer.getChildren().add(new Label("Obiettivo privato:"));
                 playerInfoContainer.getChildren().add(loader.load());
             } catch(IOException e){
-                e.printStackTrace();
+                logger.log(Level.WARNING,e.getMessage());
             }
         }
     }
