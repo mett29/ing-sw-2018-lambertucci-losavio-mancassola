@@ -1,11 +1,17 @@
 .root {
-    -fx-background-color: blanchedalmond;
-    -fx-font-family: serif;
+    -fx-background-color: floralwhite;
+    -fx-font-family: sans-serif;
 }
 
 #title {
     -fx-font-weight: bold;
     -fx-font-size: 200%;
+}
+
+.button {
+    -fx-background-color: #29B6F6;
+    -fx-text-fill: #E1F5FE;
+    -fx-font-weight: 900;
 }
 
 #die-button {
