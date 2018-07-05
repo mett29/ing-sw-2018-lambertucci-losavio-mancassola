@@ -67,7 +67,7 @@ public class Lobby implements Observer{
                     }
                 },
                 () -> updateAll(new TimeResetMessage()),
-                () -> {}
+                () -> { /*do nothing*/ }
                 );
 
         Extractor<ParsedBoard> parsedBoardExtractor = new Extractor<>();

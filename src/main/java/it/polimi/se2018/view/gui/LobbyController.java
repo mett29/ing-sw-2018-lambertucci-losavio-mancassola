@@ -22,7 +22,7 @@ public class LobbyController {
         this.client = client;
     }
 
-    public void onPlayClick(ActionEvent actionEvent) {
+    public void onPlayClick() {
         client.sendQueueRequest();
 
         waitingMessage.setVisible(true);

@@ -6,7 +6,6 @@ import it.polimi.se2018.network.server.CountdownTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -61,7 +60,7 @@ public class MatchController {
 
         this.client = client;
         this.timer = new CountdownTimer(timerValue,
-                () -> {},
+                () -> { /*do nothing*/ },
                 () -> Platform.runLater(() -> timerBar.setProgress(1d)),
                 () -> Platform.runLater(() -> timerBar.setProgress(timerBar.getProgress() - 1d/timerValue))
         );

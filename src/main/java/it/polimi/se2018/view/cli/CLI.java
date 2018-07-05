@@ -9,6 +9,8 @@ import it.polimi.se2018.view.ViewInterface;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -69,7 +71,7 @@ public class CLI implements ViewInterface {
         connections.add("Socket");
         connections.add("RMI");
 
-        makeSelection(connections, (selected) -> {
+        makeSelection(connections, selected -> {
             if(selected == 0){
                 client.setConnection(false);
             } else {
@@ -331,7 +333,7 @@ public class CLI implements ViewInterface {
         displayCards(match.getToolCards());
         List<String> selectables = new ArrayList<>();
         Arrays.stream(match.getToolCards()).map(ToolCard::getTitle).forEachOrdered(selectables::add);
-        makeSelection(selectables, (selectedIndex) -> client.activateToolCard(selectedIndex));
+        makeSelection(selectables, selectedIndex -> client.activateToolCard(selectedIndex));
     }
 
     /**

@@ -2,7 +2,6 @@ package it.polimi.se2018.network.message;
 
 import it.polimi.se2018.model.Board;
 import it.polimi.se2018.model.PrivateObjCard;
-import it.polimi.se2018.network.server.ParsedBoard;
 
 import java.util.List;
 

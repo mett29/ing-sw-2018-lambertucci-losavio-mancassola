@@ -11,6 +11,8 @@ import it.polimi.se2018.network.server.socket.SocketServer;
 
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is the main Server class.
@@ -44,7 +46,7 @@ public class Server {
             Server server = new Server();
             server.startServer(Configuration.getInstance().getSocketPort(), Configuration.getInstance().getRmiPort());
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getLogger("stdout").log(Level.WARNING, e.getMessage());
         }
     }
 
@@ -60,6 +62,10 @@ public class Server {
         rmiServer.startServer(rmiPort);
     }
 
+    /**
+     * Creates a new lobby based on players that were waiting in the queue
+     * @param players object to set
+     */
     void newLobby(List<String> players)  {
         Lobby lobby = new Lobby(players, this);
         for (String username : players) {
@@ -68,26 +74,41 @@ public class Server {
         lobby.startMatch();
     }
 
+    /**
+     * Reconnects the client to the current match if he disconnected or lost connection
+     * @param username object to read
+     * @param clientInterface object to read
+     */
+    private void reconnectClient(String username, ClientInterface clientInterface) {
+        Client client = usernames.get(username);
+        client.setClientInterface(clientInterface);
+        client.setState(Client.State.CONNECTED);
+        Player player = lobbies.get(username).getMatch().getPlayerByName(username);
+        try {
+            player.setDisconnected(false);
+            clientInterface.notify(new LoginResponse(true, lobbies.get(username).getMatch()));
+        } catch (NullPointerException|RemoteException e) {
+            Logger.getLogger("stdout").log(Level.WARNING, e.getMessage());
+        }
+    }
+
+    /**
+     * Adds a new client into the server client list in case of successful login
+     * Reconnects to the match if the state is DISCONNECTED
+     * @param username object to read/set
+     * @param clientInterface object to read/set
+     */
     public void addClient(String username, ClientInterface clientInterface) {
         // Login of the player
         if(lobbies.containsKey(username) && usernames.get(username).getState() == Client.State.CONNECTED) {
             try {
                 clientInterface.notify(new LoginResponse(false, null));
             } catch (RemoteException e1) {
-                //Client disconnected before registering
+                Logger.getLogger("stdout").log(Level.WARNING, e1.getMessage());
             }
         }
         else if(lobbies.containsKey(username) && usernames.get(username).getState() == Client.State.DISCONNECTED) {
-            Client client = usernames.get(username);
-            client.setClientInterface(clientInterface);
-            client.setState(Client.State.CONNECTED);
-            Player player = lobbies.get(username).getMatch().getPlayerByName(username);
-            try {
-                player.setDisconnected(false);
-                clientInterface.notify(new LoginResponse(true, lobbies.get(username).getMatch()));
-            } catch (NullPointerException|RemoteException e) {
-                e.printStackTrace();
-            }
+            reconnectClient(username, clientInterface);
         } else {
             try {
                 Client client = new Client(username, clientInterface);
@@ -98,16 +119,20 @@ public class Server {
                 try {
                     clientInterface.notify(new LoginResponse(false, null));
                 } catch (RemoteException e1) {
-                    //Client disconnected before registering
+                    Logger.getLogger("stdout").log(Level.WARNING, e1.getMessage());
                 }
             } catch (RemoteException e) {
-                //Client disconnected while server was notifying ok
+                Logger.getLogger("stdout").log(Level.WARNING, e.getMessage());
                 onDisconnect(username);
             }
         }
         System.out.println(usernames);
     }
 
+    /**
+     * Disconnets the client from the match
+     * @param username object to read/remove
+     */
     public void onDisconnect(String username) {
         if(!lobbies.containsKey(username)) {
             queue.remove(username);
@@ -125,11 +150,16 @@ public class Server {
                 if(usernames.containsKey(username))
                     while(lobbies.get(username).getMatch().getPlayerQueue().remove(player));
             } catch (NullPointerException e) {
-                e.printStackTrace();
+                Logger.getLogger("stdout").log(Level.WARNING, e.getMessage());
             }
         }
     }
 
+    /**
+     * Sends a message to the player's client
+     * @param username object to read
+     * @param message object to send
+     */
     public void send(String username, Message message){
         if(usernames.containsKey(username) && usernames.get(username).getState() == Client.State.CONNECTED) {
             usernames.get(username).notify(message);

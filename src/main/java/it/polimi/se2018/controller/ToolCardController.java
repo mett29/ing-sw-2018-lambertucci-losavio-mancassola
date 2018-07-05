@@ -378,6 +378,7 @@ class ToolCardController {
                 if(value > 0 && value < 7) {
                     Action a = new SetValue(tcc.memory.get(1), value);
                     a.perform();
+                    pm.getActor().setPickedDie(tcc.memory.get(1).get());
                     return new PickState(EnumSet.of(Component.BOARD),EnumSet.of(CellState.EMPTY, CellState.NEAR));
                 } else {
                     return new PlayerState(EnumState.REPEAT);

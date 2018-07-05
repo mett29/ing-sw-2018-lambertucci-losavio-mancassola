@@ -36,7 +36,7 @@ public class JsonParser {
         // Loading the standard patterns' file
         Gson gson = new GsonBuilder().create();
         JsonReader jsonBoard = new JsonReader(new InputStreamReader(getClass().getResourceAsStream("/boards.json")));
-        ParsedBoard[] parsedBoards = gson.fromJson(jsonBoard, ParsedBoard[].class);
+        ParsedBoard[] parsedBoardsArray = gson.fromJson(jsonBoard, ParsedBoard[].class);
         jsonBoard.close();
 
         // Loading the patterns' file specified by user
@@ -46,12 +46,12 @@ public class JsonParser {
             JsonReader jsonUserBoard = new JsonReader(new FileReader(dir + "/" + patternPath));
             ParsedBoard[] userParsedBoards = gson.fromJson(jsonUserBoard, ParsedBoard[].class);
             // Join files
-            parsedBoards = Stream.concat(Arrays.stream(parsedBoards), Arrays.stream(userParsedBoards))
+            parsedBoardsArray = Stream.concat(Arrays.stream(parsedBoardsArray), Arrays.stream(userParsedBoards))
                     .toArray(ParsedBoard[]::new);
             jsonUserBoard.close();
         }
 
-        return Arrays.asList(parsedBoards);
+        return Arrays.asList(parsedBoardsArray);
     }
 
     /**
