@@ -11,12 +11,12 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static it.polimi.se2018.view.cli.InputManager.selectionMap;
 import static java.lang.Integer.max;
 
 /**
+ * This class represent the Command-Line Interface
  * @author MicheleLambertucci
  */
 public class CLI implements ViewInterface {
@@ -30,11 +30,17 @@ public class CLI implements ViewInterface {
 
     public CLI(Client client){ this.client = client; }
 
+    /**
+     * Launches the Command-Line Interface
+     */
     public void launch(){
         askLogin();
         askTypeOfConnection();
     }
 
+    /**
+     * Asks the player's username to use during the match
+     */
     private void askLogin(){
         System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━┓");
         System.out.println("    ┃       = LOGIN =       ┃");
@@ -53,6 +59,11 @@ public class CLI implements ViewInterface {
         client.setUsername(username);
     }
 
+    /**
+     * Asks to the player what type of connection he wants to use.
+     * Selection 0: Socket
+     * Selection 1: RMI
+     */
     private void askTypeOfConnection(){
         List<String> connections = new ArrayList<>();
         connections.add("Socket");
@@ -74,6 +85,11 @@ public class CLI implements ViewInterface {
 
     }
 
+    /**
+     * Sets the current match to the CLI and shows the match
+     * @param match object to set
+     * @param timerValue not used in CLI
+     */
     @Override
     public void onMatchStart(Match match, int timerValue) {
         this.match = match;
@@ -84,12 +100,15 @@ public class CLI implements ViewInterface {
         }
     }
 
+    /**
+     * Four boards will be shown and the player must choose one
+     * @param message object received
+     */
     @Override
     public void onPatternRequest(PatternRequest message) {
         List<String> selections = new ArrayList<>();
 
         System.out.println("La tua carta obiettivo privata: " + message.privateObjCard.getColor());
-
         System.out.println();
 
         int iteration = 0;
@@ -107,6 +126,10 @@ public class CLI implements ViewInterface {
         );
     }
 
+    /**
+     * Response of undo request
+     * @param message object received
+     */
     @Override
     public void onUndoResponse(UndoResponse message) {
         if(message.ok)
@@ -115,6 +138,10 @@ public class CLI implements ViewInterface {
             System.out.println("Non puoi annullare la mossa in questo momento");
     }
 
+    /**
+     * Shows the current match in player's console
+     * @param match object to read
+     */
     private void displayMatch(Match match){
         System.out.println("+ ROUND TRACKER +                                      + DRAFT POOL +");
         printLines(Stringifier.display2(Stringifier.diceContainerToStrings(match.getRoundTracker(), false, null), Stringifier.diceContainerToStrings(match.getDraftPool(), false, null)));
@@ -127,18 +154,29 @@ public class CLI implements ViewInterface {
             System.out.println(match.getPlayerQueue().peek().getPickedDie());
     }
 
+    /**
+     * Shows a set of 3 cards
+     * @param cards object to read
+     */
     private static void displayCards(Card[] cards){
         if(cards.length != 3)
             throw new RuntimeException("cards.length must be 3");
         printLines(Stringifier.display2(Stringifier.display2(Stringifier.toStrings(cards[0]), Stringifier.toStrings(cards[1])), Stringifier.toStrings(cards[2])));
     }
 
+    /**
+     * @param lines object to print
+     */
     private static void printLines(String[] lines){
         for (String line : lines) {
             System.out.println(line);
         }
     }
 
+    /**
+     * Shows all players of the match in the console
+     * @param players object to read
+     */
     private void displayPlayers(Player[] players){
         int rows = players.length / 2;
         for (int i = 0; i < rows; i++) {
@@ -149,6 +187,11 @@ public class CLI implements ViewInterface {
         }
     }
 
+    /**
+     * Transforms player's information into string
+     * @param player object to read
+     * @return the stringfied player's info
+     */
     private String[] playerToStrings(Player player){
         String[] boardString = Stringifier.toStrings(player.getBoard());
 
@@ -211,6 +254,12 @@ public class CLI implements ViewInterface {
         return ret.toArray(new String[PLAYER_HEIGHT]);
     }
 
+    /**
+     * Called when a player's state is changed
+     * Closes the current input
+     * @param oldState object to set (for REPEAT)
+     * @param newState object to set
+     */
     private void onChangeState(PlayerState oldState, PlayerState newState){
         InputManager.closeInput();
         switch(newState.get()){
@@ -236,6 +285,10 @@ public class CLI implements ViewInterface {
         }
     }
 
+    /**
+     * Shows the current player's options
+     * Called when the player's state is YOUR_TURN
+     */
     private void onYourTurnState() {
         System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
         System.out.println("    ┃              = TOCCA A TE =            ┃");
@@ -270,36 +323,50 @@ public class CLI implements ViewInterface {
         );
     }
 
+    /**
+     * Shows to the player all possible selectable toolcards
+     * Called when the player's choose '1' in YOUR_TURN
+     */
     private void askToolCardActivation() {
         displayCards(match.getToolCards());
         List<String> selectables = new ArrayList<>();
         Arrays.stream(match.getToolCards()).map(ToolCard::getTitle).forEachOrdered(selectables::add);
-        makeSelection(selectables, (selectedIndex) -> {
-            client.activateToolCard(selectedIndex);
-        });
+        makeSelection(selectables, (selectedIndex) -> client.activateToolCard(selectedIndex));
     }
 
+    /**
+     * The player will repeat the last action
+     * @param oldState object to set
+     */
     private void onRepeatState(PlayerState oldState) {
         System.out.println("Mossa non valida! Riprova.");
         setState(oldState);
     }
 
+    /**
+     * Shows to the player the possible actions: +1 or -1
+     * Called when the player's state is UPDOWN
+     */
     private void onUpDownState() {
         System.out.println("Do you want to add or subtract 1 to the die value?");
         List<String> selections = Arrays.stream(new String[]{"+1", "-1"}).collect(Collectors.toList());
-        makeSelection(selections, (selection) -> {
-            client.sendMove(new UpDownMove(selection == 0));
-        });
+        makeSelection(selections, (selection) -> client.sendMove(new UpDownMove(selection == 0)));
     }
 
+    /**
+     * Shows to the player the possible actions: Yes or No
+     * Called when the player's state is YESNO
+     */
     private void onYesNoState() {
         System.out.println("Do you want to continue?");
         List<String> selections = Arrays.stream(new String[]{"Yes", "No"}).collect(Collectors.toList());
-        makeSelection(selections, (selection) -> {
-            client.sendMove(new YesNoMove(selection == 0));
-        });
+        makeSelection(selections, (selection) -> client.sendMove(new YesNoMove(selection == 0)));
     }
 
+    /**
+     * Shows to the player the possible actions: 1 .. 6 value
+     * Called when the player's state is VALUE
+     */
     private void onValueState() {
         System.out.println("Now pick a value from 1 to 6");
 
@@ -316,6 +383,11 @@ public class CLI implements ViewInterface {
         );
     }
 
+    /**
+     * Shows to the player the container or board to use
+     * Called when the player's state is PICK
+     * @param newState object to set
+     */
     private void onPickState(PlayerState newState){
         PickState pState= (PickState) newState;
 
@@ -335,6 +407,12 @@ public class CLI implements ViewInterface {
         }
     }
 
+    /**
+     * Shows the dice container to the player
+     * @param diceContainer DRAFTPOOL or ROUNDTRACKER
+     * @param cellStates FULL, EMPTY and/or NEAR
+     * @param isDraftPool boolean to set
+     */
     private void pickDiceContainer(DiceContainer diceContainer, Set<CellState> cellStates, boolean isDraftPool) {
         printLines(Stringifier.diceContainerToStrings(diceContainer, true, cellStates));
         System.out.println(Stringifier.pickContainerMessage(cellStates));
@@ -342,17 +420,26 @@ public class CLI implements ViewInterface {
         InputManager.askDiceContainer(diceContainer, cellStates, isDraftPool, client);
     }
 
+    /**
+     * Shows the board to the player
+     * @param board object to read
+     * @param cellStates FULL, EMPTY and/or NEAR
+     */
     private void pickBoard(Board board, Set<CellState> cellStates) {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("Now s");
-        buffer.append(Stringifier.toString(cellStates));
-        buffer.append(" (type the corresponding character)");
-        System.out.println(buffer.toString());
+        String buffer = "Now s" +
+                Stringifier.toString(cellStates) +
+                " (type the corresponding character)";
+        System.out.println(buffer);
         printLines(Stringifier.boardToStrings(board, true, cellStates));
 
         InputManager.askBoard(board, cellStates, client);
     }
 
+    /**
+     * Makes all possible selection based on 'selectables'
+     * @param selectables object to read
+     * @param onSelected selection to read
+     */
     private void makeSelection(List selectables, Consumer<Integer> onSelected){
         StringBuilder buffer = new StringBuilder();
         for(int i = 0; i < selectables.size(); i++){
@@ -366,46 +453,11 @@ public class CLI implements ViewInterface {
         InputManager.ask(selectables, onSelected);
     }
 
-    private void printPick(PickState pState){
-        Set<Component> containers = pState.getActiveContainers();
-        Set<CellState> states = pState.getCellStates();
-        String[] columnBoard = null;
-        if(containers.contains(Component.BOARD)){
-            columnBoard = playerToStrings(getMyself(match));
-        }
-
-        String[] roundTracker = null;
-        if(containers.contains(Component.ROUNDTRACKER)){
-            String title = "+ ROUND TRACKER +";
-            roundTracker = Stream.concat(Arrays.stream(new String[]{title}), Arrays.stream(Stringifier.diceContainerToStrings(match.getRoundTracker(), false, null))).toArray(String[]::new);
-        }
-
-        String[] draftPool = null;
-        if(containers.contains(Component.DRAFTPOOL)){
-            String title = "+ DRAFT POOL +";
-            draftPool = Stream.concat(Arrays.stream(new String[]{title}), Arrays.stream(Stringifier.diceContainerToStrings(match.getDraftPool(), false, null))).toArray(String[]::new);
-        }
-
-        String[] col2 = null;
-        if (draftPool != null && roundTracker != null) {
-            col2 = Stream.of(Arrays.stream(roundTracker), Arrays.stream(new String[]{""}), Arrays.stream(draftPool))
-                    .flatMap(s -> s)
-                    .toArray(String[]::new);
-        } else if(draftPool != null){
-            col2 = draftPool;
-        } else if(roundTracker != null){
-            col2 = roundTracker;
-        }
-
-        if(columnBoard != null && col2 != null) {
-            printLines(Stringifier.display2(columnBoard, col2));
-        } else if(columnBoard != null){
-            printLines(columnBoard);
-        } else if(col2 != null){
-            printLines(col2);
-        }
-    }
-
+    /**
+     * Returns the owner of the client
+     * @param m object to read
+     * @return player
+     */
     private Player getMyself(Match m){
         return m.getPlayers().stream()
                 .filter(p -> p.getName().equals(client.getUsername()))
@@ -413,9 +465,9 @@ public class CLI implements ViewInterface {
     }
 
     /**
-     * What to do when logged in successful?
-     * Print a "waiting" message
-     * @param isOk
+     * Checks if the player is connected successfully
+     * If the nickname is already taken, launch() will be called again
+     * @param isOk boolean to read
      */
     public void onConnect(boolean isOk){
         if (isOk) {
@@ -433,6 +485,11 @@ public class CLI implements ViewInterface {
         }
     }
 
+    /**
+     * Shows the match to the player when the match state is changed
+     * Displays the scores if the match is finished
+     * @param newMatch object to read
+     */
     private void onNewMatchState(Match newMatch) {
         if(newMatch.isFinished()){
             displayScores(newMatch);
@@ -445,29 +502,50 @@ public class CLI implements ViewInterface {
         }
     }
 
+    /**
+     * Shows the scores to all players
+     * @param newMatch object to read
+     */
     private void displayScores(Match newMatch) {
         for(Player p : newMatch.getPlayers()) {
             printLines(Stringifier.scoreToStrings(p, newMatch.getScore(p)));
         }
     }
 
+    /**
+     * Shows to the player the response of the toolcard activation
+     * In case the player doesn't have enough tokens, the toolcard won't be activated
+     * @param isOk boolean to read
+     */
     public void onToolCardActivationResponse(boolean isOk){
         if(!isOk) {
             System.out.println("Non sono disponibili abbastanza token per attivare la Toolcard");
         }
     }
 
+    /**
+     * Sets a new state to the player
+     * @param state object to set
+     */
     public void setState(PlayerState state) {
         PlayerState oldState = this.state;
         this.state = state;
         onChangeState(oldState, state);
     }
 
+    /**
+     * Updates the current match
+     * @param newMatch object to set
+     */
     public void updateMatch(Match newMatch) {
         match = newMatch;
         onNewMatchState(match);
     }
 
+    /**
+     * Shows connection error to the player if there is any connection issue
+     * @param e exception to read
+     */
     @Override
     public void onConnectionError(Exception e) {
         System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
@@ -484,6 +562,9 @@ public class CLI implements ViewInterface {
         // do nothing
     }
 
+    /**
+     * This class represents all information stringfied
+     */
     public static class Stringifier{
         private Stringifier(){}
 
@@ -548,6 +629,13 @@ public class CLI implements ViewInterface {
             return ret.toArray(new String[0]);
         }
 
+        /**
+         * Creates a String[] array which represents a contrainer that can be printed on console.
+         * @param container object to read
+         * @param printSelectors boolean to read
+         * @param cellStates FULL, EMPTY and/or NEAR
+         * @return "Stringfied" version of the container.
+         */
         private static String[] diceContainerToStrings(DiceContainer container, boolean printSelectors, Set<CellState> cellStates){
             List<String> ret = new ArrayList<>();
 
@@ -618,6 +706,15 @@ public class CLI implements ViewInterface {
             return boardToStrings(board, false, null);
         }
 
+        /**
+         * Creates a String which represents a cell that can be printed on console.
+         * @param cell object to read
+         * @param printNumbers boolean to read
+         * @param x coordinate to read
+         * @param y coordinate to read
+         * @param accepted check to read
+         * @return "Stringfied" version of the cell.
+         */
         private static String cellToString(Cell cell, boolean printNumbers, int x, int y, boolean accepted){
             StringBuilder buffer = new StringBuilder();
             if(cell.getRestriction() != null) {
@@ -674,6 +771,13 @@ public class CLI implements ViewInterface {
             return boardString.toArray(new String[8]);
         }
 
+        /**
+         * Checks if the cell is accepted or not
+         * @param diceContainer object to read
+         * @param index int to read
+         * @param cellStates FULL, EMPTY and/or NEAR
+         * @return true if accepted, false otherwise
+         */
         public static boolean acceptedCell(DiceContainer diceContainer, int index, Set<CellState> cellStates){
             if(cellStates == null)
                 return true;
@@ -687,6 +791,14 @@ public class CLI implements ViewInterface {
             return true;
         }
 
+        /**
+         * Checks if the cell is accepted or not
+         * @param board object to read
+         * @param x coordinate to read
+         * @param y coordinate to read
+         * @param cellStates FULL, EMPTY and/or NEAR
+         * @return true if accepted, false otherwise
+         */
         public static boolean acceptedCell(Board board, int x, int y, Set<CellState> cellStates) {
             if(cellStates == null){
                 return true;
@@ -744,6 +856,11 @@ public class CLI implements ViewInterface {
             return ret.toArray(new String[0]);
         }
 
+        /**
+         * Creates a String  which represents a die that can be printed on console.
+         * @param die object to read
+         * @return "Stringfied" version of the die
+         */
         private static String dieToString(Die die){
             StringBuilder buffer = new StringBuilder();
             int value = die.getValue();
@@ -752,7 +869,12 @@ public class CLI implements ViewInterface {
             return buffer.toString();
         }
 
-        public static String pickContainerMessage(Set<CellState> cellStates){
+        /**
+         * Shows a message based on CellState
+         * @param cellStates EMPTY or FULL
+         * @return string buffer
+         */
+        static String pickContainerMessage(Set<CellState> cellStates){
             StringBuilder buffer = new StringBuilder();
             buffer.append("Select a");
             if(cellStates.contains(CellState.EMPTY)) {
@@ -782,6 +904,12 @@ public class CLI implements ViewInterface {
             return buffer.toString();
         }
 
+        /**
+         * Creates a String[] array that represent the score to print on console
+         * @param player object to read
+         * @param score object to read
+         * @return "Stringfied" version of the scores
+         */
         private static String[] scoreToStrings(Player player, Score score) {
             List<String> ret = new ArrayList<>();
             StringBuilder buffer = new StringBuilder();
