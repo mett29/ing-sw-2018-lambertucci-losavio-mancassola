@@ -105,7 +105,7 @@ public class GUI extends Application implements ViewInterface {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/PatternPicker.fxml"));
-            loader.setControllerFactory(c -> new PatternPickController(message.boards, client, message.privateObjCard));
+            loader.setControllerFactory(c -> new PatternPickController(message.boards, message.boardNames, client, message.privateObjCard));
             Parent matchParent = loader.load();
 
             stage.getScene().setRoot(matchParent);

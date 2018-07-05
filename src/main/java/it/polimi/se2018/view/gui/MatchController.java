@@ -4,13 +4,13 @@ import it.polimi.se2018.model.*;
 import it.polimi.se2018.network.client.*;
 import it.polimi.se2018.network.server.CountdownTimer;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -176,6 +176,9 @@ public class MatchController {
             dialog.setHeaderText("Vuoi fare la prossima mossa?");
             dialog.setContentText("Scelta:");
 
+            dialog.getDialogPane().getScene().getWindow().setOnCloseRequest(Event::consume);
+            dialog.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, Event::consume);
+
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(value -> client.sendMove(new YesNoMove(choices.indexOf(value) == 0)));
         });
@@ -192,6 +195,10 @@ public class MatchController {
             dialog.setTitle(TOOLCARD_MESSAGE_TITLE);
             dialog.setHeaderText("Vuoi aggiungere o sottrarre uno al dado?");
             dialog.setContentText("Scelta:");
+
+            dialog.getDialogPane().getScene().getWindow().setOnCloseRequest(Event::consume);
+            dialog.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, Event::consume);
+
 
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(value -> client.sendMove(new UpDownMove(choices.indexOf(value) == 0)));
@@ -213,6 +220,10 @@ public class MatchController {
             dialog.setTitle(TOOLCARD_MESSAGE_TITLE);
             dialog.setHeaderText("Scegli il valore che vuoi assegnare");
             dialog.setContentText("Valore:");
+
+            dialog.getDialogPane().getScene().getWindow().setOnCloseRequest(Event::consume);
+            dialog.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, Event::consume);
+
 
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(value -> client.sendMove(new ValueMove(choices.indexOf(value) + 1)));

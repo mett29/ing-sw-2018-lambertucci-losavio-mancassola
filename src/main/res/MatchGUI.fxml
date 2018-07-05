@@ -55,16 +55,16 @@
       </bottom>
       <right>
          <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-            <Tab text="ToolCards">
+            <Tab text="Carte Obiettivo">
                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                  <VBox fx:id="toolcardContainer" prefHeight="541.0" prefWidth="200.0"
+                  <VBox fx:id="publicObjContainer" prefHeight="541.0" prefWidth="200.0"
                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                         AnchorPane.topAnchor="0.0"/>
                </AnchorPane>
             </Tab>
-            <Tab text="Carte Obiettivo">
+            <Tab text="ToolCards">
                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                  <VBox fx:id="publicObjContainer" prefHeight="541.0" prefWidth="200.0"
+                  <VBox fx:id="toolcardContainer" prefHeight="541.0" prefWidth="200.0"
                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                         AnchorPane.topAnchor="0.0"/>
                </AnchorPane>

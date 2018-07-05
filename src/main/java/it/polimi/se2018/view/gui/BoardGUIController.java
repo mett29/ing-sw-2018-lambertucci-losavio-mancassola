@@ -29,6 +29,7 @@ public class BoardGUIController {
 
     @FXML
     public void initialize(){
+        gridPane.setGridLinesVisible(true);
         for(int y = 0; y < 4; y++){
             for(int x = 0; x < 5; x ++){
                 final Cell cell = board.getCell(x, y);

@@ -60,8 +60,11 @@ public class Lobby implements Observer{
         //setup timer
         timer = new CountdownTimer(Configuration.getInstance().getInGameTimer(),
                 () -> {
-                    String playerToPass = controller.getMatch().getPlayerQueue().peek().getName();
-                    onReceive(new PassRequest(playerToPass));
+                    Match match = controller.getMatch();
+                    if(match != null && match.getPlayerQueue() != null && match.getPlayerQueue().peek() != null) {
+                        String playerToPass = match.getPlayerQueue().peek().getName();
+                        onReceive(new PassRequest(playerToPass));
+                    }
                 },
                 () -> updateAll(new TimeResetMessage()),
                 () -> {}

@@ -32,7 +32,7 @@ public class PlayerController {
     public void update(Player player){
         this.player = player;
         Platform.runLater(() -> playerName.setText(player.getName() + (player.isDisconnected() ? " (DISCONN.)" : "")));
-        tokens.setProgress(player.getToken() / 10D);
+        Platform.runLater(() -> tokens.setText("Tokens: " + player.getToken()));
 
         Board board = player.getBoard();
         boardController.update(board);
@@ -43,8 +43,8 @@ public class PlayerController {
     private VBox playerInfoContainer;
     @FXML
     private Label playerName;
-    @FXML
-    private ProgressBar tokens;
+
+    private Label tokens;
     @FXML
     private BorderPane borderPane;
 
@@ -63,7 +63,9 @@ public class PlayerController {
         boardController = loader.getController();
 
         playerName.setText(player.getName() + (player.isDisconnected() ? " (DISCONN.)" : ""));
-        tokens.setProgress(player.getToken() / 10D);
+
+        tokens = new Label(("Tokens: " + player.getToken()));
+        playerInfoContainer.getChildren().add(tokens);
 
         // deactivate pane if it isn't "mine"
         borderPane.setDisable(!isMe);
@@ -84,6 +86,7 @@ public class PlayerController {
             loader = new FXMLLoader(getClass().getResource("/CellGUI.fxml"));
             loader.setControllerFactory(c -> new CellController(new Cell(new Restriction(privateColor)), false));
             try {
+                playerInfoContainer.getChildren().add(new Label("Obiettivo privato:"));
                 playerInfoContainer.getChildren().add(loader.load());
             } catch(IOException e){
                 e.printStackTrace();
