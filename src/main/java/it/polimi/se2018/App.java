@@ -1,5 +1,8 @@
 package it.polimi.se2018;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Hello world!
  *
@@ -8,6 +11,8 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        Logger logger = Logger.getLogger("app");
+
+        logger.log(Level.INFO, "Hello World!" );
     }
 }

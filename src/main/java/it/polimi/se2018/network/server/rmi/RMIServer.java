@@ -7,6 +7,8 @@ import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class represents the RMI server, started by the main Server class in the start-up phase.
@@ -16,6 +18,8 @@ import java.rmi.registry.LocateRegistry;
 public class RMIServer implements Remote {
 
     private Server server;
+
+    private static Logger logger = Logger.getLogger("rmiServer");
 
     public RMIServer(Server server) {
         this.server = server;
@@ -27,9 +31,9 @@ public class RMIServer implements Remote {
         ServerImplementation serverImplementation = new ServerImplementation(server);
         try {
             Naming.rebind("//localhost/Server", serverImplementation);
-            System.out.println("RMI server is on");
+            logger.log(Level.INFO,"RMI server is on");
         } catch(RemoteException | MalformedURLException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, e.getMessage());
         }
     }
 }
