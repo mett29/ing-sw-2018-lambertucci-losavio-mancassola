@@ -22,7 +22,7 @@ class InputManager {
 
     private Thread thread;
 
-    static final String selectionMap = "ABCDEFGHIJKLMNOPQRST";
+    static final String SELECTION_MAP = "ABCDEFGHIJKLMNOPQRST";
 
     private static InputManager instance;
     private static InputManager getInstance(){
@@ -76,7 +76,7 @@ class InputManager {
                     }
                     if (sc.hasNext(ptn)) {
                         String found = sc.next(ptn);
-                        selection = selectionMap.indexOf(found.toUpperCase().charAt(0));
+                        selection = SELECTION_MAP.indexOf(found.toUpperCase().charAt(0));
                         if (!(CLI.Stringifier.acceptedCell(board, selection % 5, selection / 5, cellStates))) {
                             String message = "The cell you selected is not acceptable. S" +
                                     CLI.Stringifier.toString(cellStates) +
@@ -122,7 +122,7 @@ class InputManager {
                     }
                     if (sc.hasNext(ptn)) {
                         String found = sc.next(ptn);
-                        selection = selectionMap.indexOf(found.toUpperCase().charAt(0));
+                        selection = SELECTION_MAP.indexOf(found.toUpperCase().charAt(0));
                         if (selection < 0 || selection >= diceContainer.getMaxSize() || !CLI.Stringifier.acceptedCell(diceContainer, selection, cellStates)) {
                             System.out.println("Unacceptable selection. " + CLI.Stringifier.pickContainerMessage(cellStates));
                             selection = -1;

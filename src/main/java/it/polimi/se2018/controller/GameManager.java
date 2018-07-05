@@ -13,7 +13,7 @@ class GameManager implements Comparator<Score>{
     /**
      * Constructor
      * Create and initialize the Match
-     * @param lobby
+     * @param lobby object to set
      */
     GameManager(Lobby lobby) {
         this.match = new Match(lobby.getPlayers(), extractToolCards(), extractPublicObjCards(), lobby);
@@ -98,7 +98,7 @@ class GameManager implements Comparator<Score>{
      */
     void declareWinner() {
         List<Player> players = new ArrayList<>();
-        LinkedList<Player> q = compareQueue();
+        LinkedList<Player> q = new LinkedList<>(roundManager.newQueue());
 
         players.addAll(match.getPlayers());
 
@@ -179,33 +179,6 @@ class GameManager implements Comparator<Score>{
      */
     Match getMatch() {
         return match;
-    }
-
-    /**
-     * Creates a new round passing the first turn to the player next to him (clockwise procedure).
-     */
-    private LinkedList<Player> compareQueue(){
-        LinkedList<Player> playerQueue = new LinkedList<>();
-
-        List<Player> playerList = match.getPlayers();
-        int turnNumber = match.getRoundTracker().getCurrentSize();
-        int playerSize = playerList.size();
-        Queue<Integer> playerIndexes = new LinkedList<>();
-
-        for(int i = 0; i < playerSize; i++){
-            playerIndexes.add((i + turnNumber) % playerSize);
-        }
-
-        Integer[] indexes = playerIndexes.toArray(new Integer[playerSize]);
-
-        for(int i = 0; i < 2 * playerIndexes.size(); i++){
-            if(i < playerIndexes.size()){
-                playerQueue.add(playerList.get(indexes[i]));
-            } else {
-                playerQueue.add(playerList.get(indexes[2 * playerSize - i - 1]));
-            }
-        }
-        return playerQueue;
     }
 
     @Override

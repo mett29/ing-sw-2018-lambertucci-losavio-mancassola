@@ -25,16 +25,6 @@ public class PlayerMove<T> {
     }
 
     /**
-     * Set the state of the player who created the action
-     * @param state State to be setted
-     */
-    public void setActorState(PlayerState state){
-        if(state == null)
-            throw new NullPointerException("`state` must be not null");
-        actor.setState(state);
-    }
-
-    /**
      * @return the actor of the move
      */
     public Player getActor() { return actor; }

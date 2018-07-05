@@ -370,7 +370,7 @@ class ToolCardController {
                 a.perform();
                 Die extractedDie = tcc.match.extractDie();
                 tcc.memory.add(asDieCoord(extractedDie));
-                pm.getActor().setPickedDie(extractedDie);
+                pm.getActor().setPickedDie(tcc.memory.get(1).get());
                 return new PlayerState(EnumState.VALUE);
             });
             queue10.add((tcc, pm) -> {

@@ -42,16 +42,4 @@ public class PlayerMoveTest {
 
         assertNotEquals(move, playerMove2.getMove());
     }
-
-    @Test
-    public void stateGetSetTest() throws Exception {
-        PlayerMove<Integer> playerMove = new PlayerMove<>(player, 1);
-
-        try {
-            playerMove.setActorState(null);
-            fail();
-        } catch (NullPointerException e) {
-            //do nothing
-        }
-    }
 }

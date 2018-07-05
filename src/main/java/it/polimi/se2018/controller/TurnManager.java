@@ -85,58 +85,77 @@ class TurnManager {
     }
 
     /**
+     * HELPER: Handles a normal move
+     * @param currentPlayer object to set
+     * @param move object to read
+     */
+    private void handleNormalMove(Player currentPlayer, PlayerMove move) {
+        PlayerState newState;
+        DieCoord coord = (DieCoord) move.getMove();
+        //If 'memory' is empty, add the first DieCoord
+        if (memory.isEmpty()) {
+            memory.add(coord);
+            move.getActor().setPickedDie(coord.get());
+            //Sets the new state to 'PICK' on current player's board and he must select only EMPTY cells NEAR dice
+            newState = new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
+        } else {
+            memory.add(coord);
+            if (memory.size() != 2) {
+                throw new InvalidParameterException("playerMove must contain DieCoord[2]");
+            }
+            //The player decided the cell to put the die inside. Switch action will be performed
+            Action moveDice = new Switch(memory.get(0), memory.get(1));
+            PlacementError err = moveDice.check();
+            int diceOnBoard = currentPlayer.getBoard().countDice();
+            //Checks if the board is empty or not. The player's first die must be positioned on an EDGE.
+            if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
+                newState = new PlayerState(EnumState.REPEAT);
+                memory.remove(1);
+            } else {
+                //Perform the action if all conditions are met
+                moveDice.perform();
+                //Remove 'PICK_DIE' possible action from possibleActions of the current player, so he can't do this action anymore on the current turn
+                currentPlayer.possibleActionsRemove(PossibleAction.PICK_DIE);
+                move.getActor().setPickedDie(null);
+                //Actions finished, the new state is 'YOUR_TURN'
+                newState = new PlayerState(EnumState.YOUR_TURN);
+            }
+        }
+        currentPlayer.setState(newState);
+    }
+
+    /**
+     * HELPER: Handles a toolcard move
+     * @param currentPlayer object to set
+     * @param move object to apply
+     */
+    private void handleToolcardMove(Player currentPlayer, PlayerMove move) {
+        PlayerState newState = toolcard.handleMove(move);
+        if(newState.get() == EnumState.YOUR_TURN) {
+            toolcard = null;
+            currentPlayer.deactivateToolcard();
+        }
+        currentPlayer.setState(newState);
+    }
+
+    /**
      * Process a move of the player.
      * @param move of the player
      * @return true if the state is 'YOUR_TURN'
      */
     boolean handleMove(PlayerMove move) {
         Player currentPlayer = match.getPlayerQueue().peek();
-        PlayerState newState = currentPlayer.getState();
 
         boolean isToolcardActive = (currentPlayer.getActivatedToolcard() != null);
 
         //Checks if there is a toolcard active and the current player has 'ACTIVATE_TOOLCARD' possible action
         if(isToolcardActive && currentPlayer.getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD)) {
-            newState = toolcard.handleMove(move);
-            if(newState.get() == EnumState.YOUR_TURN) {
-                toolcard = null;
-                currentPlayer.deactivateToolcard();
-            }
+            handleToolcardMove(currentPlayer, move);
         //Checks if the current player's state is not 'YOUR_TURN' and the current player has 'PICK_DIE' possible action
         } else if(currentPlayer.getState().get() != EnumState.YOUR_TURN && currentPlayer.getPossibleActions().contains(PossibleAction.PICK_DIE)) {
-            DieCoord coord = (DieCoord) move.getMove();
-            //If 'memory' is empty, add the first DieCoord
-            if (memory.isEmpty()) {
-                memory.add(coord);
-                move.getActor().setPickedDie(coord.get());
-                //Sets the new state to 'PICK' on current player's board and he must select only EMPTY cells NEAR dice
-                newState = new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY, CellState.NEAR));
-            } else {
-                memory.add(coord);
-                if (memory.size() != 2) {
-                    throw new InvalidParameterException("playerMove must contain DieCoord[2]");
-                }
-                //The player decided the cell to put the die inside. Switch action will be performed
-                Action moveDice = new Switch(memory.get(0), memory.get(1));
-                PlacementError err = moveDice.check();
-                int diceOnBoard = currentPlayer.getBoard().countDice();
-                //Checks if the board is empty or not. The player's first die must be positioned on an EDGE.
-                if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
-                    newState = new PlayerState(EnumState.REPEAT);
-                    memory.remove(1);
-                } else {
-                    //Perform the action if all conditions are met
-                    moveDice.perform();
-                    //Remove 'PICK_DIE' possible action from possibleActions of the current player, so he can't do this action anymore on the current turn
-                    currentPlayer.possibleActionsRemove(PossibleAction.PICK_DIE);
-                    move.getActor().setPickedDie(null);
-                    //Actions finished, the new state is 'YOUR_TURN'
-                    newState = new PlayerState(EnumState.YOUR_TURN);
-                }
-            }
+            handleNormalMove(currentPlayer, move);
         }
 
-        currentPlayer.setState(newState);
         return currentPlayer.getState().get() == EnumState.YOUR_TURN;
     }
 
@@ -238,7 +257,7 @@ class TurnManager {
      */
     private static class Checks {
         private Checks(){}
-        static final Map<Integer, BiFunction<Match, PlayerMove, Boolean>> checks;
+        static final Map<Integer, BiFunction<Match, PlayerMove, Boolean>> checksMap;
 
         /**
          * Check if the player already picked a die (based on his player state)
@@ -357,11 +376,11 @@ class TurnManager {
 
             tmpChecks.put(11, tc11);
 
-            checks = Collections.unmodifiableMap(tmpChecks);
+            checksMap = Collections.unmodifiableMap(tmpChecks);
         }
 
         static BiFunction<Match, PlayerMove, Boolean> get(int mapIndex){
-            return checks.get(mapIndex);
+            return checksMap.get(mapIndex);
         }
     }
 }

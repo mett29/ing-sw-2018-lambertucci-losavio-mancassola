@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static it.polimi.se2018.view.cli.InputManager.selectionMap;
+import static it.polimi.se2018.view.cli.InputManager.SELECTION_MAP;
 import static java.lang.Integer.max;
 
 /**
@@ -647,7 +647,7 @@ public class CLI implements ViewInterface {
                 for(int i = 0; i < maxSize - 1; i++){
                     if(acceptedCell(container, i, cellStates)) {
                         buffer.append("══");
-                        buffer.append(selectionMap.charAt(i));
+                        buffer.append(SELECTION_MAP.charAt(i));
                         buffer.append("═╤");
                     } else {
                         buffer.append("════╤");
@@ -657,7 +657,7 @@ public class CLI implements ViewInterface {
                 // print last cell
                 if(acceptedCell(container, maxSize - 1, cellStates)) {
                     buffer.append("══");
-                    buffer.append(selectionMap.charAt(maxSize - 1));
+                    buffer.append(SELECTION_MAP.charAt(maxSize - 1));
                     buffer.append("═╗");
                 } else {
                     buffer.append("════╗");
@@ -724,7 +724,7 @@ public class CLI implements ViewInterface {
             }
             if(printNumbers){
                 if(accepted) {
-                    buffer.append(selectionMap.charAt(x + y * 5));
+                    buffer.append(SELECTION_MAP.charAt(x + y * 5));
                 } else {
                     buffer.append(" ");
                 }

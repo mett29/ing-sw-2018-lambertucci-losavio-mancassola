@@ -116,4 +116,32 @@ public class PlayerTest {
         player.possibleActionsRemoveAll();
         assertEquals(EnumSet.noneOf(PossibleAction.class),player.getPossibleActions());
     }
+
+    @Test
+    public void winnerTest() throws Exception {
+        Player player = new Player("Test");
+
+        player.setWinner(true);
+
+        assertTrue(player.isWinner());
+    }
+
+    @Test
+    public void disconnectTest() throws Exception {
+        Player player = new Player("Test");
+
+        player.setDisconnected(true);
+
+        assertTrue(player.isDisconnected());
+    }
+
+    @Test
+    public void pickedDieTest() throws Exception {
+        Player player = new Player("Test");
+
+        player.setPickedDie(new Die(2, Color.BLUE));
+
+        assertEquals(new Die(2, Color.BLUE).getValue(), player.getPickedDie().getValue());
+        assertEquals(new Die(2, Color.BLUE).getColor(), player.getPickedDie().getColor());
+    }
 }

@@ -112,4 +112,16 @@ public class RoundManagerTest {
         //Check if the lastDie is the die inside the roundtracker (in first position)
         assertEquals(lastDie, match.getRoundTracker().getDie(0));
     }
+
+    @Test
+    public void newQueueTest() throws Exception {
+        RoundManager roundManager = new RoundManager(match);
+
+        Queue<Player> q = roundManager.newQueue();
+
+        assertEquals(player1.getName(), q.remove().getName());
+        assertEquals(player2.getName(), q.remove().getName());
+        assertEquals(player2.getName(), q.remove().getName());
+        assertEquals(player1.getName(), q.remove().getName());
+    }
 }

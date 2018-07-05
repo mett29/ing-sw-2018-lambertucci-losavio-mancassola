@@ -382,7 +382,7 @@ public class ToolCardControllerTest {
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new DiceContainerCoord(draftpool, 0));
         PlayerState ps2 = tcc.handleMove(pm2);
 
-        assertEquals(ps2.get(),EnumState.PICK);
+        assertEquals(EnumState.PICK, ps2.get());
 
         //PlayerMove dove seleziono la cella vuota dalla board -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 2));
