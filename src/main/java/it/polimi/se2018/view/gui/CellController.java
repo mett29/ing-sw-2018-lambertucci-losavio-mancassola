@@ -98,6 +98,8 @@ public class CellController {
 
         anchorPane.getChildren().add(this.die);
 
+        die.setVisible(active);
+
         anchorPane.setDisable(!active);
 
     }
@@ -106,19 +108,19 @@ public class CellController {
         String sRestriction = restriction.toString();
         switch(sRestriction){
             case "r":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/red.png')");
+                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: red");
                 break;
             case "b":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/blue.png')");
+                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: blue");
                 break;
             case "y":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/yellow.png')");
+                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: yellow");
                 break;
             case "p":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/purple.png')");
+                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: purple");
                 break;
             case "g":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/green.png')");
+                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: green");
                 break;
             case "1":
                 cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/1.png')");
@@ -150,8 +152,9 @@ public class CellController {
     void update(Cell cell) {
         if (cell.getDie() == null) {
             setDieText("");
-            die.setStyle("-fx-background-color: white");
+            die.setVisible(false);
         } else {
+            die.setVisible(true);
             setDieText(String.valueOf(cell.getDie().getValue()));
             die.setStyle(colorStyleMap.get(cell.getDie().getColor()));
         }
@@ -159,6 +162,7 @@ public class CellController {
 
     void activate(EventHandler<? super MouseEvent> eventHandler) {
         anchorPane.setDisable(false);
+        die.setVisible(true);
         die.setOnMouseClicked(eventHandler);
     }
 

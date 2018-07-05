@@ -39,7 +39,11 @@ public class Configuration {
             inGameTimer = Integer.parseInt(prop.getProperty("inGameTimer", "20"));
             patternPath = prop.getProperty("patternPath", "null");
         } catch (Exception e) {
-            e.printStackTrace();
+            socketPort = 1111;
+            rmiPort = 1099;
+            queueTimer = 30000;
+            inGameTimer = 20;
+            patternPath = "null";
         }
     }
 

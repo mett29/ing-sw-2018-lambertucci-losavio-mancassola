@@ -14,7 +14,6 @@
       <left>
          <VBox fx:id="playerInfoContainer" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
             <Label fx:id="playerName" text="Label"/>
-            <ProgressBar fx:id="tokens" prefWidth="200.0" progress="0.0"/>
          </VBox>
       </left>
    </BorderPane>
