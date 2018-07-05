@@ -7,10 +7,9 @@ import it.polimi.se2018.network.message.UndoResponse;
 import it.polimi.se2018.view.ViewInterface;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -30,6 +29,8 @@ public class CLI implements ViewInterface {
     private static final int PLAYER_WIDTH = 47;
     private static final int CARD_WIDTH = 26;
 
+    private static PrintStream ps = new PrintStream(System.out);
+
     public CLI(Client client){ this.client = client; }
 
     /**
@@ -44,18 +45,18 @@ public class CLI implements ViewInterface {
      * Asks the player's username to use during the match
      */
     private void askLogin(){
-        System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━┓");
-        System.out.println("    ┃       = LOGIN =       ┃");
-        System.out.println("    ┠───────────────────────┨");
-        System.out.println("    ┃  Immetti il tuo       ┃");
-        System.out.println("    ┃  username.            ┃");
-        System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━┛");
-        System.out.println();
+        ps.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━┓");
+        ps.println("    ┃       = LOGIN =       ┃");
+        ps.println("    ┠───────────────────────┨");
+        ps.println("    ┃  Immetti il tuo       ┃");
+        ps.println("    ┃  username.            ┃");
+        ps.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━┛");
+        ps.println();
 
         Scanner sc = new Scanner(System.in);
         String username = sc.next();
         while (username.equals("admin")) {
-            System.out.println("Non puoi scegliere 'admin' come username");
+            ps.println("Non puoi scegliere 'admin' come username");
             username = sc.next();
         }
         client.setUsername(username);
@@ -110,12 +111,12 @@ public class CLI implements ViewInterface {
     public void askPattern(PatternRequest message) {
         List<String> selections = new ArrayList<>();
 
-        System.out.println("La tua carta obiettivo privata: " + message.privateObjCard.getColor());
-        System.out.println();
+        ps.println("La tua carta obiettivo privata: " + message.privateObjCard.getColor());
+        ps.println();
 
         int iteration = 0;
         for(Board b : message.boards){
-            System.out.println("[ -- " + message.boardNames.get(iteration) + " | Diff.: " + b.getBoardDifficulty() + " -- ]");
+            ps.println("[ -- " + message.boardNames.get(iteration) + " | Diff.: " + b.getBoardDifficulty() + " -- ]");
             printLines(Stringifier.toStrings(b));
 
             selections.add(message.boardNames.get(iteration));
@@ -135,9 +136,9 @@ public class CLI implements ViewInterface {
     @Override
     public void displayUndoMessage(UndoResponse message) {
         if(message.ok)
-            System.out.println("La tua mossa è stata annullata");
+            ps.println("La tua mossa è stata annullata");
         else
-            System.out.println("Non puoi annullare la mossa in questo momento");
+            ps.println("Non puoi annullare la mossa in questo momento");
     }
 
     /**
@@ -145,15 +146,15 @@ public class CLI implements ViewInterface {
      * @param match object to read
      */
     private void displayMatch(Match match){
-        System.out.println("+ ROUND TRACKER +                                      + DRAFT POOL +");
+        ps.println("+ ROUND TRACKER +                                      + DRAFT POOL +");
         printLines(Stringifier.display2(Stringifier.diceContainerToStrings(match.getRoundTracker(), false, null), Stringifier.diceContainerToStrings(match.getDraftPool(), false, null)));
         displayPlayers(match.getPlayers().toArray(new Player[0]));
-        System.out.println("+ TOOLCARDS +");
+        ps.println("+ TOOLCARDS +");
         displayCards(match.getToolCards());
-        System.out.println("+ PUBLIC OBJECTIVE CARDS +");
+        ps.println("+ PUBLIC OBJECTIVE CARDS +");
         displayCards(match.getPublicObjCards());
         if(match.getPlayerQueue().peek().getPickedDie() != null)
-            System.out.println(match.getPlayerQueue().peek().getPickedDie());
+            ps.println(match.getPlayerQueue().peek().getPickedDie());
     }
 
     /**
@@ -171,7 +172,7 @@ public class CLI implements ViewInterface {
      */
     private static void printLines(String[] lines){
         for (String line : lines) {
-            System.out.println(line);
+            ps.println(line);
         }
     }
 
@@ -292,17 +293,17 @@ public class CLI implements ViewInterface {
      * Called when the player's state is YOUR_TURN
      */
     private void onYourTurnState() {
-        System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
-        System.out.println("    ┃              = TOCCA A TE =            ┃");
-        System.out.println("    ┠────────────────────────────────────────┨");
-        System.out.println("    ┃  Cosa vuoi fare?                       ┃");
+        ps.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+        ps.println("    ┃              = TOCCA A TE =            ┃");
+        ps.println("    ┠────────────────────────────────────────┨");
+        ps.println("    ┃  Cosa vuoi fare?                       ┃");
         if(match.getPlayerByName(client.getUsername()).getPossibleActions().contains(PossibleAction.PICK_DIE))
-            System.out.println("    ┃  0 - Prendi un dado dalla Draft Pool   ┃");
+            ps.println("    ┃  0 - Prendi un dado dalla Draft Pool   ┃");
         if(match.getPlayerByName(client.getUsername()).getPossibleActions().contains(PossibleAction.ACTIVATE_TOOLCARD))
-            System.out.println("    ┃  1 - Usa una ToolCard                  ┃");
+            ps.println("    ┃  1 - Usa una ToolCard                  ┃");
         if(match.getPlayerByName(client.getUsername()).getPossibleActions().contains(PossibleAction.PASS_TURN))
-            System.out.println("    ┃  2 - Passa                             ┃");
-        System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+            ps.println("    ┃  2 - Passa                             ┃");
+        ps.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 
         Pattern pattern = Pattern.compile("[0-2]");
         InputManager.ask(pattern,
@@ -341,7 +342,7 @@ public class CLI implements ViewInterface {
      * @param oldState object to set
      */
     private void onRepeatState(PlayerState oldState) {
-        System.out.println("Mossa non valida! Riprova.");
+        ps.println("Mossa non valida! Riprova.");
         setState(oldState);
     }
 
@@ -350,9 +351,9 @@ public class CLI implements ViewInterface {
      * Called when the player's state is UPDOWN
      */
     private void onUpDownState() {
-        System.out.println("Do you want to add or subtract 1 to the die value?");
+        ps.println("Do you want to add or subtract 1 to the die value?");
         List<String> selections = Arrays.stream(new String[]{"+1", "-1"}).collect(Collectors.toList());
-        makeSelection(selections, (selection) -> client.sendMove(new UpDownMove(selection == 0)));
+        makeSelection(selections, selection -> client.sendMove(new UpDownMove(selection == 0)));
     }
 
     /**
@@ -360,9 +361,9 @@ public class CLI implements ViewInterface {
      * Called when the player's state is YESNO
      */
     private void onYesNoState() {
-        System.out.println("Do you want to continue?");
+        ps.println("Do you want to continue?");
         List<String> selections = Arrays.stream(new String[]{"Yes", "No"}).collect(Collectors.toList());
-        makeSelection(selections, (selection) -> client.sendMove(new YesNoMove(selection == 0)));
+        makeSelection(selections, selection -> client.sendMove(new YesNoMove(selection == 0)));
     }
 
     /**
@@ -370,7 +371,7 @@ public class CLI implements ViewInterface {
      * Called when the player's state is VALUE
      */
     private void onValueState() {
-        System.out.println("Now pick a value from 1 to 6");
+        ps.println("Now pick a value from 1 to 6");
 
         List<Integer> selections = new ArrayList<>();
         selections.add(1);
@@ -417,7 +418,7 @@ public class CLI implements ViewInterface {
      */
     private void pickDiceContainer(DiceContainer diceContainer, Set<CellState> cellStates, boolean isDraftPool) {
         printLines(Stringifier.diceContainerToStrings(diceContainer, true, cellStates));
-        System.out.println(Stringifier.pickContainerMessage(cellStates));
+        ps.println(Stringifier.pickContainerMessage(cellStates));
 
         InputManager.askDiceContainer(diceContainer, cellStates, isDraftPool, client);
     }
@@ -431,7 +432,7 @@ public class CLI implements ViewInterface {
         String buffer = "Now s" +
                 Stringifier.toString(cellStates) +
                 " (type the corresponding character)";
-        System.out.println(buffer);
+        ps.println(buffer);
         printLines(Stringifier.boardToStrings(board, true, cellStates));
 
         InputManager.askBoard(board, cellStates, client);
@@ -450,7 +451,7 @@ public class CLI implements ViewInterface {
             buffer.append(selectables.get(i).toString());
             buffer.append("    ");
         }
-        System.out.println(buffer.toString());
+        ps.println(buffer.toString());
 
         InputManager.ask(selectables, onSelected);
     }
@@ -473,8 +474,8 @@ public class CLI implements ViewInterface {
      */
     public void onConnect(boolean isOk){
         if (isOk) {
-            System.out.println("Login successful.");
-            System.out.println("Press ENTER to enter the queue.");
+            ps.println("Login successful.");
+            ps.println("Press ENTER to enter the queue.");
             try {
                 System.in.read();
             } catch (IOException e) {
@@ -482,7 +483,7 @@ public class CLI implements ViewInterface {
             }
             client.sendQueueRequest();
         } else {
-            System.out.println("Username already exists.");
+            ps.println("Username already exists.");
             launch();
         }
     }
@@ -521,7 +522,7 @@ public class CLI implements ViewInterface {
      */
     public void displayToolcardActivationResponse(boolean isOk){
         if(!isOk) {
-            System.out.println("Non sono disponibili abbastanza token per attivare la Toolcard");
+            ps.println("Non sono disponibili abbastanza token per attivare la Toolcard");
         }
     }
 
@@ -550,13 +551,13 @@ public class CLI implements ViewInterface {
      */
     @Override
     public void displayConnectionError(Exception e) {
-        System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
-        System.out.println("    ┃         ERRORE DI CONNESSIONE       ┃");
-        System.out.println("    ┠─────────────────────────────────────┨");
-        System.out.println("    ┃  Si è  verificato  un  errore  di   ┃");
-        System.out.println("    ┃  connessione.  L'applicazione  si   ┃");
-        System.out.println("    ┃  spegnerà.                          ┃");
-        System.out.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+        ps.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+        ps.println("    ┃         ERRORE DI CONNESSIONE       ┃");
+        ps.println("    ┠─────────────────────────────────────┨");
+        ps.println("    ┃  Si è  verificato  un  errore  di   ┃");
+        ps.println("    ┃  connessione.  L'applicazione  si   ┃");
+        ps.println("    ┃  spegnerà.                          ┃");
+        ps.println("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
     }
 
     @Override
