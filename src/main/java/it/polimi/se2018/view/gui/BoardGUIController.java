@@ -13,6 +13,9 @@ import javafx.scene.layout.GridPane;
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * JavaFX controller of the Board
+ */
 public class BoardGUIController {
     private final Client client;
     @FXML
@@ -21,6 +24,12 @@ public class BoardGUIController {
     private CellController[][] controllerMatrix;
 
     private Board board;
+
+    /**
+     * Constructor
+     * @param board Board to display
+     * @param client Reference to the client object
+     */
     BoardGUIController(Board board, Client client){
         this.board = board;
         this.client = client;
@@ -50,7 +59,10 @@ public class BoardGUIController {
     }
 
 
-
+    /**
+     * Update content of the board
+     * @param board New board state to display
+     */
     void update(Board board) {
         for(int y = 0; y < 4; y++) {
             for (int x = 0; x < 5; x++) {
@@ -61,6 +73,10 @@ public class BoardGUIController {
         this.board = board;
     }
 
+    /**
+     * Activate board cells that respect the state described in cellStates
+     * @param cellStates Set of accepted cell states
+     */
     void activate(Set<CellState> cellStates) {
         final BoardGUIController toDisable = this;
         for(int y = 0; y < 4; y++) {
@@ -79,7 +95,10 @@ public class BoardGUIController {
         }
     }
 
-    public void disableAll() {
+    /**
+     * Disable each cell
+     */
+    void disableAll() {
         for(int y = 0; y < 4; y++) {
             for (int x = 0; x < 5; x++) {
                 controllerMatrix[y][x].disable();

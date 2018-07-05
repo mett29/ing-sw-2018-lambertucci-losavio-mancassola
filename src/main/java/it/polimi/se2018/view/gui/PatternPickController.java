@@ -12,6 +12,9 @@ import javafx.scene.layout.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * JavaFX controller of the Pattern-Pick phase
+ */
 public class PatternPickController {
     private final Client client;
     private PrivateObjCard privateObjCard;
@@ -23,7 +26,14 @@ public class PatternPickController {
     private List<Board> boards;
     private List<String> boardNames;
 
-    public PatternPickController(List<Board> boards, List<String> boardNames, Client client, PrivateObjCard privateObjCard) {
+    /**
+     * Constructor
+     * @param boards List of pattern to chose from
+     * @param boardNames List of names of the patterns
+     * @param client Reference to the Client object
+     * @param privateObjCard Private Objective Card of the player
+     */
+    PatternPickController(List<Board> boards, List<String> boardNames, Client client, PrivateObjCard privateObjCard) {
         this.boards = boards;
         this.client = client;
         this.privateObjCard = privateObjCard;

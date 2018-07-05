@@ -25,7 +25,7 @@ public class GUI extends Application implements ViewInterface {
     private MatchController matchController;
 
     @Override
-    public void onToolCardActivationResponse(boolean isOk) {
+    public void displayToolcardActivationResponse(boolean isOk) {
         if(!isOk){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Attivazione toolcard fallita");
@@ -70,7 +70,7 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void onConnectionError(Exception e) {
+    public void displayConnectionError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore di connessione");
         alert.setHeaderText("Si è verificato un errore di connessione");
@@ -101,7 +101,7 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void onPatternRequest(PatternRequest message) {
+    public void askPattern(PatternRequest message) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/PatternPicker.fxml"));
@@ -116,7 +116,7 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void onUndoResponse(UndoResponse message) {
+    public void displayUndoMessage(UndoResponse message) {
         if(!message.ok){
             Alert unableToUnload = new Alert(Alert.AlertType.ERROR);
             unableToUnload.setTitle("Impossibile annullare");
@@ -127,8 +127,8 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void onTimeReset() {
-        matchController.onTimeReset();
+    public void resetTimer() {
+        matchController.resetTimer();
     }
 
     @Override

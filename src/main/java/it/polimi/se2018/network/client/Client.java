@@ -107,7 +107,7 @@ public class Client {
         try {
             connection.send(new MoveMessage(username, move));
         } catch (RemoteException e) {
-            view.onConnectionError(e);
+            view.displayConnectionError(e);
         }
     }
 
@@ -122,7 +122,7 @@ public class Client {
                 break;
 
             case TOOLCARD_RESPONSE:
-                view.onToolCardActivationResponse(((ToolCardResponse) message).response == Message.Type.OK);
+                view.displayToolcardActivationResponse(((ToolCardResponse) message).response == Message.Type.OK);
                 break;
 
             case MATCH_STATE:
@@ -136,15 +136,15 @@ public class Client {
                 break;
 
             case PATTERN_REQUEST:
-                view.onPatternRequest((PatternRequest) message);
+                view.askPattern((PatternRequest) message);
                 break;
 
             case UNDO_RESPONSE:
-                view.onUndoResponse((UndoResponse) message);
+                view.displayUndoMessage((UndoResponse) message);
                 break;
 
             case TIME_RESET:
-                view.onTimeReset();
+                view.resetTimer();
                 break;
 
             default:
@@ -166,7 +166,7 @@ public class Client {
     }
 
     public void onConnectionError(Exception e){
-        view.onConnectionError(e);
+        view.displayConnectionError(e);
     }
 
     public void setView(ViewInterface view) {
@@ -182,7 +182,7 @@ public class Client {
         try {
             connection.send(message);
         } catch (Exception e) {
-            view.onConnectionError(e);
+            view.displayConnectionError(e);
         }
     }
 
@@ -194,7 +194,7 @@ public class Client {
         try {
             connection.send(message);
         } catch (RemoteException e) {
-            view.onConnectionError(e);
+            view.displayConnectionError(e);
         }
     }
 
@@ -207,7 +207,7 @@ public class Client {
         try {
             connection.send(message);
         } catch(Exception e){
-            view.onConnectionError(e);
+            view.displayConnectionError(e);
         }
     }
 
@@ -219,7 +219,7 @@ public class Client {
         try {
             connection.send(message);
         } catch (RemoteException e) {
-            view.onConnectionError(e);
+            view.displayConnectionError(e);
         }
     }
 
@@ -230,7 +230,7 @@ public class Client {
         try {
             connection.send(new UndoRequest(username));
         } catch (RemoteException e) {
-            view.onConnectionError(e);
+            view.displayConnectionError(e);
         }
     }
 }

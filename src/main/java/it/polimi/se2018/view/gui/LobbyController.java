@@ -7,6 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 
+/**
+ * JavaFX controller of the lobby phase
+ */
 public class LobbyController {
     private Client client;
 
@@ -18,11 +21,18 @@ public class LobbyController {
     @FXML
     private Label waitingMessage;
 
+    /**
+     * Setter of Client
+     * @param client Reference to the client object
+     */
     public void setClient(Client client) {
         this.client = client;
     }
 
-    public void onPlayClick(ActionEvent actionEvent) {
+    /**
+     * Send queue request to server. Display waiting messages
+     */
+    public void onPlayClick() {
         client.sendQueueRequest();
 
         waitingMessage.setVisible(true);

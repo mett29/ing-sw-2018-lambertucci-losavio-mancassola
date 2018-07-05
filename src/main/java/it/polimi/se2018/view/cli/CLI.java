@@ -105,7 +105,7 @@ public class CLI implements ViewInterface {
      * @param message object received
      */
     @Override
-    public void onPatternRequest(PatternRequest message) {
+    public void askPattern(PatternRequest message) {
         List<String> selections = new ArrayList<>();
 
         System.out.println("La tua carta obiettivo privata: " + message.privateObjCard.getColor());
@@ -131,7 +131,7 @@ public class CLI implements ViewInterface {
      * @param message object received
      */
     @Override
-    public void onUndoResponse(UndoResponse message) {
+    public void displayUndoMessage(UndoResponse message) {
         if(message.ok)
             System.out.println("La tua mossa è stata annullata");
         else
@@ -517,7 +517,7 @@ public class CLI implements ViewInterface {
      * In case the player doesn't have enough tokens, the toolcard won't be activated
      * @param isOk boolean to read
      */
-    public void onToolCardActivationResponse(boolean isOk){
+    public void displayToolcardActivationResponse(boolean isOk){
         if(!isOk) {
             System.out.println("Non sono disponibili abbastanza token per attivare la Toolcard");
         }
@@ -547,7 +547,7 @@ public class CLI implements ViewInterface {
      * @param e exception to read
      */
     @Override
-    public void onConnectionError(Exception e) {
+    public void displayConnectionError(Exception e) {
         System.out.println("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
         System.out.println("    ┃         ERRORE DI CONNESSIONE       ┃");
         System.out.println("    ┠─────────────────────────────────────┨");
@@ -558,7 +558,7 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void onTimeReset() {
+    public void resetTimer() {
         // do nothing
     }
 

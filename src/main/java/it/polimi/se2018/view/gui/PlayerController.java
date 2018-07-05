@@ -23,13 +23,23 @@ public class PlayerController {
     private BoardGUIController boardController;
     private CellController pickedController;
 
-    public PlayerController(Player player, boolean isMe, Client client){
+    /**
+     * Constructor
+     * @param player Reference to the player to be displayed
+     * @param isMe   If true, private object card will be shown
+     * @param client Reference to the client object
+     */
+    PlayerController(Player player, boolean isMe, Client client){
         this.player = player;
         this.isMe = isMe;
         this.client = client;
     }
 
-    public void update(Player player){
+    /**
+     * Update content of the section
+     * @param player Reference to the player to be displayed
+     */
+    void update(Player player){
         this.player = player;
         Platform.runLater(() -> playerName.setText(player.getName() + (player.isDisconnected() ? " (DISCONN.)" : "")));
         Platform.runLater(() -> tokens.setText("Tokens: " + player.getToken()));
@@ -94,6 +104,10 @@ public class PlayerController {
         }
     }
 
+    /**
+     * Update picked die
+     * @param die Die to be displayed in PickedDie section
+     */
     private void updatePicked(Die die) {
         Cell pp = new Cell(null);
         pp.setDie(die);
@@ -101,10 +115,17 @@ public class PlayerController {
         pickedController.update(pp);
     }
 
+    /**
+     * Activate conditionally each cell of the player's board
+     * @param cellStates Set of conditions for a cell to be active
+     */
     void activate(Set<CellState> cellStates) {
         boardController.activate(cellStates);
     }
 
+    /**
+     * Disable each cell of the player's board
+     */
     void disableAll(){
         boardController.disableAll();
     }

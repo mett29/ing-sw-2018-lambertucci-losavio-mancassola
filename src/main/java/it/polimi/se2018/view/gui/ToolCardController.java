@@ -7,9 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 
-
-
-
+/**
+ * JavaFX controller of toolcard
+ */
 public class ToolCardController {
 
     private final ToolCard toolCard;
