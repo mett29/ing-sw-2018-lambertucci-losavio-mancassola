@@ -1,14 +1,11 @@
 package it.polimi.se2018.network.client.rmi;
 
-import it.polimi.se2018.controller.Configuration;
 import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.Client;
 import it.polimi.se2018.network.client.ClientInterface;
 import it.polimi.se2018.network.client.IConnection;
 import it.polimi.se2018.network.server.rmi.ServerInterface;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
