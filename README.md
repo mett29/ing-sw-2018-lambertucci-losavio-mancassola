@@ -2,27 +2,44 @@
 
 <img src="https://ksr-ugc.imgix.net/assets/013/393/383/88f9cae91e41ef71ac2b06fb2fa564de_original.jpg?crop=faces&w=1552&h=873&fit=crop&v=1473272732&auto=format&q=92&s=49635f0025d51f0ffe4d3b820b04c854" width="700" height="350"></img>
 
-### What is Sagrada?
+## What is Sagrada?
 > A Game of Dice Drafting and Window Crafting for 1 to 4 players that plays in about 30 minutes.
 
-### Where could you find more information about this game?
+## Where could you find more information about this game?
 [Here], on the official KickStarter webpage.
 
-### Index of the README
+## Index of the README
 
   - How to run the game
   - External libraries used
   - Specification covered
 
-### How to run the game
+## Usage
 
 The game requires [Java 8] or later versions to run.
 
-Once downloaded, run the *jar file* as follow:
+#### Client
 
 ```sh
-$ java -jar sagrada.jar
+$ java -jar sargrada-client.jar [cli/gui] [unicode/ascii] [ip-address]
 ```
+
+##### Options
+- `[cli/gui]` - type `cli` or `gui` to chose from Command Line Interface and Graphical User Interface (default: `cli`)
+- `[unicode/ascii]` - type `ascii` to prevent the application from using unicode characters. In Windows you need to use `bash` to correctly display unicode characters. Keep in mind that your terminal needs to have a font that supports unicode boxes. (default: `unicode`)
+- `[ip-address]` - you can specify the ip address of the server (default: `localhost`)
+
+#### Server
+```sh
+$ java -jar sagrada-server.jar
+```
+You can specify parameters in a file that you need to call `"config.properties"`, which needs to be located in the same folder as the jar.
+The parameters you can specify are:
+- `socketPort` - Specify the socket server port
+- `rmiPort` - Specify the rmi server port
+- `queueTimer` - Specify the queue timer (milliseconds)
+- `inGameTimer` - Specify the in-game timer (seconds)
+- `patternPath` - Specify the (relative) path to a json file where you can define custom board patterns
 
 ### External libraries used
 
@@ -32,7 +49,7 @@ The external libraries we used to implement some game's features are linked belo
 | ------ | ------ | ------ |
 | GSON | https://github.com/google/gson | We use this library to load the patterns from file |
 
-### Specification covered
+## Specification covered
 
 **Game-specific met requirements:**
 
