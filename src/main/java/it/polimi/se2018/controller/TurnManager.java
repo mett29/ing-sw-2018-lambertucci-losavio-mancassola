@@ -108,7 +108,7 @@ class TurnManager {
             PlacementError err = moveDice.check();
             int diceOnBoard = currentPlayer.getBoard().countDice();
             //Checks if the board is empty or not. The player's first die must be positioned on an EDGE.
-            if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
+            if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flag.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
                 newState = new PlayerState(EnumState.REPEAT);
                 memory.remove(1);
             } else {

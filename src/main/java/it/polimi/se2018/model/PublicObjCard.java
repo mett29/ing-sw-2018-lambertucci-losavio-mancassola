@@ -44,6 +44,19 @@ public class PublicObjCard implements ObjCard{
     private static class CardInfos {
         private CardInfos(){}
 
+        /**
+         * Find the number of occurrences of dice with value n1 and n2, then return the least occurring one's occurrences
+         * @param n1    Value of first die
+         * @param n2    Value of second die
+         * @param board Board to count from
+         * @return      Least occurring die's occurrences
+         */
+        private static int minOccurrences(int n1, int n2, Board board){
+            int occ1 = numberOf(n1, board);
+            int occ2 = numberOf(n2, board);
+            return min(occ1, occ2);
+        }
+
         static final Map<Integer, String> titles;
         static final Map<Integer, String> descriptions;
         static final Map<Integer, Function<Board, Integer>> bonuses;
@@ -100,25 +113,19 @@ public class PublicObjCard implements ObjCard{
             tmpTitles.put(4, "Sfumature Chiare");
             tmpDescriptions.put(4, "Set di 1 & 2 ovunque");
             tmpBonuses.put(4, (Board board) -> {
-                int n1 = numberOf(1, board);
-                int n2 = numberOf(2, board);
-                int score = min(n1, n2);
+                int score = minOccurrences(1, 2, board);
                 return score * 2;
             });
             tmpTitles.put(5, "Sfumature Medie");
             tmpDescriptions.put(5, "Set di 3 & 4 ovunque");
             tmpBonuses.put(5,  (Board board) -> {
-                int n1 = numberOf(3, board);
-                int n2 = numberOf(4, board);
-                int score = min(n1, n2);
+                int score = minOccurrences(3, 4, board);
                 return score * 2;
             });
             tmpTitles.put(6, "Sfumature Scure");
             tmpDescriptions.put(6, "Set di 5 & 6 ovunque");
             tmpBonuses.put(6, (Board board) -> {
-                int n1 = numberOf(5, board);
-                int n2 = numberOf(6, board);
-                int score = min(n1, n2);
+                int score = minOccurrences(5, 6, board);
                 return score * 2;
             });
             tmpTitles.put(7, "Sfumature Diverse");
@@ -161,24 +168,24 @@ public class PublicObjCard implements ObjCard{
 
         /**
          * This method checks if a row or a columns is full of dice
-         * @param elems
+         * @param elements List of cells to be checked
          * @return true if full
          */
-        private static boolean fullList(List<Cell> elems) {
-            for (Cell elem : elems)
+        private static boolean fullList(List<Cell> elements) {
+            for (Cell elem : elements)
                 if (elem.isEmpty()) return false;
             return true;
         }
 
         /**
          * Check if there are not two or more dice with the same color in container
-         * @param elems List to be checked
+         * @param elements List to be checked
          * @return true if there is no duplicate, false otherwise
          */
-        private static boolean differentColors(List<Cell> elems) {
+        private static boolean differentColors(List<Cell> elements) {
             Map<Color, Integer> count = new EnumMap<>(Color.class);
             for(Color color : Color.values()){
-                count.put(color, numberOf(color, elems));
+                count.put(color, numberOf(color, elements));
             }
             for(int counter : count.values()){
                 if(counter > 1) {
@@ -190,13 +197,13 @@ public class PublicObjCard implements ObjCard{
 
         /**
          * Check if there is no duplicate value in list
-         * @param elems List to be checked
+         * @param elements List to be checked
          * @return true if there is no duplicate, false otherwise
          */
-        private static boolean differentValues(List<Cell> elems){
+        private static boolean differentValues(List<Cell> elements){
             Map<Integer, Integer> count = new HashMap<>();
             for(int i = 1; i < 7; i++){
-                count.put(i, numberOf(i, elems));
+                count.put(i, numberOf(i, elements));
             }
             for(int counter : count.values()){
                 if(counter > 1) {
@@ -207,10 +214,10 @@ public class PublicObjCard implements ObjCard{
         }
 
         /**
-         * Count occurrencies of dice with a specified value in a container
-         * @param value number whose occurrencies are to be counted
+         * Count occurrences of dice with a specified value in a container
+         * @param value number whose occurrences are to be counted
          * @param container iterable to count in
-         * @return number of occurrencies
+         * @return number of occurrences
          */
         private static int numberOf(int value, Iterable<Cell> container){
             int count = 0;
@@ -223,10 +230,10 @@ public class PublicObjCard implements ObjCard{
         }
 
         /**
-         * Count occurrencies of dice with a specified color in a container
-         * @param color color whose occurrencies are to be counted
+         * Count occurrences of dice with a specified color in a container
+         * @param color color whose occurrences are to be counted
          * @param container iterable to count in
-         * @return number of occurrencies
+         * @return number of occurrences
          */
         private static int numberOf(Color color, Iterable<Cell> container){
             int sum = 0;

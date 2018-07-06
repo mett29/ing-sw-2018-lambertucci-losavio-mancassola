@@ -44,7 +44,7 @@ public class ActionTest {
         // There is a same color/value dice near c2;
         // c2 (end target cell) is empty;
         // Not near edges
-        EnumSet<Flags> expectedA = EnumSet.of(Flags.COLOR, Flags.VALUE);
+        EnumSet<Flag> expectedA = EnumSet.of(Flag.COLOR, Flag.VALUE);
         assertTrue(errA.isEqual(expectedA));
 
         a.perform();
@@ -71,7 +71,7 @@ public class ActionTest {
         // Near c1: same value of d2
         // c2 (end target cell) is empty;
         // Not near edges
-        EnumSet<Flags> expectedA = EnumSet.of(Flags.NOTEMPTY, Flags.COLOR, Flags.VALUE, Flags.EDGE);
+        EnumSet<Flag> expectedA = EnumSet.of(Flag.NOTEMPTY, Flag.COLOR, Flag.VALUE, Flag.EDGE);
         assertTrue(errA.isEqual(expectedA));
     }
 

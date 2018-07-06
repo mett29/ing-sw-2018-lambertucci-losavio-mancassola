@@ -7,10 +7,10 @@ import static org.junit.Assert.*;
 public class PlacementErrorTest {
     @Test
     public void typeCheckTest() throws Exception {
-        PlacementError color = new PlacementError(Flags.COLOR);
-        PlacementError value = new PlacementError(Flags.VALUE);
-        PlacementError notempty = new PlacementError(Flags.NOTEMPTY);
-        PlacementError notonedge = new PlacementError(Flags.EDGE);
+        PlacementError color = new PlacementError(Flag.COLOR);
+        PlacementError value = new PlacementError(Flag.VALUE);
+        PlacementError notempty = new PlacementError(Flag.NOTEMPTY);
+        PlacementError notonedge = new PlacementError(Flag.EDGE);
         PlacementError none = new PlacementError();
 
         assertTrue(color.isColorError());

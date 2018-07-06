@@ -42,7 +42,7 @@ public class DiceContainerCoord implements DieCoord {
      */
     public PlacementError isAllowed(Die die) {
         if(!container.isEmpty(index))
-            return new PlacementError(Flags.NOTEMPTY);
+            return new PlacementError(Flag.NOTEMPTY);
         return new PlacementError();
     }
 

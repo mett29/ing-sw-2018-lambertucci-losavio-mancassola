@@ -37,7 +37,7 @@ public class Cell implements Serializable{
 
         // Check if the Cell is occupied yet
         if (!isEmpty())
-            err = PlacementError.union(err, new PlacementError(Flags.NOTEMPTY));
+            err = PlacementError.union(err, new PlacementError(Flag.NOTEMPTY));
 
         return err;
     }

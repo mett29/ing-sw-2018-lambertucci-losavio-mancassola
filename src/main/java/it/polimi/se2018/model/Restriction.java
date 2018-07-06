@@ -31,12 +31,12 @@ public class Restriction implements Serializable{
         switch(type){
             case COLOR:
                 if(die.getColor() != color)
-                    return new PlacementError(Flags.COLOR);
+                    return new PlacementError(Flag.COLOR);
                 else return new PlacementError();
 
             case VALUE:
                 if(die.getValue() != value)
-                    return new PlacementError(Flags.VALUE);
+                    return new PlacementError(Flag.VALUE);
                 else return new PlacementError();
 
             default:

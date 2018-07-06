@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -196,75 +197,58 @@ public class MatchController {
      * Display a Yes/No dialog and sends the response to the Server
      */
     private void askYesNo() {
-        Platform.runLater(() -> {
-            List<String> choices = new ArrayList<>();
-            choices.add("Si");
-            choices.add("No");
-
-            ChoiceDialog<String> dialog = new ChoiceDialog<>("Si", choices);
-            dialog.setTitle(TOOLCARD_MESSAGE_TITLE);
-            dialog.setHeaderText("Vuoi fare la prossima mossa?");
-            dialog.setContentText("Scelta:");
-
-            dialog.getDialogPane().getScene().getWindow().setOnCloseRequest(Event::consume);
-            dialog.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, Event::consume);
-
-            Optional<String> result = dialog.showAndWait();
-            result.ifPresent(value -> client.sendMove(new YesNoMove(choices.indexOf(value) == 0)));
-        });
-
+        ask(
+                "Vuoi fare la prossima mossa?",
+                "Scelta:",
+                Arrays.asList("Si", "No"),
+                value -> client.sendMove(new YesNoMove(value == 0))
+        );
     }
 
     /**
      * Display a +1/-1 dialog and sends the response to the Server
      */
     private void askUpDown() {
-        Platform.runLater(() -> {
-            List<String> choices = new ArrayList<>();
-            choices.add("+1");
-            choices.add("-1");
+        ask(
+                "Vuoi aggiungere o sottrarre uno al dado?",
+                "Scelta:",
+                Arrays.asList("+1", "-1"),
+                value -> client.sendMove(new UpDownMove(value == 0))
+        );
+    }
 
-            ChoiceDialog<String> dialog = new ChoiceDialog<>("+1", choices);
+    /**
+     * Display a dialog in which the user needs to chose from a list of possible choices. The dialog cannot be closed unless "ok" button is clicked.
+     * @param header      Header text message of the dialog
+     * @param content     Content text message of the dialog
+     * @param choices     List of choices to pick from
+     * @param onSelected  When "ok" is clicked, this consumer will be executed. The argument will be the index of the selected item in the list
+     */
+    private void ask(String header, String content, List<String> choices, Consumer<Integer> onSelected){
+        Platform.runLater(() -> {
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
             dialog.setTitle(TOOLCARD_MESSAGE_TITLE);
-            dialog.setHeaderText("Vuoi aggiungere o sottrarre uno al dado?");
-            dialog.setContentText("Scelta:");
+            dialog.setHeaderText(header);
+            dialog.setContentText(content);
 
             dialog.getDialogPane().getScene().getWindow().setOnCloseRequest(Event::consume);
             dialog.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, Event::consume);
 
-
             Optional<String> result = dialog.showAndWait();
-            result.ifPresent(value -> client.sendMove(new UpDownMove(choices.indexOf(value) == 0)));
+            result.ifPresent(value -> onSelected.accept(choices.indexOf(value)));
         });
-
     }
 
     /**
      * Display a "pick value" dialog and sends the response to the Server
      */
     private void askValue() {
-        Platform.runLater(() -> {
-            List<String> choices = new ArrayList<>();
-            choices.add("1");
-            choices.add("2");
-            choices.add("3");
-            choices.add("4");
-            choices.add("5");
-            choices.add("6");
-
-            ChoiceDialog<String> dialog = new ChoiceDialog<>("1", choices);
-            dialog.setTitle(TOOLCARD_MESSAGE_TITLE);
-            dialog.setHeaderText("Scegli il valore che vuoi assegnare");
-            dialog.setContentText("Valore:");
-
-            dialog.getDialogPane().getScene().getWindow().setOnCloseRequest(Event::consume);
-            dialog.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, Event::consume);
-
-
-            Optional<String> result = dialog.showAndWait();
-            result.ifPresent(value -> client.sendMove(new ValueMove(choices.indexOf(value) + 1)));
-        });
-
+        ask(
+                "Scegli il valore che vuoi assegnare",
+                "Valore:",
+                Arrays.asList("1", "2", "3", "4", "5", "6"),
+                value -> client.sendMove(new ValueMove(value + 1))
+        );
     }
 
     /**

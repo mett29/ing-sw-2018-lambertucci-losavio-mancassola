@@ -56,7 +56,7 @@ public class DiceContainerCoordTest {
         diceContainerCoord.set(die1);
 
         PlacementError pe = diceContainerCoord.isAllowed(die2);
-        EnumSet<Flags> enum1 = EnumSet.of(Flags.NOTEMPTY);
+        EnumSet<Flag> enum1 = EnumSet.of(Flag.NOTEMPTY);
 
         assertTrue(pe.isEqual(enum1));
     }

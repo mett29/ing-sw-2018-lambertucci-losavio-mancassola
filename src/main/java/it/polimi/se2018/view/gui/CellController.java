@@ -13,7 +13,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 
 import java.security.InvalidParameterException;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CellController {
@@ -124,43 +126,8 @@ public class CellController {
      */
     private void setCellStyle(AnchorPane cell, Restriction restriction){
         String sRestriction = restriction.toString();
-        switch(sRestriction){
-            case "r":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: red");
-                break;
-            case "b":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: blue");
-                break;
-            case "y":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: yellow");
-                break;
-            case "p":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: purple");
-                break;
-            case "g":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-color: green");
-                break;
-            case "1":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/1.png')");
-                break;
-            case "2":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/2.png')");
-                break;
-            case "3":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/3.png')");
-                break;
-            case "4":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/4.png')");
-                break;
-            case "5":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/5.png')");
-                break;
-            case "6":
-                cell.setStyle("-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; -fx-background-image: url('/img/6.png')");
-                break;
-            default:
-                // do nothing
-        }
+        String style = "-fx-background-position: center; -fx-background-repeat: no-repeat; -fx-background-size: 100%; " + colorMap.get(sRestriction);
+        cell.setStyle(style);
     }
 
     /**
@@ -201,5 +168,24 @@ public class CellController {
      */
     void disable(){
         anchorPane.setDisable(true);
+    }
+
+    private static final Map<String, String> colorMap;
+    static {
+        Map<String, String> tmpMap = new HashMap<>();
+        tmpMap.put("r", "-fx-background-color: red");
+        tmpMap.put("b", "-fx-background-color: blue");
+        tmpMap.put("y", "-fx-background-color: yellow");
+        tmpMap.put("p", "-fx-background-color: purple");
+        tmpMap.put("g", "-fx-background-color: green");
+        tmpMap.put("1", "-fx-background-image: url('/img/1.png')");
+        tmpMap.put("2", "-fx-background-image: url('/img/2.png')");
+        tmpMap.put("3", "-fx-background-image: url('/img/3.png')");
+        tmpMap.put("4", "-fx-background-image: url('/img/4.png')");
+        tmpMap.put("5", "-fx-background-image: url('/img/5.png')");
+        tmpMap.put("6", "-fx-background-image: url('/img/6.png')");
+
+        colorMap = Collections.unmodifiableMap(tmpMap);
+
     }
 }

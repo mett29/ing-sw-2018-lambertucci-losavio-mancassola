@@ -4,10 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
 
@@ -37,15 +35,15 @@ public class BoardTest {
         Board board = new Board(pattern1, 1);
 
         PlacementError red200 = board.isDieAllowed(0, 0, red2);
-        EnumSet<Flags> expected = EnumSet.of(Flags.NEIGHBOURS);
+        EnumSet<Flag> expected = EnumSet.of(Flag.NEIGHBOURS);
         assertTrue(red200.isEqual(expected));
 
         PlacementError blue421 = board.isDieAllowed(2, 1, blue4);
-        expected = EnumSet.of(Flags.EDGE, Flags.VALUE, Flags.NEIGHBOURS);
+        expected = EnumSet.of(Flag.EDGE, Flag.VALUE, Flag.NEIGHBOURS);
         assertTrue(blue421.isEqual(expected));
 
         PlacementError green121 = board.isDieAllowed(2, 1, green1);
-        expected = EnumSet.of(Flags.NEIGHBOURS, Flags.EDGE);
+        expected = EnumSet.of(Flag.NEIGHBOURS, Flag.EDGE);
         assertTrue(green121.isEqual(expected));
     }
 
@@ -55,7 +53,7 @@ public class BoardTest {
 
         board.setDie(0, 1, red4);
         PlacementError blue400 = board.isDieAllowed(0, 0, blue4);
-        EnumSet<Flags> expected = EnumSet.of(Flags.VALUE, Flags.COLOR);
+        EnumSet<Flag> expected = EnumSet.of(Flag.VALUE, Flag.COLOR);
         assertTrue(blue400.isEqual(expected));
     }
 
@@ -65,7 +63,7 @@ public class BoardTest {
 
         board.setDie(0, 0, red4);
         PlacementError blue400 = board.isDieAllowed(0, 0, blue4);
-        EnumSet<Flags> expected = EnumSet.of(Flags.NOTEMPTY, Flags.COLOR, Flags.NEIGHBOURS);
+        EnumSet<Flag> expected = EnumSet.of(Flag.NOTEMPTY, Flag.COLOR, Flag.NEIGHBOURS);
         assertTrue(blue400.isEqual(expected));
     }
 

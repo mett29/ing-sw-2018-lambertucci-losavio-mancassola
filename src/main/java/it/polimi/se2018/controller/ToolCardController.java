@@ -59,7 +59,7 @@ class ToolCardController {
             return new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.EMPTY));
         };
 
-        static BiFunction<ToolCardController, PlayerMove, PlayerState> performWithFilter(Flags filter) {
+        static BiFunction<ToolCardController, PlayerMove, PlayerState> performWithFilter(Flag filter) {
             return (tcc, pm) -> {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action a = new Switch(tcc.memory.get(0), tcc.memory.get(1));
@@ -129,7 +129,7 @@ class ToolCardController {
 
             queue1.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue1.add(handlePickAndPickFromBoardEmpty);
-            queue1.add(performWithFilter(Flags.COLOR));
+            queue1.add(performWithFilter(Flag.COLOR));
 
             tmpOps.put(1, queue1);
 
@@ -139,7 +139,7 @@ class ToolCardController {
 
             queue2.add((tcc, pm) -> new PickState(EnumSet.of(Component.BOARD), EnumSet.of(CellState.FULL)));
             queue2.add(handlePickAndPickFromBoardEmpty);
-            queue2.add(performWithFilter(Flags.VALUE));
+            queue2.add(performWithFilter(Flag.VALUE));
 
             tmpOps.put(2, queue2);
 
@@ -247,7 +247,7 @@ class ToolCardController {
                 Action b = new Switch(tcc.memory.get(0), tcc.memory.get(1));
                 PlacementError err = b.check();
                 int diceOnBoard = pm.getActor().getBoard().countDice();
-                if((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
+                if((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flag.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
                     tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
@@ -292,7 +292,7 @@ class ToolCardController {
                 Action move = new Switch(tcc.memory.get(0), tcc.memory.get(1));
                 PlacementError err = move.check();
                 int diceOnBoard = pm.getActor().getBoard().countDice();
-                if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
+                if ((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flag.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
                     tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
@@ -327,7 +327,7 @@ class ToolCardController {
                 tcc.memory.add((DieCoord) pm.getMove());
                 Action move = new Switch(tcc.memory.get(0), tcc.memory.get(1));
                 PlacementError err = move.check();
-                if(!err.hasNoErrorExceptEdgeFilter(EnumSet.of(Flags.NEIGHBOURS))) {
+                if(!err.hasNoErrorExceptEdgeFilter(EnumSet.of(Flag.NEIGHBOURS))) {
                     tcc.memory.remove(1);
                     return new PlayerState(EnumState.REPEAT);
                 } else {
@@ -382,7 +382,7 @@ class ToolCardController {
                 Action move = new Switch(tcc.memory.get(1), tcc.memory.get(2));
                 PlacementError err = move.check();
                 int diceOnBoard = pm.getActor().getBoard().countDice();
-                if((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flags.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
+                if((diceOnBoard == 0 && err.hasErrorFilter(EnumSet.of(Flag.NEIGHBOURS))) || (diceOnBoard != 0 && !err.hasNoErrorExceptEdge())) {
                     tcc.memory.remove(2);
                     return new PlayerState(EnumState.REPEAT);
                 } else {

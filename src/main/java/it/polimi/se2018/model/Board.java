@@ -78,19 +78,19 @@ public class Board implements Iterable<Cell>, Memento<Board>, Serializable {
         for (Die neighbour : adjacentDies) {
             if(neighbour != null && neighbour != die) {
                 if (neighbour.getColor() == die.getColor())
-                    ret = PlacementError.union(ret, new PlacementError(Flags.COLOR));
+                    ret = PlacementError.union(ret, new PlacementError(Flag.COLOR));
                 if (neighbour.getValue() == die.getValue())
-                    ret = PlacementError.union(ret, new PlacementError(Flags.VALUE));
+                    ret = PlacementError.union(ret, new PlacementError(Flag.VALUE));
             }
         }
 
         // Check if the Die is near other dices
         if (getNeighbours(x, y).isEmpty())
-            ret = PlacementError.union(ret, new PlacementError(Flags.NEIGHBOURS));
+            ret = PlacementError.union(ret, new PlacementError(Flag.NEIGHBOURS));
 
         // Check if the Die has been placed on an edge
         if (x != 0 && y != 0 && x != 4 && y != 3)
-            ret = PlacementError.union(ret, new PlacementError(Flags.EDGE));
+            ret = PlacementError.union(ret, new PlacementError(Flag.EDGE));
 
         return ret;
     }

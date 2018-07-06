@@ -8,20 +8,20 @@ import java.util.Set;
  * @author MicheleLambertucci, ontech7
  */
 public class PlacementError {
-    private EnumSet<Flags> errorByte;
+    private EnumSet<Flag> errorByte;
 
-    public PlacementError() { errorByte = EnumSet.noneOf(Flags.class); }
+    public PlacementError() { errorByte = EnumSet.noneOf(Flag.class); }
 
-    public PlacementError(Flags flag) { errorByte = EnumSet.of(flag); }
+    public PlacementError(Flag flag) { errorByte = EnumSet.of(flag); }
 
-    private PlacementError(EnumSet<Flags> flags) { errorByte = flags; }
+    private PlacementError(EnumSet<Flag> flags) { errorByte = flags; }
 
     /**
      * Check if the die placed near another die has the same value
      * @return true if same value
      */
     public boolean isValueError() {
-        return errorByte.contains(Flags.VALUE);
+        return errorByte.contains(Flag.VALUE);
     }
 
     /**
@@ -29,7 +29,7 @@ public class PlacementError {
      * @return true if same color
      */
     public boolean isColorError() {
-        return errorByte.contains(Flags.COLOR);
+        return errorByte.contains(Flag.COLOR);
     }
 
     /**
@@ -37,7 +37,7 @@ public class PlacementError {
      * @return true if not empty
      */
     public boolean isNotEmptyError() {
-        return errorByte.contains(Flags.NOTEMPTY);
+        return errorByte.contains(Flag.NOTEMPTY);
     }
 
     /**
@@ -45,7 +45,7 @@ public class PlacementError {
      * @return true if not near die
      */
     public boolean isNotNearOthersError() {
-        return errorByte.contains(Flags.NEIGHBOURS);
+        return errorByte.contains(Flag.NEIGHBOURS);
     }
 
     /**
@@ -53,7 +53,7 @@ public class PlacementError {
      * @return true if not on edge
      */
     public boolean isNotOnEdgeError() {
-        return errorByte.contains(Flags.EDGE);
+        return errorByte.contains(Flag.EDGE);
     }
 
     /**
@@ -63,7 +63,7 @@ public class PlacementError {
      * @return the two object united
      */
     static PlacementError union(PlacementError a, PlacementError b) {
-        EnumSet<Flags> c = EnumSet.copyOf(a.errorByte);
+        EnumSet<Flag> c = EnumSet.copyOf(a.errorByte);
         c.addAll(b.errorByte);
 
         return new PlacementError(c);
@@ -77,21 +77,21 @@ public class PlacementError {
         return !errorByte.isEmpty();
     }
 
-    public boolean hasErrorFilter(Set<Flags> filters){
-        EnumSet<Flags> tmpErrs = errorByte.clone();
+    public boolean hasErrorFilter(Set<Flag> filters){
+        EnumSet<Flag> tmpErrs = errorByte.clone();
         tmpErrs.removeAll(filters);
         return !tmpErrs.isEmpty();
     }
 
-    public boolean hasNoErrorExceptEdgeFilter(Set<Flags> filters) {
-        Set<Flags> tmpErrs = errorByte.clone();
+    public boolean hasNoErrorExceptEdgeFilter(Set<Flag> filters) {
+        Set<Flag> tmpErrs = errorByte.clone();
         tmpErrs.removeAll(filters);
-        return tmpErrs.equals(EnumSet.of(Flags.EDGE)) || tmpErrs.isEmpty();
+        return tmpErrs.equals(EnumSet.of(Flag.EDGE)) || tmpErrs.isEmpty();
     }
 
-    public boolean hasNoErrorExceptEdge(){ return isEqual(EnumSet.of(Flags.EDGE)) || !hasError(); }
+    public boolean hasNoErrorExceptEdge(){ return isEqual(EnumSet.of(Flag.EDGE)) || !hasError(); }
 
-    boolean isEqual(EnumSet<Flags> flags){
+    boolean isEqual(EnumSet<Flag> flags){
         return errorByte.equals(flags);
     }
 
