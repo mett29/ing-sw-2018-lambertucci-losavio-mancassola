@@ -148,6 +148,8 @@ public class GUI extends Application implements ViewInterface {
 
         stage.setScene(scene);
 
+        stage.setTitle("Sagrada Online");
+
         stage.setResizable(false);
         stage.show();
 

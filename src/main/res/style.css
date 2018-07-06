@@ -5,7 +5,9 @@
 
 #title {
     -fx-font-weight: bold;
-    -fx-font-size: 200%;
+    -fx-font: 100px Tahoma;
+    -fx-text-fill: #01579B;
+    -fx-stroke-width: 0;
 }
 
 .button {

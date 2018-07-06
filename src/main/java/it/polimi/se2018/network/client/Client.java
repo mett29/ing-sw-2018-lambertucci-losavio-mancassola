@@ -12,6 +12,7 @@ import javafx.application.Application;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +58,10 @@ public class Client {
     private static boolean useFX = false;
 
     public static void main(String[] args) {
+        boolean useUnicode = true;
+
+        Arrays.stream(args).forEach(System.out::println);
+
         if(args.length > 0){
             switch(args[0]){
                 case "cli":
@@ -70,7 +75,19 @@ public class Client {
             }
         }
         if(args.length > 1){
-            Client.ipAddress = args[1];
+            switch(args[1]){
+                case "unicode":
+                    useUnicode = true;
+                    break;
+                case "ascii":
+                    useUnicode = false;
+                    break;
+                default:
+                    useUnicode = true;
+            }
+        }
+        if(args.length > 2){
+            Client.ipAddress = args[2];
         } else {
             Client.ipAddress = "localhost";
         }
@@ -78,7 +95,7 @@ public class Client {
             Application.launch(GUI.class, args);
         } else {
             Client client = new Client();
-            CLI view = new CLI(client);
+            CLI view = new CLI(client, useUnicode);
             client.setView(view);
 
             view.launch();
@@ -86,7 +103,7 @@ public class Client {
     }
 
     private static void printUsageMessage() {
-        logger.log(Level.INFO, "Usage: \n\tsagrada.exe [cli/gui] [ip_address]\n");
+        logger.log(Level.INFO, "Usage: \n\tsagrada.exe [cli/gui] [unicode/ascii] [ip_address]\n");
     }
 
     /**

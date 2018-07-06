@@ -32,11 +32,14 @@ public class CLI implements ViewInterface {
     private static final int PLAYER_WIDTH = 47;
     private static final int CARD_WIDTH = 26;
 
-    private static PrintStream ps = new PrintStream(System.out);
+    private PrintStream ps;
 
     private static Logger logger = Logger.getLogger("cli");
 
-    public CLI(Client client){ this.client = client; }
+    public CLI(Client client, boolean useUnicode){
+        this.client = client;
+        ps = new CustomPrintStream(System.out, useUnicode);
+    }
 
     /**
      * Launches the Command-Line Interface
@@ -166,7 +169,7 @@ public class CLI implements ViewInterface {
      * Shows a set of 3 cards
      * @param cards object to read
      */
-    private static void displayCards(Card[] cards){
+    private void displayCards(Card[] cards){
         if(cards.length != 3)
             throw new MatchNotValidException("cards.length must be 3");
         printLines(Stringifier.display2(Stringifier.display2(Stringifier.toStrings(cards[0]), Stringifier.toStrings(cards[1])), Stringifier.toStrings(cards[2])));
@@ -175,7 +178,7 @@ public class CLI implements ViewInterface {
     /**
      * @param lines object to print
      */
-    private static void printLines(String[] lines){
+    private void printLines(String[] lines){
         for (String line : lines) {
             ps.println(line);
         }
