@@ -22,7 +22,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>it.polimi.se2018.network.client.Client</mainClass>
+              <mainClass>it.polimi.se2018.network.server.Server</mainClass>
             </manifest>
           </archive>
         </configuration>
