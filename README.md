@@ -21,7 +21,7 @@ The game requires [Java 8] or later versions to run.
 #### Client
 
 ```sh
-$ java -jar sargrada-client.jar [cli/gui] [unicode/ascii] [ip-address]
+$ java -jar sagrada-client.jar [cli/gui] [unicode/ascii] [ip-address]
 ```
 
 ##### Options
