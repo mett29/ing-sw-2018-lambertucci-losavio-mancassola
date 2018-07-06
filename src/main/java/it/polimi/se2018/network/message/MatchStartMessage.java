@@ -9,7 +9,7 @@ public class MatchStartMessage extends Message {
 
     /**
      * Constructor
-     *
+     * @param timerValue Initial timer value
      * @param payload  Initial state of the match
      */
     public MatchStartMessage(Match payload, int timerValue) {

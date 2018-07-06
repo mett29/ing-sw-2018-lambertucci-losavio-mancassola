@@ -30,7 +30,7 @@ public class JsonParser {
     /**
      * This method loads and parses the json file containing all the boards using GSON library
      * @return the List of parsed Boards
-     * @throws IOException
+     * @throws IOException exception of input/output
      */
     private List<ParsedBoard> loadParsedBoards() throws IOException {
         // Loading the standard patterns' file

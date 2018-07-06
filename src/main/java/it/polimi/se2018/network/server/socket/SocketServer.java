@@ -59,6 +59,7 @@ public class SocketServer extends Thread {
      * Forward message to Server
      * This function is triggered when a message is received from a client (VirtualClient)
      * @param message Received message
+     * @throws IOException exception of input/output
      */
     void onReceive(Message message) throws IOException {
         server.onReceive(message);

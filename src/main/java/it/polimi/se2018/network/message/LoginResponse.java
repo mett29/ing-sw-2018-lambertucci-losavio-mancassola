@@ -8,7 +8,7 @@ public class LoginResponse extends Message{
 
     /**
      * Constructor
-     *
+     * @param payload current match
      * @param ok   False if login went wrong, true otherwise
      */
     public LoginResponse(boolean ok, Match payload) {

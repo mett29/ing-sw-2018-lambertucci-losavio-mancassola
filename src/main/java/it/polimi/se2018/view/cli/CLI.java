@@ -917,6 +917,7 @@ public class CLI implements ViewInterface {
          * @param name Name of the parameter
          * @param value Points of the related parameter. Values below zero will not be printed.
          * @param leftPadding String of spaces that will be inserted at the end of the line, right after `┃`.
+         * @param showValue true if the value must be shown
          * @return String defined with parameters, with total length == `PLAYER_WIDTH` and `┃` characters at the start and at the end of the line.
          */
         private static String scoreLine(String name, int value, String leftPadding, boolean showValue){

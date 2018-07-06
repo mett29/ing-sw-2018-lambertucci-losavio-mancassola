@@ -58,6 +58,7 @@ public class ToolCard implements Card{
 
     /**
      * Increase the cost of the toolcard (max: 2)
+     * @param cost of the card
      */
     public void setCost(int cost) {
         this.cost = cost;
