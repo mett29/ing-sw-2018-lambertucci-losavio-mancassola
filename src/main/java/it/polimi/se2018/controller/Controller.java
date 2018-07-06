@@ -4,6 +4,10 @@ import it.polimi.se2018.model.Match;
 import it.polimi.se2018.model.PlayerMove;
 import it.polimi.se2018.network.server.Lobby;
 
+/**
+ * This class represents the controller that interfaces with Lobby (server-side)
+ * @author ontech7
+ */
 public class Controller {
     private GameManager gameManager;
 

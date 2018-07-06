@@ -6,6 +6,10 @@ import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.function.BiFunction;
 
+/**
+ * This class represents the management of a turn in a round of a match
+ * @author ontech7
+ */
 class TurnManager {
     private Match match;
     private ToolCardController toolcard;

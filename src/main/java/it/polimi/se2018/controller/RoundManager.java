@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents the management of a round in a match
+ * @author ontech7
+ */
 class RoundManager {
     private Match match;
     private TurnManager turnManager;

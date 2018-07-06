@@ -7,6 +7,10 @@ import java.util.function.BiFunction;
 
 import static it.polimi.se2018.model.DiceContainerCoord.asDieCoord;
 
+/**
+ * This class represents the logic of all toolcards of the game
+ * @author ontech7
+ */
 class ToolCardController {
     private Match match;
     private int id;

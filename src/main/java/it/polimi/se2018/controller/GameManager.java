@@ -6,6 +6,10 @@ import it.polimi.se2018.utils.*;
 
 import java.util.*;
 
+/**
+ * This class represents the management of a game
+ * @author ontech7
+ */
 class GameManager implements Comparator<Score>{
     private Match match;
     private RoundManager roundManager;
