@@ -192,6 +192,7 @@ class TurnManager {
 
     /**
      * Activate one of the 3 toolcards.
+     * @param username of the player
      * @param toolCardId index of toolcard selected
      * @return true if successfully activated
      */
