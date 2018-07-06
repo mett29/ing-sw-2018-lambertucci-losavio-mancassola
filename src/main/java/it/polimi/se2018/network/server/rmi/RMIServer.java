@@ -26,7 +26,7 @@ public class RMIServer implements Remote {
 
     // Start the server and do the rebind to tell the Registry I have a new service to offer to the clients
     public void startServer(int port) throws RemoteException {
-        System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+        System.setProperty("java.rmi.server.hostname", "localhost");
         Registry registry = LocateRegistry.createRegistry(port);
         ServerImplementation serverImplementation = new ServerImplementation(server);
         try {
