@@ -256,9 +256,6 @@ public class ToolCardControllerTest {
         PlayerState ps3 = tcc.handleMove(pm3);
 
         assertEquals(EnumState.YOUR_TURN, ps3.get());
-
-        System.out.println(roundtracker.getDie(0));
-        System.out.println(draftpool.getDie(0));
     }
 
     @Test
@@ -282,15 +279,11 @@ public class ToolCardControllerTest {
 
         assertEquals(EnumState.YESNO, ps2.get());
 
-        System.out.println(draftpool.getDie(0));
-
         //PlayerMove dove decido di non posizionare il dado -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<Boolean> pm3 = new PlayerMove<>(currentPlayer, false);
         PlayerState ps3 = tcc.handleMove(pm3);
 
         assertEquals(EnumState.YOUR_TURN, ps3.get());
-
-        System.out.println(draftpool.getDie(0));
     }
 
     @Test
@@ -315,8 +308,6 @@ public class ToolCardControllerTest {
         PlayerState ps2 = tcc.handleMove(pm2);
 
         assertEquals(EnumState.YESNO, ps2.get());
-
-        System.out.println(draftpool.getDie(0));
 
         //PlayerMove dove decido di non posizionare il dado -> TERMINO -> Vado in stato YOUR_TURN
         PlayerMove<Boolean> pm3 = new PlayerMove<>(currentPlayer, true);
@@ -350,14 +341,6 @@ public class ToolCardControllerTest {
 
         assertEquals(EnumState.YOUR_TURN, ps.get());
 
-        System.out.println(draftpool.getDie(0));
-        System.out.println(draftpool.getDie(1));
-        System.out.println(draftpool.getDie(2));
-        System.out.println(draftpool.getDie(3));
-        System.out.println(draftpool.getDie(4));
-
-        System.out.println(playerMove.getActor().getPossibleActions());
-
         playerMove.getActor().possibleActionsSetUp();
     }
 
@@ -389,8 +372,6 @@ public class ToolCardControllerTest {
         PlayerState ps3 = tcc.handleMove(pm3);
 
         assertEquals(EnumState.YOUR_TURN, ps3.get());
-
-        System.out.println(match.getPlayerQueue());
     }
 
     @Test
@@ -420,8 +401,6 @@ public class ToolCardControllerTest {
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 2));
         PlayerState ps3 = tcc.handleMove(pm3);
 
-        //TODO: Restrizioni scritte con x e y invertite
-
         assertEquals(EnumState.YOUR_TURN, ps3.get());
     }
 
@@ -445,8 +424,6 @@ public class ToolCardControllerTest {
         PlayerState ps2 = tcc.handleMove(pm2);
 
         assertEquals(EnumState.YOUR_TURN, ps2.get());
-
-        System.out.println(draftpool.getDie(0));
     }
 
     @Test

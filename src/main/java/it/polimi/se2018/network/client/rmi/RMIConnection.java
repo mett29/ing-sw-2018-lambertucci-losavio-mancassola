@@ -1,5 +1,6 @@
 package it.polimi.se2018.network.client.rmi;
 
+import it.polimi.se2018.controller.Configuration;
 import it.polimi.se2018.network.message.Message;
 import it.polimi.se2018.network.client.Client;
 import it.polimi.se2018.network.client.ClientInterface;
@@ -27,7 +28,7 @@ public class RMIConnection implements IConnection {
 
     private static Logger logger = Logger.getLogger("rmiConnection");
 
-    public RMIConnection(Client c) throws RemoteException, NotBoundException, MalformedURLException {
+    public RMIConnection(Client c) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(Client.getIpAddress(), 1099);
         server = (ServerInterface) registry.lookup("Server");
         ClientImplementation client = new ClientImplementation(c);

@@ -32,30 +32,6 @@ public class ActionTest {
         c2 = new BoardCoord(b2, 4, 3);
     }
 
-    /*
-    @Test
-    public void moveDiceTest() throws Exception{
-        c1.set(d1);
-        b2.setDie(3, 3, d1);
-
-        Action a = new Switch(c1, c2);
-        PlacementError errA = a.check();
-
-        // There is a same color/value dice near c2;
-        // c2 (end target cell) is empty;
-        // Not near edges
-        EnumSet<Flag> expectedA = EnumSet.of(Flag.COLOR, Flag.VALUE);
-        assertTrue(errA.isEqual(expectedA));
-
-        a.perform();
-
-        assertEquals(null, c1.get());
-        assertEquals(d1.getColor(), c2.get().getColor());
-        assertEquals(d1.getValue(), c2.get().getValue());
-
-    }
-    */
-
     @Test
     public void switchDieTest() throws Exception{
         c1.set(d1);

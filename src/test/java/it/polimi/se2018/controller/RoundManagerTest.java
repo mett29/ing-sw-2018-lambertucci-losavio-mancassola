@@ -54,9 +54,6 @@ public class RoundManagerTest {
         //Sets last die of the container to null
         match.getDraftPool().setDie(4, null);
 
-        //Shows actual draftpool
-        System.out.println(match.getDraftPool().getDice());
-
         //Queue size is 4
         assertEquals(4, match.getPlayerQueue().size());
 
@@ -92,7 +89,6 @@ public class RoundManagerTest {
 
         //Take the last die of the draftpool
         Die lastDie = match.getDraftPool().getLastDie();
-        System.out.println(lastDie);
 
         //Check if the roundtracker current size is 0
         assertEquals(0, match.getRoundTracker().getCurrentSize());
@@ -100,14 +96,8 @@ public class RoundManagerTest {
         //Creates a new round
         roundManager.newRound();
 
-        //Check if there is a new draftpool
-        System.out.println(match.getDraftPool().getDice());
-
         //Check if the size of the playerQueue is again 4
         assertEquals(4, match.getPlayerQueue().size());
-
-        //Check if the roundtracker is now 1
-        System.out.println(match.getRoundTracker().getCurrentSize());
 
         //Check if the lastDie is the die inside the roundtracker (in first position)
         assertEquals(lastDie, match.getRoundTracker().getDie(0));

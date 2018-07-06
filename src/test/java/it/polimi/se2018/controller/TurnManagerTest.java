@@ -88,9 +88,6 @@ public class TurnManagerTest {
 
         pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 1));
         assertTrue(turnManager.handleMove(pm2));
-
-        System.out.println(currentPlayer.getBoard().getDie(1,1));
-        System.out.println(dc.getDie(0));
     }
 
     @Test
@@ -112,9 +109,6 @@ public class TurnManagerTest {
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 1));
         assertTrue(turnManager.handleMove(pm2));
 
-        System.out.println(currentPlayer.getBoard().getDie(0,1));
-        System.out.println(dc.getDie(0));
-
         turnManager = new TurnManager(match);
         currentPlayer.possibleActionsSetUp();
 
@@ -125,9 +119,6 @@ public class TurnManagerTest {
 
         pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 1));
         assertTrue(turnManager.handleMove(pm2));
-
-        System.out.println(currentPlayer.getBoard().getDie(1,1));
-        System.out.println(dc.getDie(1));
     }
 
     @Test
@@ -142,22 +133,16 @@ public class TurnManagerTest {
 
         //Attivo la seconda toolcard -> Vado in stato PICK
         assertTrue(turnManager.activateToolcard("Pino", 1));
-        System.out.println(currentPlayer.getState().get());
 
         //Seleziono un dado dalla Board -> Vado in stato PICK
         PlayerMove<DieCoord> pm2 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 0, 0));
 
         assertFalse(turnManager.handleMove(pm2));
-        System.out.println(currentPlayer.getState().get());
 
         //Seleziono una casella dalla Board -> TERMINATO -> Vado in stato YOUR_TURN
         PlayerMove<DieCoord> pm3 = new PlayerMove<>(currentPlayer, new BoardCoord(currentPlayer.getBoard(), 1, 1));
 
         assertTrue(turnManager.handleMove(pm3));
-
-        System.out.println(currentPlayer.getState().get());
-
-        System.out.println(currentPlayer.getBoard().getDie(1,1));
     }
 
     @Test
