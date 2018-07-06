@@ -58,10 +58,6 @@ public class Client {
     private static boolean useFX = false;
 
     public static void main(String[] args) {
-        boolean useAscii = true;
-
-        Arrays.stream(args).forEach(System.out::println);
-
         if(args.length > 0){
             switch(args[0]){
                 case "cli":
@@ -74,6 +70,8 @@ public class Client {
                     printUsageMessage();
             }
         }
+
+        boolean useAscii = true;
         if(args.length > 1){
             switch(args[1]){
                 case "unicode":

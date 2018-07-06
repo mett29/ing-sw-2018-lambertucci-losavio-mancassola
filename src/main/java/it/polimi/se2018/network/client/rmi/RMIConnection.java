@@ -10,6 +10,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +28,8 @@ public class RMIConnection implements IConnection {
     private static Logger logger = Logger.getLogger("rmiConnection");
 
     public RMIConnection(Client c) throws RemoteException, NotBoundException, MalformedURLException {
-        server = (ServerInterface)Naming.lookup("Server");
+        Registry registry = LocateRegistry.getRegistry(Client.getIpAddress(), 1099);
+        server = (ServerInterface) registry.lookup("Server");
         ClientImplementation client = new ClientImplementation(c);
         remoteClientRef = (ClientInterface) UnicastRemoteObject.exportObject(client, 0);
     }

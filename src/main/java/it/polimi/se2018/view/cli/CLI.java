@@ -9,6 +9,7 @@ import it.polimi.se2018.view.Utils;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -38,7 +39,11 @@ public class CLI implements ViewInterface {
 
     public CLI(Client client, boolean useAscii){
         this.client = client;
-        ps = new CustomPrintStream(System.out, !useAscii);
+        try {
+            ps = new CustomPrintStream(System.out, !useAscii);
+        } catch (UnsupportedEncodingException e) {
+            logger.log(Level.SEVERE, "It looks like UTF-8 is not supported in your terminal");
+        }
     }
 
     /**

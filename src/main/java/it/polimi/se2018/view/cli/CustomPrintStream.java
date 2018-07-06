@@ -2,6 +2,7 @@ package it.polimi.se2018.view.cli;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,15 +43,21 @@ public class CustomPrintStream extends PrintStream {
         tmp.put('┓', '\\');
         tmp.put('┃', '|');
         tmp.put('┠', '+');
+        tmp.put('┨', '+');
         tmp.put('┗', '\\');
         tmp.put('┛', '/');
         tmp.put('━', '-');
+        tmp.put('è', 'e');
+        tmp.put('é', 'e');
+        tmp.put('à', 'a');
+        tmp.put('ò', 'o');
+        tmp.put('ù', 'u');
 
         charMap = Collections.unmodifiableMap(tmp);
     }
 
-    CustomPrintStream(OutputStream out, boolean useUnicode) {
-        super(out);
+    CustomPrintStream(OutputStream out, boolean useUnicode) throws UnsupportedEncodingException {
+        super(out, true, "UTF-8");
         this.useUnicode = useUnicode;
     }
 

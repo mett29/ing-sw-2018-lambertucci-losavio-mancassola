@@ -2,11 +2,10 @@ package it.polimi.se2018.network.server.rmi;
 
 import it.polimi.se2018.network.server.Server;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,12 +26,13 @@ public class RMIServer implements Remote {
 
     // Start the server and do the rebind to tell the Registry I have a new service to offer to the clients
     public void startServer(int port) throws RemoteException {
-        LocateRegistry.createRegistry(port);
+        System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+        Registry registry = LocateRegistry.createRegistry(port);
         ServerImplementation serverImplementation = new ServerImplementation(server);
         try {
-            Naming.rebind("//localhost/Server", serverImplementation);
+            registry.rebind("Server", serverImplementation);
             logger.log(Level.INFO,"RMI server is on");
-        } catch(RemoteException | MalformedURLException e) {
+        } catch(RemoteException e) {
             logger.log(Level.WARNING, e.getMessage());
         }
     }
