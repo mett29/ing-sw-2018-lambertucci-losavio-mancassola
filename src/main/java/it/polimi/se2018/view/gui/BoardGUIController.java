@@ -5,7 +5,7 @@ import it.polimi.se2018.model.Cell;
 import it.polimi.se2018.model.CellState;
 import it.polimi.se2018.network.client.BoardCoordMove;
 import it.polimi.se2018.network.client.Client;
-import it.polimi.se2018.view.cli.CLI;
+import it.polimi.se2018.view.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
@@ -83,7 +83,7 @@ public class BoardGUIController {
         final BoardGUIController toDisable = this;
         for(int y = 0; y < 4; y++) {
             for (int x = 0; x < 5; x++) {
-                if(CLI.Stringifier.acceptedCell(board, x, y, cellStates)) {
+                if(Utils.acceptedCell(board, x, y, cellStates)) {
                     final int x_fin = x;
                     final int y_fin = y;
                     controllerMatrix[y][x].activate(e -> {

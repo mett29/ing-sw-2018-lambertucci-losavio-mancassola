@@ -5,7 +5,7 @@ import it.polimi.se2018.model.CellState;
 import it.polimi.se2018.model.DiceContainer;
 import it.polimi.se2018.network.client.Client;
 import it.polimi.se2018.network.client.DiceContainerCoordMove;
-import it.polimi.se2018.view.cli.CLI;
+import it.polimi.se2018.view.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -107,7 +107,7 @@ public class DiceContainerController {
         for (int i = 0; i < diceContainer.getMaxSize(); i++) {
             final int index = i;
 
-            if(CLI.Stringifier.acceptedCell(diceContainer, i, cellStates)) {
+            if(Utils.acceptedCell(diceContainer, i, cellStates)) {
                 cellControllers.get(i).activate(e -> {
                     toDisable.disableAll();
                     client.sendMove(new DiceContainerCoordMove(index, name));

@@ -5,6 +5,7 @@ import it.polimi.se2018.network.client.*;
 import it.polimi.se2018.network.message.PatternRequest;
 import it.polimi.se2018.network.message.UndoResponse;
 import it.polimi.se2018.view.ViewInterface;
+import it.polimi.se2018.view.Utils;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -648,7 +649,7 @@ public class CLI implements ViewInterface {
             if(printSelectors){
                 // print selection character for each row accepted by cellState
                 for(int i = 0; i < maxSize - 1; i++){
-                    if(acceptedCell(container, i, cellStates)) {
+                    if(Utils.acceptedCell(container, i, cellStates)) {
                         buffer.append("══");
                         buffer.append(SELECTION_MAP.charAt(i));
                         buffer.append("═╤");
@@ -658,7 +659,7 @@ public class CLI implements ViewInterface {
                 }
 
                 // print last cell
-                if(acceptedCell(container, maxSize - 1, cellStates)) {
+                if(Utils.acceptedCell(container, maxSize - 1, cellStates)) {
                     buffer.append("══");
                     buffer.append(SELECTION_MAP.charAt(maxSize - 1));
                     buffer.append("═╗");
@@ -775,7 +776,7 @@ public class CLI implements ViewInterface {
                     if(board.isEmpty()){
                         buffer.append(cellToString(row[i], printSelectors, i, j, i == 0 || i == row.length-1 || j == 0 || j == board.getRows().size()-1));
                     } else {
-                        buffer.append(cellToString(row[i], printSelectors, i, j, acceptedCell(board, i, j, cellStates)));
+                        buffer.append(cellToString(row[i], printSelectors, i, j, Utils.acceptedCell(board, i, j, cellStates)));
                     }
                 }
                 buffer.append("│");
@@ -786,57 +787,6 @@ public class CLI implements ViewInterface {
             }
             boardString.add("└────┴────┴────┴────┴────┘");
             return boardString.toArray(new String[8]);
-        }
-
-        /**
-         * Checks if the cell is accepted or not
-         * @param diceContainer object to read
-         * @param index int to read
-         * @param cellStates FULL, EMPTY and/or NEAR
-         * @return true if accepted, false otherwise
-         */
-        public static boolean acceptedCell(DiceContainer diceContainer, int index, Set<CellState> cellStates){
-            if(cellStates == null)
-                return true;
-
-            if(cellStates.contains(CellState.FULL) && diceContainer.getDie(index) == null){
-                return false;
-            }
-            if(cellStates.contains(CellState.EMPTY) && diceContainer.getDie(index) != null){
-                return false;
-            }
-            return true;
-        }
-
-        /**
-         * Checks if the cell is accepted or not
-         * @param board object to read
-         * @param x coordinate to read
-         * @param y coordinate to read
-         * @param cellStates FULL, EMPTY and/or NEAR
-         * @return true if accepted, false otherwise
-         */
-        public static boolean acceptedCell(Board board, int x, int y, Set<CellState> cellStates) {
-            if(cellStates == null){
-                return true;
-            }
-            if(board.isEmpty()){
-                return x == 0 || x == 4 || y == 0 || y == 3;
-            }
-
-            if (cellStates.contains(CellState.EMPTY) && !board.getCell(x, y).isEmpty()){
-                return false;
-            }
-            if (cellStates.contains(CellState.FULL) && board.getCell(x, y).isEmpty()){
-                return false;
-            }
-            if(cellStates.contains(CellState.NEAR) && board.getNeighbours(x, y).isEmpty()){
-                return false;
-            }
-            if(cellStates.contains(CellState.NOT_NEAR) && !board.getNeighbours(x, y).isEmpty()){
-                return false;
-            }
-            return true;
         }
 
         private static String[] display2(String[] a, String[] b){

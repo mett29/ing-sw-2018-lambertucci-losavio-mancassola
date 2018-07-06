@@ -6,6 +6,7 @@ import it.polimi.se2018.model.DiceContainer;
 import it.polimi.se2018.network.client.BoardCoordMove;
 import it.polimi.se2018.network.client.Client;
 import it.polimi.se2018.network.client.DiceContainerCoordMove;
+import it.polimi.se2018.view.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -84,7 +85,7 @@ class InputManager {
                     if (sc.hasNext(ptn)) {
                         String found = sc.next(ptn);
                         selection = SELECTION_MAP.indexOf(found.toUpperCase().charAt(0));
-                        if (!(CLI.Stringifier.acceptedCell(board, selection % 5, selection / 5, cellStates))) {
+                        if (!(Utils.acceptedCell(board, selection % 5, selection / 5, cellStates))) {
                             String message = "The cell you selected is not acceptable. S" +
                                     CLI.Stringifier.toString(cellStates) +
                                     " (type the corresponding character)";
@@ -130,7 +131,7 @@ class InputManager {
                     if (sc.hasNext(ptn)) {
                         String found = sc.next(ptn);
                         selection = SELECTION_MAP.indexOf(found.toUpperCase().charAt(0));
-                        if (selection < 0 || selection >= diceContainer.getMaxSize() || !CLI.Stringifier.acceptedCell(diceContainer, selection, cellStates)) {
+                        if (selection < 0 || selection >= diceContainer.getMaxSize() || !Utils.acceptedCell(diceContainer, selection, cellStates)) {
                             ps.println("Unacceptable selection. " + CLI.Stringifier.pickContainerMessage(cellStates));
                             selection = -1;
                         }
