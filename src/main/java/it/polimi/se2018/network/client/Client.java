@@ -58,7 +58,7 @@ public class Client {
     private static boolean useFX = false;
 
     public static void main(String[] args) {
-        boolean useUnicode = true;
+        boolean useAscii = true;
 
         Arrays.stream(args).forEach(System.out::println);
 
@@ -77,13 +77,13 @@ public class Client {
         if(args.length > 1){
             switch(args[1]){
                 case "unicode":
-                    useUnicode = true;
+                    useAscii = true;
                     break;
                 case "ascii":
-                    useUnicode = false;
+                    useAscii = false;
                     break;
                 default:
-                    useUnicode = true;
+                    useAscii = true;
             }
         }
         if(args.length > 2){
@@ -95,7 +95,7 @@ public class Client {
             Application.launch(GUI.class, args);
         } else {
             Client client = new Client();
-            CLI view = new CLI(client, useUnicode);
+            CLI view = new CLI(client, useAscii);
             client.setView(view);
 
             view.launch();

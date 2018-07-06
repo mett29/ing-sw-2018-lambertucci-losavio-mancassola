@@ -36,9 +36,9 @@ public class CLI implements ViewInterface {
 
     private static Logger logger = Logger.getLogger("cli");
 
-    public CLI(Client client, boolean useUnicode){
+    public CLI(Client client, boolean useAscii){
         this.client = client;
-        ps = new CustomPrintStream(System.out, useUnicode);
+        ps = new CustomPrintStream(System.out, !useAscii);
     }
 
     /**
