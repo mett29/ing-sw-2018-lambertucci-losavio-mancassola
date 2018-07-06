@@ -157,7 +157,7 @@ public class Match extends Observable implements Serializable {
         return extractedDie;
     }
 
-    public void insertDie(Die die){
+    void insertDie(Die die){
         diceBag.insert(die);
     }
 

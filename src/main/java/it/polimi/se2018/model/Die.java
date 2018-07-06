@@ -14,7 +14,7 @@ public class Die implements Serializable{
 
     public Die(int value, Color color) {
         if(value < 0 || value > 6)
-            throw new InvalidParameterException("The die value must be between 1 and 6 (0 for null)");
+            throw new InvalidParameterException("The die value must be between 1 and 6");
         this.value = value;
         if(color == null)
             throw new NullPointerException("'color' must be not null");

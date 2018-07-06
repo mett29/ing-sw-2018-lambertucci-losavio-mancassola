@@ -4,7 +4,6 @@ import it.polimi.se2018.model.Board;
 import it.polimi.se2018.model.PrivateObjCard;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class encapsulates a board's pattern request

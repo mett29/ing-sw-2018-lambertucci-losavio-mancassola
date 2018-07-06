@@ -3,7 +3,7 @@ package it.polimi.se2018.network.server;
 import it.polimi.se2018.controller.Configuration;
 import it.polimi.se2018.model.EnumState;
 import it.polimi.se2018.model.Player;
-import it.polimi.se2018.network.client.QueueRequest;
+import it.polimi.se2018.network.message.QueueRequest;
 import it.polimi.se2018.network.message.*;
 import it.polimi.se2018.network.client.ClientInterface;
 import it.polimi.se2018.network.server.rmi.RMIServer;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author mett29, MicheleLambertucci, ontech7
  */
 public class Server {
-    private static final int MAX_PLAYER_NUMBER = 2; //TODO: change to 4 before deployment
+    private static final int MAX_PLAYER_NUMBER = 4;
 
     private PlayerQueue queue;
 

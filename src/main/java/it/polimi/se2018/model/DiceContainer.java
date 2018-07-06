@@ -78,12 +78,21 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer>, Ser
         return null;
     }
 
+    /**
+     * Sets a die in a specified position of the container
+     * @param index of the cell
+     * @param die object to set
+     */
     public void setDie(int index, Die die){
         if(index > maxSize)
             throw new IndexOutOfBoundsException();
         container.put(index, die);
     }
 
+    /**
+     * Inserts in the last empty position a die
+     * @param die object to set
+     */
     public void insert(Die die) {
         int size = getCurrentSize();
         setDie(size, die);
@@ -117,6 +126,10 @@ public class DiceContainer implements Iterable<Die>, Memento<DiceContainer>, Ser
         this.maxSize = savedState.maxSize;
     }
 
+    /**
+     * @param index of the cell
+     * @return a cell based on index
+     */
     public Cell getCell(int index) {
         Cell ret = new Cell(null);
         ret.setDie(container.get(index));
