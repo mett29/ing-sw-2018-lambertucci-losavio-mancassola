@@ -3,6 +3,10 @@ package it.polimi.se2018.controller;
 import java.io.*;
 import java.util.Properties;
 
+/**
+ * This class represents the server configuration, loaded from file 'config.properties'
+ * @author MicheleLambertucci, mett29
+ */
 public class Configuration {
     private static Configuration ourInstance = new Configuration();
     public static Configuration getInstance() {

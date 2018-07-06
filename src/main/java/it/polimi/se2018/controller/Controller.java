@@ -5,7 +5,8 @@ import it.polimi.se2018.model.PlayerMove;
 import it.polimi.se2018.network.server.Lobby;
 
 /**
- * This class represents the controller that interfaces with Lobby (server-side)
+ * This class is the highest level class in Controller package.
+ * When a new lobby is born, a new Controller is created.
  * @author ontech7
  */
 public class Controller {

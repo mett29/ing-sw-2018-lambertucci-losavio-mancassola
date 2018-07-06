@@ -18,6 +18,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Main class of the Graphic User Interface
+ * @author MicheleLambertucci
+ */
 public class GUI extends Application implements ViewInterface {
 
     private Client client;

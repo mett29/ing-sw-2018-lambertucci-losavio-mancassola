@@ -4,6 +4,10 @@ import it.polimi.se2018.model.Match;
 import it.polimi.se2018.network.message.PatternRequest;
 import it.polimi.se2018.network.message.UndoResponse;
 
+/**
+ * This is the interface implemented by {@link it.polimi.se2018.view.cli.CLI} and {@link it.polimi.se2018.view.gui.GUI}
+ * @author MicheleLambertucci
+ */
 public interface ViewInterface {
     /**
      * Display toolcard activation response

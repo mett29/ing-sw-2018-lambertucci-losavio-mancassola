@@ -7,7 +7,7 @@ import it.polimi.se2018.utils.*;
 import java.util.*;
 
 /**
- * This class represents the management of a game
+ * This class is the "real" controller, indeed it implements all the main functionalities to handle a Game.
  * @author ontech7
  */
 class GameManager implements Comparator<Score>{

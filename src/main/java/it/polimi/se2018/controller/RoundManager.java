@@ -8,7 +8,8 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 
 /**
- * This class represents the management of a round in a match
+ * This class is at a lower level than {@link GameManager}
+ * It handles the operations and the logic relating to the round phase
  * @author ontech7
  */
 class RoundManager {

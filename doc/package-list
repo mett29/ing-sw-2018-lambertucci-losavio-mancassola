@@ -1,3 +1,13 @@
-it.polimi.se2018
+it.polimi.se2018.controller
 it.polimi.se2018.model
+it.polimi.se2018.network.client
+it.polimi.se2018.network.client.rmi
+it.polimi.se2018.network.client.socket
+it.polimi.se2018.network.message
+it.polimi.se2018.network.server
+it.polimi.se2018.network.server.rmi
+it.polimi.se2018.network.server.socket
 it.polimi.se2018.utils
+it.polimi.se2018.view
+it.polimi.se2018.view.cli
+it.polimi.se2018.view.gui

@@ -21,6 +21,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+/**
+ * This class is used to separate the logic of the CLI from the input listener
+ * @author MicheleLambertucci
+ */
 class InputManager {
     private InputManager(){}
 

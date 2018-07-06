@@ -6,6 +6,10 @@ import it.polimi.se2018.model.DiceContainer;
 
 import java.util.Set;
 
+/**
+ * This class was written because some code was used by both CLI and GUI
+ * @author MicheleLambertucci
+ */
 public class Utils {
     private Utils(){}
     /**

@@ -8,7 +8,8 @@ import java.util.function.BiFunction;
 import static it.polimi.se2018.model.DiceContainerCoord.asDieCoord;
 
 /**
- * This class represents the logic of all toolcards of the game
+ * This class implements the logic behind the ToolCard object.
+ * Every toolcard is stored and its functioning described.
  * @author ontech7
  */
 class ToolCardController {

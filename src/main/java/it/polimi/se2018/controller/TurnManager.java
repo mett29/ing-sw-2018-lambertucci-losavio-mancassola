@@ -7,7 +7,8 @@ import java.util.*;
 import java.util.function.BiFunction;
 
 /**
- * This class represents the management of a turn in a round of a match
+ * This class is at a lower level than {@link RoundManager}
+ * It handles the operations and the logic relating to a player's turn phase
  * @author ontech7
  */
 class TurnManager {
